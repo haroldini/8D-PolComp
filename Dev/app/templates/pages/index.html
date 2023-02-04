@@ -6,15 +6,73 @@
 {% block CONTENT %}
 <div class="components">
     <div class="component">
-        <p class="text">8D PolComp is a political identity test that tries to quantify your ideology on eight axes. Click the button below to join 5807 others and find where you stand politically. Alternatively, scroll down to read more about how it works.</p>
-        <button class="button">Take the Test</button>
+        <p class="text">8D-PolComp is a political model which places you on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
+        <p class="text">Alternatively, continue reading to learn more about the test.</p>
+        <button class="button" onclick="location.href='/test';">Take the Test</button>
     </div>
     <div class="component">
-        <p class="text">Though 8DPolComp is intended to avoid bias, it's not perfect, and shouldn't be taken too seriously. It may be more useful to measure your ideology relative to other participants, rather than relative to certain labels that the test prescribes to you.</p>
+        <p class="text">With permission, {{data["recorded_count"]}} participants' results have been recorded with some optional demographics, such as nationality, age, as well as their political affiliations.</p>
+        <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
+        <button class="button" onclick="location.href='/data';">Data</button>
     </div>
     <div class="component">
-        <p class="text">Participants can choose to have their results recorded with some optional demographic information, such as their nationality, party allegiance, or self-identified ideology. Visit 'All Results' to see a filterable visualisation of all the results recorded so far.</p>
-        <button class="button">Data</button>
+    </div>
+    <div class="component">
+        <p class="text">All political tests are subject to bias, including 8D-PolComp. It may be more useful to compare your results to those of other participants, rather than relative to the axes the test places you on. You can do this on the <span class="inline-link"><a href="/data">Data</a></span> page.</p>
+    </div>
+</div>
+<div class="components">
+    <p class="text text-subtitle">The Axes</p>
+    <div class="component">
+        <p class="text text-subtitle">Upper-Left</p>
+        <p class="text">The upper-left compass measures your attitudes towards social and cultural change, and how you believe this change should be politically executed.</p>
+        <br>
+        <span class="inline-link"><a>Show more...</a></span>
+    </div>
+    <div class="component">
+        <p class="text text-subtitle">Upper-Right</p>
+        <p class="text">The upper-right compass is the traditional 2-dimensional political compass you're probably familiar with. It measures your attitudes towards economic policy, as well as state authority and individual liberty.</p>
+        <br>
+        <span class="inline-link"><a>Show more...</a></span>
+    </div>
+</div>
+<div class="components">
+    <div class="component">
+        <p class="text text-subtitle">Lower-Left</p>
+        <p class="text">The lower-left compass measures your attitudes towards governmental power distribution, and your nation's relationships with other nations.</p>
+        <br>
+        <span class="inline-link"><a>Show more...</a></span>
+    </div>
+    <div class="component">
+        <p class="text text-subtitle">Lower-Right</p>
+        <p class="text">The lower-right compass measures your attitudes towards science and technological advancement, and the role of religion in government.</p>
+        <br>
+        <span class="inline-link"><a>Show more...</a></span>
+    </div>
+</div>
+<div class="components">
+    <p class="text text-subtitle">Learn More</p>
+    <div class="component">
+        <p class="text">If you'd like to learn more about your views, check out the Political Compass and 8values at the links below.</p>
+        <div class="wrapper">
+            <div class="wrapped">
+                <button class="button" onclick="location.href='https://www.politicalcompass.org/';">Political Compass</button>
+            </div>
+            <div class="wrapped">
+                <button class="button" onclick="location.href='https://8values.github.io/';">8values</button>
+            </div>
+        </div>
+    </div>
+    <div class="component">
+        <p class="text">If you like 8D-PolComp, please donate to help keep the site running. You can also contact me at the link below if you have any suggestions.</p>
+        <div class="wrapper">
+            <div class="wrapped">
+                <button class="button" onclick="location.href='';">Donate</button>
+            </div>
+            <div class="wrapped">
+                <button class="button" onclick="location.href='';">Contact</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
