@@ -1,0 +1,237 @@
+:root{
+    --white: #f3f3f3;
+    --black: #262626;
+    --grey: #afafaf;
+    --green: #c9e5bd;
+    --blue: #93daf8;
+}
+
+button:focus, input:focus {
+    outline: var(--blue) solid 2px;
+    outline-offset: 4px;
+}
+a:focus {
+    text-decoration: solid underline 4px;
+    outline: none;
+}
+a:link {
+    color: inherit;
+    background-color: transparent;
+    text-decoration: none;
+}
+a:visited {
+    color: inherit;
+}
+a:active {
+    color: inherit;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+body {
+    position: relative;
+    font-family: "Montserrat";
+    font-weight: 200;
+    font-size: 1rem;
+    background: var(--black);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+.header {
+    background: var(--black);
+    color: var(--black);
+    border-bottom: solid 0.25rem var(--white);
+    background-image: linear-gradient(90deg, var(--blue), var(--green));
+    font-weight: 600;
+    width: 100%;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    min-height: 8rem;
+    padding-top: 1rem;
+    border-top: solid 0.25rem var(--white);
+    background: var(--black);
+    color: var(--white);
+}
+
+.page {
+    background: var(--black);
+    color: var(--white);
+    /*box-shadow: -5rem 0px 0px 0px var(--white), 5rem 0px 0px 0px var(--white);*/
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    min-height: 80vh;
+}
+/* Mobile/small screen support */
+@media only screen and (max-width: 1200px) {
+    .page {
+        box-shadow: none;
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+}
+/* Mobile/small screen support */
+@media only screen and (max-width: 900px) {
+    .page {
+        box-shadow: none;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+}
+/* Mobile/small screen support */
+@media only screen and (max-width: 600px) {
+    .page {
+        box-shadow: none;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+
+.header-text {
+    color: var(--black);
+    height: 4rem;
+    font-size: 2.25rem;
+    padding: 0;
+    margin: 0;
+}
+
+.header-link .inline-logo {
+    transform: scale(0%) rotate(90deg);
+    width: 0;
+    transform-origin: center;
+    
+    transition: transform 0.2s ease-out 0.2s;
+}
+.header-link:hover .inline-logo {
+    transform: scale(100%);
+    width: auto;
+
+}
+.header-link .header-text {
+    transition: padding-left 0.2s linear;
+    margin-left: 0;
+}
+.header-link:hover .header-text {
+    margin-left: -1.5rem;
+    padding-left: 2.5rem;
+}
+
+.inline-logo {
+    height: 1.5rem;
+    filter: brightness(0) saturate(100%) invert(15%) sepia(0%) saturate(1%) hue-rotate(97deg) brightness(97%) contrast(98%);
+}
+
+.nav-bar {
+    color: var(--black);
+    height: 2.5rem;
+    width: 100%;
+    display: flex;
+}
+
+.nav-item {
+    height: 100%;
+    display: flex;
+    width: 10rem;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out; 
+}
+.nav-item:hover {
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.nav-link {
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+}
+
+.active-page { 
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.footer-logo {
+    width: 8rem;
+    transform: scale(90%);
+    transition: transform .2s ease-in-out;
+}
+.footer-logo:hover {
+    transform: scale(100%)
+}
+.footer-text {
+    color: var(--grey)
+}
+
+
+.center-content {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    word-wrap: break-word;
+    vertical-align: middle;
+}
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.component {
+    margin: 0.5rem;
+    padding: 1rem;
+    padding-top: 0;
+
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--blue), var(--green));
+    border-image-slice: 1;
+}
+.components {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+.components .component {
+    flex: 1;
+    min-width: 15rem;
+    overflow: auto;
+}
+
+.text {
+    padding: 0;
+    margin: 0;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.button {
+    padding: 1rem;
+    width: 100%;
+    line-height: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    font-family: "Montserrat";
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    border-radius: 1rem;
+    border: none;
+    color: var(--black);
+    background: var(--green);
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out; 
+}
+
+.button:hover {
+    background: var(--blue);
+}
