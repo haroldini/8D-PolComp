@@ -1,0 +1,101 @@
+id,dbq_question,dbq_authlib,dbq_autodemo,dbq_nationglob,dbq_modrad,dbq_theosec,dbq_tradprog,dbq_primtrans,dbq_capsoc
+1,"Cannabis should be decriminalised.",-2.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+2,"Prostitution should be illegal.",2.0,0.0,0.0,0.0,0.0,-2.0,0.0,0.0
+3,"Abortion is morally wrong.",2.0,0.0,0.0,0.0,0.0,-2.0,0.0,0.0
+4,"All drugs should be decriminalised.",-2.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+5,"Certain ethnicities, genders, or sexual orientations, should sometimes be given preferential treatment.",2.0,-1.0,0.0,0.0,-2.0,-2.0,0.0,0.0
+6,"It is sometimes acceptable to perform unethical experiments for medical research.",1.0,0.0,0.0,0.0,0.0,0.0,-2.0,0.0
+7,"Free access to the internet should be provided by the state as a public utility.",0.0,0.0,0.0,0.0,0.0,1.0,-1.0,-2.0
+8,"Genetic modification of human embryos is immoral.",1.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+9,"Religious values should inform law.",1.0,0.0,0.0,0.0,-2.0,-1.0,0.0,0.0
+10,"Faith schools indoctrinate children and should be restricted or banned.",-1.0,0.0,0.0,0.0,1.0,0.0,-1.0,0.0
+11,"Without religious values, there can be no right and wrong.",0.0,0.0,0.0,0.0,-1.0,-1.0,0.0,0.0
+12,"Governments should not favour one particular religion.",-2.0,1.0,0.0,0.0,2.0,2.0,0.0,0.0
+13,"Publicly owned research institutions, such as space programs, should receive more public funding.",0.0,0.0,0.0,0.0,0.0,0.0,-2.0,-2.0
+14,"Essential utilities, like electricity and water, should be publicly owned.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+15,"All taxes should be abolished.",-1.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0
+16,"Currency should be abolished.",-1.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+17,"The government should regulate the economy to prevent monopolies.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+18,"Corporations should be trusted without regulation.",2.0,0.0,0.0,1.0,0.0,0.0,0.0,2.0
+19,"The government should be trusted.",2.0,-1.0,0.0,1.0,0.0,0.0,0.0,0.0
+20,"Those with a greater ability to pay should receive better healthcare and education.",-1.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0
+21,"The manufacturing industry should be publicly owned.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+22,"People are ultimately more divided by class than nationality.",0.0,0.0,1.0,0.0,0.0,0.0,0.0,-1.0
+23,"If technological automation is inevitable, the resultant unemployment is a positive outcome.",0.0,0.0,0.0,0.0,0.0,1.0,-2.0,0.0
+24,"Land should not be a commodity to be bought and sold.",1.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+25,"The rich are too highly taxed.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0
+26,"The only social responsibility of a company should be to deliver a profit to its shareholders.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0
+27,"There should be no minimum wage, as employers know best what a worker's labour is worth.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0
+28,"Welfare programs that sometimes benefit those too lazy to work should be reduced or eliminated.",0.0,0.0,0.0,0.0,0.0,-1.0,0.0,2.0
+29,"Economic inequality is a greater issue than social inequality.",0.0,0.0,0.0,0.0,0.0,-2.0,0.0,-2.0
+30,"A person's gender identity may be different to their biological sex.",0.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+31,"Torture, even during warfare, is morally wrong.",-2.0,0.0,1.0,0.0,0.0,2.0,0.0,0.0
+32,"I support the death penalty for serious criminals, even if some are falsely accused.",2.0,0.0,0.0,0.0,0.0,-2.0,0.0,0.0
+33,"My national identity is important to me.",0.0,0.0,-2.0,0.0,0.0,-1.0,0.0,0.0
+34,"Borders should not restrict human movement.",-2.0,0.0,2.0,0.0,0.0,2.0,0.0,0.0
+35,"International tax systems should be implemented to mitigate tax avoidance.",0.0,0.0,2.0,0.0,0.0,0.0,0.0,-2.0
+36,"Intellectual property is a legal fiction created by the state and should be abolished.",-2.0,0.0,0.0,0.0,0.0,0.0,-1.0,-1.0
+37,"A united world government is a goal mankind should strive for.",0.0,0.0,2.0,0.0,0.0,0.0,-1.0,0.0
+38,"Scientific research should be freely available to the public, rather than restricted or sold for profit.",-1.0,0.0,1.0,0.0,0.0,0.0,-1.0,-1.0
+39,"Foreign-born migrants should be required to learn our language.",2.0,0.0,-2.0,0.0,0.0,0.0,0.0,0.0
+40,"My nation is greater than other nations.",0.0,0.0,-2.0,0.0,0.0,0.0,0.0,0.0
+41,"Military action that defies international law is sometimes justified.",0.0,-1.0,-2.0,0.0,0.0,0.0,0.0,0.0
+42,"My nation should not be dependent on other nations for resources.",0.0,0.0,-2.0,0.0,0.0,0.0,0.0,0.0
+43,"Corporate exploitation of cheap foreign labour ultimately benefits everyone.",1.0,0.0,1.0,0.0,0.0,0.0,0.0,2.0
+44,"Foreign-born migrants should not have the right to vote.",1.0,-2.0,-2.0,0.0,0.0,0.0,0.0,0.0
+45,"Criminals should not have the right to vote.",1.0,-2.0,0.0,0.0,0.0,-1.0,0.0,0.0
+46,"Voting should be mandatory.",1.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0
+47,"A region in which secession has democratic support should be recognised as an independent nation.",-1.0,2.0,1.0,0.0,0.0,0.0,0.0,0.0
+48,"People should not worry about government surveillance if they have nothing to hide.",2.0,-1.0,0.0,0.0,0.0,0.0,0.0,0.0
+49,"It is acceptable for the state to censor websites which speak negatively of the government.",2.0,-2.0,-2.0,0.0,0.0,0.0,1.0,0.0
+50,"Violent revolution is sometimes justified against a popular and democratically elected government.",2.0,-2.0,0.0,-2.0,0.0,0.0,0.0,0.0
+51,"Nuclear energy production should be phased out due to its environmental and health risks.",0.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+52,"Wealthy corporations should be prohibited from financial involvement in politics.",0.0,2.0,0.0,0.0,0.0,0.0,0.0,-2.0
+53,"Certain social media platforms should be owned and regulated by the government.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+54,"International wealth redistribution programs should be implemented to mitigate global inequality.",0.0,0.0,2.0,0.0,0.0,0.0,-1.0,-2.0
+55,"We should prioritise the protection of our own planet before we explore others.",0.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+56,"Society was better in the past than it is now.",0.0,0.0,0.0,0.0,0.0,-2.0,1.0,0.0
+57,"My political philosophy is derived from my faith.",0.0,0.0,0.0,0.0,-2.0,-1.0,0.0,0.0
+58,"A carbon tax should be implemented to encourage the free market to minimise greenhouse emissions.",0.0,0.0,0.0,0.0,0.0,0.0,0.0,-2.0
+59,"Basic needs for survival should be unconditionally provided for free.",0.0,0.0,0.0,0.0,0.0,1.0,0.0,-2.0
+60,"All authority should be questioned.",-2.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0
+61,"The state should subsidise private companies that invest heavily in scientific or technological research.",0.0,0.0,0.0,0.0,0.0,0.0,-2.0,2.0
+62,"New technologies should be regulated to protect jobs they would otherwise make obsolete.",0.0,0.0,0.0,0.0,0.0,0.0,2.0,-1.0
+63,"Revolution is the only way to achieve the society I desire.",0.0,0.0,0.0,-2.0,0.0,0.0,0.0,0.0
+64,"Radical ideas can be dangerous, so it is best to change society incrementally.",0.0,0.0,0.0,2.0,0.0,-2.0,1.0,0.0
+65,"The political system should be trusted to reform itself.",2.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0
+66,"Politicians generally serve my interests.",0.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0
+67,"Violent revolution is justified if the ruling party maintains control by undermining democracy.",-2.0,2.0,0.0,-2.0,0.0,0.0,0.0,0.0
+68,"I do not care how my nation is perceived by other nations.",0.0,0.0,-2.0,0.0,0.0,-1.0,0.0,0.0
+69,"Military service should be mandatory.",2.0,0.0,-2.0,0.0,0.0,-2.0,0.0,0.0
+70,"Technology developed through human suffering should not be used.",0.0,0.0,0.0,0.0,0.0,1.0,2.0,0.0
+71,"My nation should topple foreign governments which do not follow my nation's principles.",2.0,-1.0,-2.0,0.0,0.0,0.0,0.0,0.0
+72,"Foreign whistleblowers who reveal crimes committed by their government should be granted asylum.",-2.0,1.0,1.0,-1.0,0.0,0.0,0.0,0.0
+73,"Freedom of speech should be protected, even if it is offensive or untrue.",-2.0,2.0,0.0,0.0,0.0,2.0,0.0,0.0
+74,"The police need more power to protect us from extremists.",2.0,-1.0,0.0,1.0,0.0,-1.0,0.0,0.0
+75,"It is never acceptable for protesters to break the law.",2.0,-1.0,0.0,2.0,0.0,0.0,0.0,0.0
+76,"Voting is pointless.",0.0,0.0,0.0,-2.0,0.0,0.0,0.0,0.0
+77,"Atheism should be enforced by the state.",2.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0
+78,"The government should never interfere with religious traditions.",1.0,0.0,0.0,0.0,-2.0,-1.0,0.0,0.0
+79,"The environment cannot accommodate the current human population without a reduction in consumption.",0.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+80,"The consumption of animal products should be phased out due to environmental and ethical concerns.",-2.0,0.0,0.0,0.0,0.0,2.0,-1.0,0.0
+81,"My nation's political system is dysfunctional and must be reformed.",0.0,0.0,0.0,-2.0,0.0,0.0,0.0,0.0
+82,"I support lowering the legal voting age.",-1.0,1.0,0.0,0.0,0.0,2.0,0.0,0.0
+83,"Elections should be publicly funded.",0.0,2.0,0.0,0.0,0.0,0.0,0.0,-2.0
+84,"Universal services or incomes are desirable ways to distribute the productivity of an automated workforce.",0.0,0.0,0.0,0.0,0.0,0.0,-2.0,-2.0
+85,"Government officials should be selected through a democratic process.",-1.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0
+86,"I would rather be ruled by a dictator I agree with than an elected leader I disagree with.",2.0,-2.0,0.0,0.0,0.0,0.0,0.0,0.0
+87,"Justice should be primarily rehabilitative, rather than punitive.",-1.0,0.0,0.0,0.0,0.0,2.0,0.0,0.0
+88,"Sacrifices to living standards should be made if they are necessary to preserve the environment.",1.0,0.0,0.0,0.0,0.0,2.0,2.0,0.0
+89,"Abortion should be encouraged during pregnancies in which genetic illnesses are identified.",1.0,0.0,0.0,0.0,0.0,1.0,-2.0,0.0
+90,"No one chooses their country of birth, so it is foolish to be proud of it.",0.0,0.0,2.0,0.0,0.0,1.0,0.0,0.0
+91,"Diplomacy is a better foreign policy asset than a strong military.",-1.0,0.0,2.0,0.0,0.0,2.0,0.0,0.0
+92,"Globalisation is inevitable. There is no way to reverse modern hyper-connectivity.",0.0,0.0,2.0,0.0,0.0,0.0,-1.0,0.0
+93,"Stereotypical gender roles are justified because they exist due to biological differences.",1.0,0.0,0.0,0.0,0.0,-2.0,0.0,0.0
+94,"To make compromises with your political opponents is to abandon your principles.",0.0,0.0,0.0,-2.0,0.0,0.0,0.0,0.0
+95,"The industrial revolution and its consequences have been a disaster for the human race.",0.0,0.0,0.0,0.0,0.0,0.0,2.0,0.0
+96,"Religious traditions hinder technological and social progress.",0.0,0.0,0.0,0.0,1.0,1.0,-1.0,0.0
+97,"Direct democracy is a superior electoral system to representative democracy.",0.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0
+98,"Religious attire should be required by law.",1.0,0.0,0.0,0.0,-1.0,-1.0,0.0,0.0
+99,"The wealthy should be taxed all of their income in excess of an upper limit.",0.0,0.0,0.0,0.0,0.0,1.0,0.0,-2.0
+100,"Illegal immigrants, who are not political refugees, should be deported without exception.",2.0,0.0,-2.0,0.0,0.0,-1.0,0.0,0.0

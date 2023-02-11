@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<a href="/" class="center-content flex header-link">
+<a href="/" class="center-content flex header-link link">
     <span class="flex">
         <img src="/static/images/logo.svg" class="inline-logo flex"></img>
         <h1 class="header-text flex">8D-PolComp</h1>
@@ -9,11 +9,11 @@
     {% for page, link in {"Home":"index.index", "Test":"test.test", "Data":"data.data"}.items() %}
             {% if request.path == url_for(link) %}
                 <div class="nav-item active-page center-content">
-                    <a href="{{ url_for(link) }}" class="nav-link flex center-content">{{page}}</a>
+                    <a href="{{ url_for(link) }}" class="nav-link flex center-content link">{{page}}</a>
                 </div>
             {% else %}
                 <div class="nav-item center-content">
-                    <a href="{{ url_for(link) }}" class="nav-link flex center-content">{{page}}</a>
+                    <a href="{{ url_for(link) }}" class="nav-link flex center-content link">{{page}}</a>
                 </div>
             {% endif %}
     {% endfor %}
