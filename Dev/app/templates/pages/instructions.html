@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<script>
+    function start_test() {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('test.questions') }}",
+            success: function () {
+                window.location = "/test";
+            }
+        })
+    }
+</script>>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="component">
+    <p style="margin: 0;">Instructions</p>
+</div>
+<div class="component">
+    <p>You will be shown a series of political statements, and your responses to them will be recorded. At the end of the test, your responses will be used to determine your position across eight ideological axes.</p>
+</div>
+<div class="component flex">
+    <button class="button blue-button" onclick="start_test()">Continue</button>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<script type="text/javascript" src="/static/js/questions.js"></script>
+<script type="text/javascript" src="/static/js/test.js" defer></script>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="component">
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</div>
+<div class="component">
+    <p id="question"></p>
+</div>
+<div class="component flex">
+    <button class="button blue-button" onclick="next_question(2)">Strongly Agree</button>
+    <button class="button blue-button" onclick="next_question(1)">Agree</button>
+    <button class="button fade-button" onclick="next_question(0)">Neutral / Not Sure</button>
+    <button class="button green-button" onclick="next_question(-1)">Disagree</button>
+    <button class="button green-button" onclick="next_question(-2)">Strongly Disagree</button>
+    <button class="button grey-button" onclick="prev_question()">Back</button>
+</div>
+{% endblock %}
+

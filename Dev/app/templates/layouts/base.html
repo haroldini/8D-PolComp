@@ -16,15 +16,15 @@
 
         <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
         <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
-        <script data-ad-client="ca-pub-2398051805812434" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <script src="https://www.google.com/recaptcha/api.js"></script>
     </head>
     <body class="center-content">
         <div class="header center-content">
             {% include "layouts/header.html" %}
         </div>
-        <div class="page center-content">
+        <div id="page" class="page center-content">
             {% block CONTENT %}{% endblock %}
         </div>
         <div class="footer center-content">

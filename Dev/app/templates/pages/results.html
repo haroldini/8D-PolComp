@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<script>
+    function restart_test() {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('test.instructions') }}",
+            success: function () {
+                window.location = "/test";
+            }
+        })
+    }
+</script>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="components">
+    <div class="component">
+        <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
+    </div>
+    <div class="component">
+        <p class="text">Click the button below if you'd like to take the test again!</p>
+        <a class="button center-content flex" onclick="restart_test()">Restart Test</a>
+    </div>
+</div>
+<div class="component">
+    <p class="text">Results</p>
+</div>
+
+{% endblock %}
