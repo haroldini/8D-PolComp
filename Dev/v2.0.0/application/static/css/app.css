@@ -52,7 +52,8 @@ form {
     margin-right: 20%;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    min-height: 80vh;
+    min-height: 90vh;
+    min-height: 90svh;
 }
 /* Mobile/small screen support */
 @media only screen and (max-width: 1200px) {
@@ -326,10 +327,12 @@ form {
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 }
 .icon {
     width: auto;
+    border-radius: 4rem;
+    border: 2px solid var(--white);
     min-height: max(15%, 3rem);
     max-height: 5rem;
 }
@@ -353,6 +356,7 @@ form {
 }
 .grey-button {
     width: 50%;
+    max-width: 15rem;
     background: var(--grey) !important;
 }
 .grey-button:hover {

@@ -11,6 +11,8 @@ progress.style.width = (100*qn/questions.length)+"%";
 text.innerText = questions[qn]["text"];
 
 function next_question(answer) {
+
+    // Store answer, display next question
     answers.push({"id": id, "answer": answer});
     if (qn+1 < questions.length) {
         qn += 1;
@@ -18,7 +20,8 @@ function next_question(answer) {
         progress.style.width = (100*qn/questions.length)+"%";
         text.innerText = questions[qn]["text"];
         console.log(answers)
-
+    
+    // Goto results page, pass answers to backend
     } else if (qn+1 == questions.length) {
         $(function () {
             $.ajax({
@@ -39,6 +42,8 @@ function next_question(answer) {
 }
 
 function prev_question() {
+
+    // Return to instructions if on first question
     if (qn == 0) {
         $(function () {
             $.ajax({
@@ -50,12 +55,12 @@ function prev_question() {
             })
         });
 
+    // Return to previous question if not on first question
     } else if (qn < questions.length) {
         qn -= 1;
         id = questions[qn]["id"];
         answers.splice(-1);
         progress.style.width = (100*qn/questions.length)+"%";
         text.innerText = questions[qn]["text"];
-
     }
 }
