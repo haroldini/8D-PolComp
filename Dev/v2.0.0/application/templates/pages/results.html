@@ -3,9 +3,14 @@
     function restart_test() {
         $.ajax({
             type: "POST",
-            url: "{{ url_for('test.instructions') }}",
+            url: "{{ url_for('results.results') }}",
+            contentType:'application/json',
+            data : JSON.stringify({"action": "to_instructions"}),
             success: function () {
-                window.location = "/test";
+                window.location = "/instructions";
+            },
+            error: function(req, err) {
+                console.log("error ", err)
             }
         })
     }
@@ -21,7 +26,7 @@
     </div>
     <div class="component">
         <p class="text">Click the button below if you'd like to take the test again!</p>
-        <a class="button center-content flex" onclick="restart_test()">Restart Test</a>
+        <a class="button center-content flex" href="" onclick="restart_test()">Restart Test</a>
     </div>
 </div>
 <div class="component">

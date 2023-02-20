@@ -3,9 +3,14 @@
     function start_test() {
         $.ajax({
             type: "POST",
-            url: "{{ url_for('test.questions') }}",
+            url: "{{ url_for('instructions.instructions') }}",
+            contentType:'application/json',
+            data : JSON.stringify({"action": "to_test"}),
             success: function () {
                 window.location = "/test";
+            },
+            error: function(req, err) {
+                console.log("error ", err)
             }
         })
     }

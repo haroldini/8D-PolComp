@@ -1,11 +1,11 @@
-from flask import Blueprint, render_template
-from application.controllers import questions
+from flask import Blueprint, render_template, session
 
 v = Blueprint('index', __name__)
 
 @v.route("/", methods=["POST", "GET"])
 def index():
-    print(questions.get_all())
+    session.clear()
+    print(session)
     data = {
         "completed_count": 100,
         "started_count": 200,

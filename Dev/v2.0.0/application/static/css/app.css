@@ -284,6 +284,7 @@ form {
     color: var(--black);
     background: var(--green);
     transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out; 
+    transition: outline-offset 0.1s ease-out
 }
 .button:hover {
     background: var(--blue);
@@ -330,11 +331,18 @@ form {
     justify-content: space-evenly;
 }
 .icon {
+    outline: var(--blue) solid 0px;
+    outline-offset: 0;
     width: auto;
     border-radius: 4rem;
     border: 2px solid var(--white);
     min-height: max(15%, 3rem);
     max-height: 5rem;
+    transition: outline-offset 0.1s ease-out
+}
+.icon:hover{
+    outline: var(--blue) solid 2px;
+    outline-offset: 4px;
 }
 .fade-button {
     background: linear-gradient(180deg, var(--blue), var(--green)) !important;

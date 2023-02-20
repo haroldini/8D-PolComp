@@ -1,14 +1,15 @@
-from sqlalchemy import Column, Numeric, String
+from sqlalchemy import Column, Numeric, String, Integer
 from application import db
 
 class Questions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    dbq_question = db.Column(db.String, nullable=False)
-    dbq_authlib = db.Column(db.Float, nullable=False)
-    dbq_autodemo = db.Column(db.Float, nullable=False)
-    dbq_nationglob = db.Column(db.Float, nullable=False)
-    dbq_modrad = db.Column(db.Float, nullable=False)
-    dbq_theosec = db.Column(db.Float, nullable=False)
-    dbq_tradprog = db.Column(db.Float, nullable=False)
-    dbq_primtrans = db.Column(db.Float, nullable=False)
-    dbq_capsoc = db.Column(db.Float, nullable=False)
+    text = db.Column(db.String, nullable=False)
+    society = db.Column(db.Integer, nullable=False)
+    politics = db.Column(db.Integer, nullable=False)
+    economics = db.Column(db.Integer, nullable=False)
+    state = db.Column(db.Integer, nullable=False)
+    diplomacy = db.Column(db.Integer, nullable=False)
+    government = db.Column(db.Integer, nullable=False)
+    technology = db.Column(db.Integer, nullable=False)
+    religion = db.Column(db.Integer, nullable=False)
+    downvotes = db.Column(db.Integer, nullable=False)

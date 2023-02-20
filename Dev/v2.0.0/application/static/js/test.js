@@ -1,9 +1,11 @@
 
+
 // Access elements
 let text = document.getElementById("question");
 let progress = document.getElementById("progress-bar");
 
 // Initial question
+let questions = $('#texts').data("texts").sort( () => Math.random() - 0.5);
 let qn = 0;
 let answers = [];
 let id = questions[qn]["id"];
@@ -26,15 +28,14 @@ function next_question(answer) {
         $(function () {
             $.ajax({
                 type: "POST",
-                url: "/results",
+                url: "/test",
                 contentType:'application/json',
-                data : JSON.stringify(answers),
+                data : JSON.stringify({"action": "to_results", "answers": answers}),
                 success: function () {
-                    window.location = "/test";
-                    console.log("123")
+                    window.location = "/results";
                 },
                 error: function(req, err) {
-                    console.log("error ", err)
+                    console.log("error: ", err)
                 }
             })
         });
@@ -48,9 +49,14 @@ function prev_question() {
         $(function () {
             $.ajax({
                 type: "POST",
-                url: "/instructions",
+                contentType:'application/json',
+                data : JSON.stringify({"action": "to_instructions"}),
+                url: "/test",
                 success: function () {
-                    window.location = "/test";
+                    window.location = "/instructions";
+                },
+                error: function(req, err) {
+                    console.log("error: ", err)
                 }
             })
         });

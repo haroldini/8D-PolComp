@@ -13,10 +13,12 @@ def create_app():
 
     db.init_app(app)
 
-    with app.app_context():   
-        from application.views import index, test, data
+    with app.app_context():
+        from application.views import index, instructions, test, results, data
         app.register_blueprint(index.v)
+        app.register_blueprint(instructions.v)
         app.register_blueprint(test.v)
+        app.register_blueprint(results.v)
         app.register_blueprint(data.v)
 
     return app
