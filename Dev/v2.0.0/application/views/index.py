@@ -5,7 +5,7 @@ v = Blueprint('index', __name__)
 @v.route("/", methods=["POST", "GET"])
 def index():
     session.clear()
-    print(session)
+
     data = {
         "completed_count": 100,
         "started_count": 200,

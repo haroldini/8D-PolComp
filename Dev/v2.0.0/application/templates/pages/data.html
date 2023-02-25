@@ -1,8 +1,35 @@
 <!DOCTYPE html>
+<script src="/static/js/data.js"></script>
 
 {% extends "layouts/base.html" %}
 
 {% block TITLE %} | Data{% endblock %}
 {% block CONTENT %}
-<p>Page Content</p>
+
+<div class="components">
+    <div class="component table-container">
+        <p class="text text-subtitle">Questions</p>
+            <div class="table-container hidden table-grow" id="questions-div">
+                <table class="questions-table">
+                    <thead>
+                        <tr>
+                            {% for key in ["ID", "Question", "Society", "Politics", "Economics", "State", "Diplomacy", "Government", "Technology", "Religion"] %}
+                            <th scope="col"><button class="table-button">{{key}}</button></th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for question in questions %}
+                        <tr class="row-highlight">
+                            {% for key in ["id", "text", "society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"] %}
+                            <td scope="col">{{question[key]}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        <span class="show-more" id="questions-link"><button class="inline-link large-link link" onclick="show_more('questions')">Show more...</button></span>
+    </div>
+</div>
 {% endblock %}

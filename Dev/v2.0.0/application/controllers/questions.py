@@ -1,8 +1,8 @@
 from application.models.questions import Questions
 
 class QuestionsController:
-    def get_all():
-        return Questions.query.all()
+    def get_all(test=False):
+        return Questions.query.all()[:5] if test else Questions.query.all()
 
     def get_texts(test=False):
         texts = [
@@ -23,11 +23,19 @@ class QuestionsController:
         return downvotes[:5] if test else downvotes
 
     def get_scores(test=False):
-        scores = [
-            {
+        scores = { getattr(question, "id"): {
             axis: getattr(question, axis) for axis in [
-                "id", "society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"
+                "society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"
                 ]
-            } for question in Questions.query.all() 
-        ]
-        return scores[:5] if test else scores
+            } for question in Questions.query.all() }
+        
+        return {k: scores[k] for k in sorted(scores.keys())[:5]} if test else scores
+
+    def get_max_scores():
+        max_scores = {}
+        for q_id, q_scores in QuestionsController.get_scores().items():
+            max_scores[q_id] = { axis: abs(q_score)*2 for axis, q_score in q_scores.items() }   
+        axis_scores = { axis: sum([ v[axis] for v in max_scores.values() ]) for axis in max_scores[1].keys() }
+        return axis_scores
+
+

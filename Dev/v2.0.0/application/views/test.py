@@ -4,6 +4,22 @@ import json
 
 v = Blueprint('test', __name__)
 
+
+def validate_answers(answers):
+    answers = { int(q): int(answer) for q, answer in answers.items() }
+    return answers
+
+def calculate_results(answers):
+
+    scores = Questions.get_scores(test=True)
+    r_scores = {}
+    for q_id, q_scores in scores.items():
+        r_scores[q_id] = { axis: q_score*answers[q_id] for axis, q_score in q_scores.items() }
+    r_sums = { axis: sum([ v[axis] for v in r_scores.values() ]) for axis in r_scores[1].keys() }
+    max_scores = Questions.get_max_scores()
+
+    return { axis: val/max_scores[axis] for axis, val in r_sums.items() }
+
 @v.route("/test", methods=["GET", "POST"])
 def test():
 
@@ -15,16 +31,15 @@ def test():
     
     if request.method == "POST":
         data = request.get_json()
+
         if data["action"] == "to_instructions":
-            # Back button
             session["template"] = "instructions"
             return {"status": "success"}, 200
+
         elif data["action"] == "to_results":
-            # Final question
-            # Insert function to process answers and scores to results
-            scores = Questions.get_scores(test=True)
-            answers = data["answers"]
-            session["results"] = answers
+            answers = validate_answers(data["answers"])
+            results = calculate_results(answers)
+            session["results"] = results
             session["template"] = "results"
             return {"status": "success"}, 200
 

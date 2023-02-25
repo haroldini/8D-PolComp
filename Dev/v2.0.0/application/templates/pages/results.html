@@ -22,7 +22,8 @@
 {% block CONTENT %}
 <div class="components">
     <div class="component">
-        <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
+        <p class="text">Compare your results to others' using 8D-PolComp's data visualisation tool.</p>
+        <a class="button center-content flex" href="/data">Data</a>
     </div>
     <div class="component">
         <p class="text">Click the button below if you'd like to take the test again!</p>
@@ -31,6 +32,7 @@
 </div>
 <div class="component">
     <p class="text">Results</p>
+    <p>{{results}}</p>
 </div>
 
 {% endblock %}

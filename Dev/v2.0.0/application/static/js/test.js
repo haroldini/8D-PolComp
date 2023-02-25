@@ -7,7 +7,7 @@ let progress = document.getElementById("progress-bar");
 // Initial question
 let questions = $('#texts').data("texts").sort( () => Math.random() - 0.5);
 let qn = 0;
-let answers = [];
+let answers = {};
 let id = questions[qn]["id"];
 progress.style.width = (100*qn/questions.length)+"%";
 text.innerText = questions[qn]["text"];
@@ -15,7 +15,7 @@ text.innerText = questions[qn]["text"];
 function next_question(answer) {
 
     // Store answer, display next question
-    answers.push({"id": id, "answer": answer});
+    answers[id] = answer;
     if (qn+1 < questions.length) {
         qn += 1;
         id = questions[qn]["id"];
