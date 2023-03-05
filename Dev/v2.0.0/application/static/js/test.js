@@ -1,5 +1,3 @@
-
-
 // Access elements
 let text = document.getElementById("question");
 let progress = document.getElementById("progress-bar");

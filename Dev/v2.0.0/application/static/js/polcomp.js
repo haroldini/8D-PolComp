@@ -1,29 +1,36 @@
-let vals = $('#results').data("results")
 
+
+let vals = $('#compass-data').data("compass")
 const quadrants = {
     "upper_left": {
-        "x": vals["society"],
-        "y": vals["politics"],
-        "colors": ["#93daf8", "#afafaf", "#afafaf", "#c9e5bd"]
+        "x": "society",
+        "y": "politics",
+        "colors": ["#93daf8", "#afafaf", "#afafaf", "#c9e5bd"],
+        "chart": null,
+        "data": null,
     }, 
     "upper_right": {
-        "x": vals["economics"],
-        "y": vals["state"],
-        "colors": ["#afafaf", "#93daf8", "#c9e5bd", "#afafaf"]
+        "x": "economics",
+        "y": "state",
+        "colors": ["#afafaf", "#93daf8", "#c9e5bd", "#afafaf"],
+        "chart": null,
+        "data": null,
     }, 
     "lower_left": {
-        "x": vals["diplomacy"],
-        "y": vals["government"],
-        "colors": ["#afafaf", "#c9e5bd", "#93daf8", "#afafaf"]
+        "x": "diplomacy",
+        "y": "government",
+        "colors": ["#afafaf", "#c9e5bd", "#93daf8", "#afafaf"],
+        "chart": null,
+        "data": null,
     }, 
     "lower_right": {
-        "x": vals["technology"],
-        "y": vals["religion"],
-        "colors": ["#c9e5bd", "#afafaf", "#afafaf", "#93daf8"]
+        "x": "technology",
+        "y": "religion",
+        "colors": ["#c9e5bd", "#afafaf", "#afafaf", "#93daf8"],
+        "chart": null,
+        "data": null,
     }
 }
-
-
 
 const quadrants_plugin = {
     id: 'quadrants',
@@ -42,80 +49,92 @@ const quadrants_plugin = {
       ctx.fillRect(left, midY, midX - left, bottom - midY);
       ctx.restore();
     }
-  };
+};
 
 for(const quadrant in quadrants) {
-    new Chart(quadrant, {
-        type: "scatter",
-        data: {
-            datasets: [{
-                pointRadius: 4,
-                pointBackgroundColor: "rgba(0,0,255,1)",
-                data: [{x: quadrants[quadrant]["x"], y: quadrants[quadrant]["y"]}],
-                borderWidth: 2,
-                borderWidth: {
-                    bottom: 0,
-                    top: 1,
-                    left: 1,
-                    right: 1
-                }
-          }]
+    let data = {
+        datasets: [{
+            pointRadius: 4,
+            pointBackgroundColor: "rgba(0,0,255,1)",
+            data: [{x: vals[quadrants[quadrant]["x"]], y: vals[quadrants[quadrant]["y"]]}],
+            borderWidth: 2,
+            borderWidth: {
+                bottom: 0,
+                top: 1,
+                left: 1,
+                right: 1
+            }
+        }]
+    }
+    let options = {
+        aspectRatio: 1, 
+        responsive: true,
+        maintainAspectRatio: true,
+        layout: {
+            padding: 0,
+            autoPadding: false,
         },
-        options:{
-            aspectRatio: 1, 
-            responsive: true,
-            maintainAspectRatio: true,
-            layout: {
-                padding: 0,
-                autoPadding: false,
-            },
-            scales:{
-                x: {
+        scales:{
+            x: {
+                display: false,
+                grid: {
+                    drawTicks: false,
                     display: false,
-                    grid: {
-                        drawTicks: false,
-                        display: false,
-                    },
-                    ticks: {
-                        display: false
-                    },
-                    min: -1,
-                    max: 1,
                 },
-                y: {
-                    display: true,
-                    grid: {
-                        drawTicks: false,
-                        display: false
-                      },
-                    ticks: {
-                        display: false
-                    },
-                    min: -1,
-                    max: 1,
-                }
-            },
-            plugins: {
-                quadrants: {
-                  topLeft: quadrants[quadrant]["colors"][0],
-                  topRight: quadrants[quadrant]["colors"][1],
-                  bottomLeft: quadrants[quadrant]["colors"][2],
-                  bottomRight: quadrants[quadrant]["colors"][3],
-                },
-                legend: {
+                ticks: {
                     display: false
-                }
+                },
+                min: -1,
+                max: 1,
+            },
+            y: {
+                display: true,
+                grid: {
+                    drawTicks: false,
+                    display: false
+                  },
+                ticks: {
+                    display: false
+                },
+                min: -1,
+                max: 1,
             }
         },
+        plugins: {
+            quadrants: {
+              topLeft: quadrants[quadrant]["colors"][0],
+              topRight: quadrants[quadrant]["colors"][1],
+              bottomLeft: quadrants[quadrant]["colors"][2],
+              bottomRight: quadrants[quadrant]["colors"][3],
+            },
+            legend: {
+                display: false
+            }
+        }
+    }
+
+    quadrants[quadrant]["chart"] = new Chart(quadrant, {
+        type: "scatter",
+        data: data,
+        options: options,
         plugins: [quadrants_plugin]
     });
+    quadrants[quadrant]["data"] = data
+    quadrants[quadrant]["options"] = options
 }
-
+console.log(quadrants)
 function save_image(div_id) {
-    var element = document.getElementById(div_id);
-    html2canvas(element).then(function(canvas) {
-        canvas.toBlob(function(blob) {
-            window.saveAs(blob, "8dpolcomp.png");
-        });
+    let scale = 10;
+    let domNode = document.getElementById(div_id)
+    domtoimage.toBlob(domNode, {
+        width: domNode.clientWidth * scale,
+        height: domNode.clientHeight * scale,
+        style: {
+        transform: 'scale('+scale+')',
+        transformOrigin: 'top left'
+        }
+    })
+    .then(function (blob) {
+        window.saveAs(blob, '8dpolcomp.png');
     });
 }

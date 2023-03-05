@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+
+<meta id="compass-data" data-compass='{
+    "diplomacy": 0,
+    "economics": 0,
+    "government": -0.02631578947368421,
+    "politics": 0,
+    "religion": -0.13333333333333333,
+    "society": -0.03278688524590164,
+    "state": 0.024691358024691357,
+    "technology": 0
+}'>
+
 <script src="/static/js/ui.js"></script>
 
 {% extends "layouts/base.html" %}
@@ -25,16 +37,16 @@
 <p class="text text-subtitle">Sample Compasses</p>
 <div class="components">
     <div class="component compass-container">
-        <img src="/static/images/samples/compasses/recent.png" class="wrapped compass"></img>
+        {% include "components/compass.html" %}
     </div>
     <div class="component icons">
-        <img src="/static/images/samples/icons/chomsky.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/gandhi.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/hitler.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/rand.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/reagan.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/stalin.png" class="wrapped icon"></img>
-        <img src="/static/images/samples/icons/recent.png" class="wrapped icon"></img>
+        <button onclick="update_chart_data('chomsky')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/chomsky.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('gandhi')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/gandhi.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('hitler')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/hitler.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('rand')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/rand.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('reagan')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/reagan.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('stalin')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/stalin.png" class="wrapped icon"></button>
+        <button onclick="update_chart_data('recent')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/recent.png" class="wrapped icon"></button>
     </div>
 </div>
 <p class="text text-subtitle">The Axes</p>
@@ -131,4 +143,7 @@
         </div>
     </div>
 </div>
+
+<script src="/static/js/index.js"></script>
+
 {% endblock %}
