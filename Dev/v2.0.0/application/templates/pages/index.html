@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<script src="/static/js/index.js"></script>
+<script src="/static/js/ui.js"></script>
 
 {% extends "layouts/base.html" %}
 
@@ -9,12 +9,12 @@
     <div class="component">
         <p class="text">8D-PolComp is a political model which places you on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
         <p class="text">Alternatively, continue reading to learn more about the test.</p>
-        <a class="button center-content flex" href="/test">Take the Test</a>
+        <a class="button center-content flex" href="/test"><i class="fa-solid fa-right-long"></i>Take the Test</a>
     </div>
     <div class="component">
         <p class="text">With permission, {{data["recorded_count"]}} participants' results have been recorded with some optional demographics, such as nationality, age, as well as their political affiliations.</p>
         <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
-        <a class="button center-content flex" href="/data">Data</a>
+        <a class="button center-content flex" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
     <div class="component">
     </div>

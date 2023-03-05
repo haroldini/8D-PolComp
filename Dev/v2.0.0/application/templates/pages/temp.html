@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<meta id="results" data-results="{{ results }}">
+<script>
+    function restart_test() {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('results.results') }}",
+            contentType:'application/json',
+            data : JSON.stringify({"action": "to_instructions"}),
+            success: function () {
+                window.location = "/instructions";
+            },
+            error: function(req, err) {
+                console.log("error ", err)
+            }
+        })
+    }
+</script>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="components">
+    <div class="component">
+        <p class="text">Compare your results to others' using 8D-PolComp's data visualisation tool.</p>
+        <a class="button center-content flex" href="/data"><i class="fa-solid fa-table"></i>Data</a>
+    </div>
+    <div class="component">
+        <p class="text">Click the button below if you'd like to take the test again!</p>
+        <a class="button center-content flex" href="" onclick="restart_test()"><i class="fa-solid fa-rotate"></i>Restart Test</a>
+    </div>
+</div>
+<div class="component">
+    <div id="results_compass">
+        <p class="text text-subtitle">Your Results</p>
+        <div class="quadrant-container">
+            <div class="compass-columns">
+                <div class="vertical-label-container">
+                    <p class="vertical-label left">Conservatism</p>
+                    <p class="vertical-label right">Progressivism</p>
+                    <p class="vertical-label left">Socialism</p>
+                    <p class="vertical-label right">Capitalism</p>
+                </div>
+                <div>
+                    <div class="horizontal-label-container">
+                        <p class="horizontal-label left">Conservatism</p>
+                        <p class="horizontal-label right">Progressivism</p>
+                        <p class="horizontal-label left">Socialism</p>
+                        <p class="horizontal-label right">Capitalism</p>
+                    </div>
+                    <div style="display: inline-block;">
+                        <div class="quadrant">
+                            <canvas class="quadrant-canvas" id="upper_left"></canvas>
+                        </div>
+                        <div class="quadrant">
+                            <canvas class="quadrant-canvas" id="upper_right"></canvas>
+                        </div>
+                        <div class="quadrant">
+                            <canvas class="quadrant-canvas" id="lower_left"></canvas>
+                        </div>
+                        <div class="quadrant">
+                            <canvas class="quadrant-canvas" id="lower_right"></canvas>
+                        </div>
+                    </div>
+                    <div class="horizontal-label-container">
+                        <p class="horizontal-label left">Nationalism</p>
+                        <p class="horizontal-label right">Cosmopolitanism</p>
+                        <p class="horizontal-label left">Transhumanism</p>
+                        <p class="horizontal-label right">Primitivism</p>
+                    </div>
+                </div>
+                <div class="vertical-label-container">
+                    <p class="vertical-label left">Conservatism</p>
+                    <p class="vertical-label right">Progressivism</p>
+                    <p class="vertical-label left">Socialism</p>
+                    <p class="vertical-label right">Capitalism</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="button grey-button" onclick="save_image('results_compass')"><i class="fa-solid fa-arrow-down"></i>Save</button>
+</div>
+<script src="/static/js/polcomp.js"></script>
+{% endblock %}

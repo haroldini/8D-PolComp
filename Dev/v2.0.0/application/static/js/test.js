@@ -6,6 +6,7 @@ let progress = document.getElementById("progress-bar");
 
 // Initial question
 let questions = $('#texts').data("texts").sort( () => Math.random() - 0.5);
+console.log(questions)
 let qn = 0;
 let answers = {};
 let id = questions[qn]["id"];

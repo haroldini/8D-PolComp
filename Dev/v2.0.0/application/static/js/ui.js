@@ -2,7 +2,6 @@ function show_more(target) {
     const div = document.getElementById(target+"-div")
     const link = document.getElementById(target+"-link")
 
-
     if(div.classList.contains("hidden")) {
         div.classList.remove("hidden")
         div.style.maxHeight = div.scrollHeight+"px"

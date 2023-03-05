@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+
+<meta id="results" data-results="{{ results }}">
 <script>
     function restart_test() {
         $.ajax({
@@ -23,16 +25,48 @@
 <div class="components">
     <div class="component">
         <p class="text">Compare your results to others' using 8D-PolComp's data visualisation tool.</p>
-        <a class="button center-content flex" href="/data">Data</a>
+        <a class="button center-content flex" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
     <div class="component">
         <p class="text">Click the button below if you'd like to take the test again!</p>
-        <a class="button center-content flex" href="" onclick="restart_test()">Restart Test</a>
+        <a class="button center-content flex" href="" onclick="restart_test()"><i class="fa-solid fa-rotate"></i>Restart Test</a>
     </div>
 </div>
 <div class="component">
-    <p class="text">Results</p>
-    <p>{{results}}</p>
+    <div id="results_compass">
+        <p class="text text-subtitle">Your Results</p>
+        <div class="compass">
+            <div class="div1 quadrant">
+                <canvas class="quadrant-canvas" id="upper_left"></canvas>
+            </div>
+            <div class="div2 quadrant">
+                <canvas class="quadrant-canvas" id="upper_right"></canvas>
+            </div>
+            <div class="div3 quadrant">
+                <canvas class="quadrant-canvas" id="lower_left"></canvas>
+            </div>
+            <div class="div4 quadrant">
+                <canvas class="quadrant-canvas" id="lower_right"></canvas>
+            </div>
+            <div class="div5 label left">Conservatism</div>
+            <div class="div6 label right">Progressivism</div>
+            <div class="div7 label left">Socialism</div>
+            <div class="div8 label right">Capitalism</div>
+            <div class="div9 label right"><div class="v9">Moderatism</div></div>
+            <div class="div10 label left"><div class="v10">Radicalism</div></div>
+            <div class="div11 label right"><div class="v11">Authority</div></div>
+            <div class="div12 label left"><div class="v12">Liberty</div></div>
+            <div class="div13 label right"><div class="v13">Democracy</div></div>
+            <div class="div14 label left"><div class="v14">Autocracy</div></div>
+            <div class="div15 label right"><div class="v15">Secularism</div></div>
+            <div class="div16 label left"><div class="v16">Theocracy</div></div>
+            <div class="div17 label">Nationalism</div>
+            <div class="div18 label">Cosmopolitanism</div>
+            <div class="div19 label">Transhumanism</div>
+            <div class="div20 label">Primitivism</div>
+        </div>
+    </div>
+    <button class="button grey-button" onclick="save_image('results_compass')"><i class="fa-solid fa-arrow-down"></i>Save</button>
 </div>
-
+<script src="/static/js/polcomp.js"></script>
 {% endblock %}

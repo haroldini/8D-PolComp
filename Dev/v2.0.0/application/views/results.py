@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for
 from application.controllers.questions import QuestionsController as Questions
+import json
 
 v = Blueprint('results', __name__)
 
@@ -19,4 +20,4 @@ def results():
         return {"status": "success"}, 200
 
     print("TEMPLATE: ", session["template"])
-    return render_template(f"pages/{session['template']}.html", results=session["results"])
+    return render_template(f"pages/{session['template']}.html", results=json.dumps(session["results"]))
