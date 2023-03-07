@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 
-<meta id="compass-data" data-compass='{
-    "diplomacy": 0,
-    "economics": 0,
-    "government": -0.02631578947368421,
-    "politics": 0,
-    "religion": -0.13333333333333333,
-    "society": -0.03278688524590164,
-    "state": 0.024691358024691357,
-    "technology": 0
-}'>
+<meta id="compass-data" data-compass='{{ data["recent"] }}'>
 
 <script src="/static/js/ui.js"></script>
 
@@ -17,41 +8,41 @@
 
 {% block TITLE %}{% endblock %}
 {% block CONTENT %}
-<div class="components">
-    <div class="component">
-        <p class="text">8D-PolComp is a political model which places you on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
-        <p class="text">Alternatively, continue reading to learn more about the test.</p>
+<div class="components-50-50">
+    <div class="component-border component">
+        <p class="text">8D-PolComp is a political data collection app that places users on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
+        <p class="text">Alternatively, continue reading to learn more.</p>
         <a class="button center-content flex" href="/test"><i class="fa-solid fa-right-long"></i>Take the Test</a>
     </div>
-    <div class="component">
-        <p class="text">With permission, {{data["recorded_count"]}} participants' results have been recorded with some optional demographics, such as nationality, age, as well as their political affiliations.</p>
+    <div class="component-border component">
+        <p class="text">8D-PolComp has recorded the ideological results of {{data["recorded_count"]}} test participants. Some users choose to provide demographic information too, such as nationality, age, as well as their political affiliations.</p>
         <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
         <a class="button center-content flex" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
-    <div class="component">
+    <div class="component-border component">
     </div>
-    <div class="component">
+    <div class="component-border component">
         <p class="text">All political tests are subject to bias, including 8D-PolComp. It may be more useful to compare your results to those of other participants, rather than relative to the axes the test places you on. You can do this on the <span class="inline-link"><a href="/data" class="link">Data</a></span> page.</p>
     </div>
 </div>
 <p class="text text-subtitle">Sample Compasses</p>
-<div class="components">
-    <div class="component compass-container">
+<div class="components-80-20 si-container">
+    <div class="component-border component sample-container">
         {% include "components/compass.html" %}
     </div>
-    <div class="component icons">
-        <button onclick="update_chart_data('chomsky')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/chomsky.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('gandhi')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/gandhi.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('hitler')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/hitler.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('rand')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/rand.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('reagan')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/reagan.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('stalin')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/stalin.png" class="wrapped icon"></button>
-        <button onclick="update_chart_data('recent')" style="all: unset;cursor: pointer;"><img src="/static/images/samples/icons/recent.png" class="wrapped icon"></button>
+    <div class="component-border component icon-container">
+        <button onmouseover="update_chart_data(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
+        <button onmouseover="update_chart_data(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
+        <button onmouseover="update_chart_data(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>
+        <button onmouseover="update_chart_data(event, 'rand')" class="icon-button" style="background-image: url('/static/images/samples/icons/rand.png');"></button>
+        <button onmouseover="update_chart_data(event, 'reagan')" class="icon-button" style="background-image: url('/static/images/samples/icons/reagan.png');"></button>
+        <button onmouseover="update_chart_data(event, 'stalin')" class="icon-button" style="background-image: url('/static/images/samples/icons/stalin.png');"></button>
+        <button onmouseover="update_chart_data(event, 'recent')" class="icon-button icon-selected" style="background-image: url('/static/images/samples/icons/recent.png');"></button>
     </div>
 </div>
 <p class="text text-subtitle">The Axes</p>
-<div class="components">
-    <div class="component">
+<div class="components-50-50">
+    <div class="component-border component">
         <div>
             <p class="text text-subtitle">Upper-Left</p>
             <p class="text">The upper-left compass measures your attitudes towards social and cultural change, and how you believe this change should be politically executed.</p>
@@ -67,7 +58,7 @@
         </div>
         <span class="show-more" id="upper-left-link"><button class="inline-link large-link link" onclick="show_more('upper-left')">Show more...</button></span>
     </div>
-    <div class="component">
+    <div class="component-border component">
         <div>
             <p class="text text-subtitle">Upper-Right</p>
             <p class="text">The upper-right compass is the traditional 2-dimensional political compass you're probably familiar with. It measures your attitudes towards economic policy, as well as state authority and individual liberty.</p>
@@ -84,8 +75,8 @@
         <span class="show-more" id="upper-right-link"><button class="inline-link large-link link"  onclick="show_more('upper-right')">Show more...</button></span>
     </div>
 </div>
-<div class="components">
-    <div class="component">
+<div class="components-50-50">
+    <div class="component-border component">
         <div>
             <p class="text text-subtitle">Lower-Left</p>
             <p class="text">The lower-left compass measures your attitudes towards governmental power distribution, and your nation's relationships with other nations.</p>
@@ -101,7 +92,7 @@
         </div>
         <span class="show-more" id="lower-left-link"><button class="inline-link large-link link" onclick="show_more('lower-left')">Show more...</button></span>
     </div>
-    <div class="component">
+    <div class="component-border component">
         <div>
             <p class="text text-subtitle">Lower-Right</p>
             <p class="text">The lower-right compass measures your attitudes towards science and technological advancement, and the role of religion in government.</p>
@@ -119,8 +110,8 @@
     </div>
 </div>
 <p class="text text-subtitle">Learn More</p>
-<div class="components">
-    <div class="component">
+<div class="components-50-50">
+    <div class="component-border component">
         <p class="text">If you'd like to learn more about your views, check out the Political Compass and 8values at the links below.</p>
         <div class="wrapper">
             <div class="wrapped">
@@ -131,7 +122,7 @@
             </div>
         </div>
     </div>
-    <div class="component">
+    <div class="component-border component">
         <p class="text">If you like 8D-PolComp, please donate to help keep the site running. You can also contact me at the link below if you have any suggestions.</p>
         <div class="wrapper">
             <div class="wrapped">

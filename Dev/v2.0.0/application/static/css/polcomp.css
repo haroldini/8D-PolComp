@@ -2,17 +2,16 @@
     container-type: inline-size;
     align-items: center;
     margin: auto;
-    min-width: 350px;
+    min-width: 250px;
     aspect-ratio: 1;
     width: 100%;
     background-color: var(--black);
-    padding-bottom: 1rem;
+    font-weight: 500;
 }
 .c-grid {
     font-size: min(1.9cqw, 1.9cqh);
     display: grid;
     width: calc(100% - 1rem);
-    padding: 0.5rem;
     justify-content: center;
     vertical-align: middle;
     grid-template-columns: 4% 2% repeat(4, 1fr) 2% 4%;
@@ -20,11 +19,11 @@
     grid-column-gap: 2%;
     grid-row-gap: 2%;
     aspect-ratio: 1;
+    margin: auto;
 }
 .scroll-container {
     width: 100%;
     max-width: min(75vh, 75vw);
-    aspect-ratio: 0.95;
     overflow: auto;
 }
     
@@ -116,4 +115,9 @@
 }
 #lower_right {
     border-bottom-right-radius: 5% ;
+}
+.save-button {
+    width: 50%;
+    font-size: 1.25rem;
+    font-weight: 600;
 }

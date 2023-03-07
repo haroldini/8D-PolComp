@@ -6,17 +6,17 @@
 
 {% block TITLE %} | Test{% endblock %}
 {% block CONTENT %}
-<div class="components">
-    <div class="component">
+<div class="components-50-50">
+    <div class="component-border component">
         <p class="text">Compare your results to others' using 8D-PolComp's data visualisation tool.</p>
         <a class="button center-content flex" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
-    <div class="component">
+    <div class="component-border component">
         <p class="text">Click the button below if you'd like to take the test again!</p>
         <a class="button center-content flex" href="" onclick="restart_test()"><i class="fa-solid fa-rotate"></i>Restart Test</a>
     </div>
 </div>
-<div class="component">
+<div class="component-border component">
     <p class="text text-subtitle">Your Results</p>
     {% include "components/compass.html" %}
 </div>
