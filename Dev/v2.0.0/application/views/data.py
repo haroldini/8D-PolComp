@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+
 from application.controllers.questions import QuestionsController as Questions
 
 v = Blueprint('data', __name__)

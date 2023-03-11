@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for
+
 from application.controllers.questions import QuestionsController as Questions
 
 v = Blueprint('instructions', __name__)

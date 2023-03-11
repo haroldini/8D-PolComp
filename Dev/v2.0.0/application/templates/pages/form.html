@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<script>
+    function goto_results() {
+        let demographics = "123"
+        console.log(demographics)
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: "/form",
+                contentType:'application/json',
+                data : JSON.stringify({"action": "to_results", "demographics": demographics}),
+                success: function () {
+                    window.location = "/results";
+                },
+                error: function(req, err) {
+                    console.log("error: ", err)
+                }
+            })
+        });
+    }
+</script>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="component-border component">
+    <p style="margin: 0;">Results</p>
+</div>
+<div class="component-border component">
+    <p>To improve 8D-PolComp's data, please answer as many of the following optional questions as you wish.</p>
+</div>
+<div class="component-border component flex">
+    <input value="hello">
+    <input value="hello2">
+    <button class="button blue-button" onclick="goto_results()"><i class="fa-solid fa-right-long"></i>Continue</button>
+</div>
+{% endblock %}
+
+

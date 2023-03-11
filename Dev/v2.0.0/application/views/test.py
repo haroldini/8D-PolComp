@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for
-from application.controllers.questions import QuestionsController as Questions
 import json
 
-v = Blueprint('test', __name__)
+from application.controllers.questions import QuestionsController as Questions
+from application.controllers.results import ResultsController as Results
 
+v = Blueprint('test', __name__)
 
 def validate_answers(answers):
     answers = { int(q): int(answer) for q, answer in answers.items() }
     return answers
 
 def calculate_results(answers):
-
     scores = Questions.get_scores(test=True)
     r_scores = {}
     for q_id, q_scores in scores.items():
@@ -18,7 +18,7 @@ def calculate_results(answers):
     r_sums = { axis: sum([ v[axis] for v in r_scores.values() ]) for axis in r_scores[1].keys() }
     max_scores = Questions.get_max_scores()
 
-    return { axis: val/max_scores[axis] for axis, val in r_sums.items() }
+    return { axis: round(val/max_scores[axis], 2) for axis, val in r_sums.items() }
 
 @v.route("/test", methods=["GET", "POST"])
 def test():
@@ -36,11 +36,12 @@ def test():
             session["template"] = "instructions"
             return {"status": "success"}, 200
 
-        elif data["action"] == "to_results":
+        elif data["action"] == "to_form":
             answers = validate_answers(data["answers"])
             results = calculate_results(answers)
+            session["answers"] = answers
             session["results"] = results
-            session["template"] = "results"
+            session["template"] = "form"
             return {"status": "success"}, 200
 
     # Get question texts, pass to front.

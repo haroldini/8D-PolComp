@@ -21,7 +21,6 @@
 }
 
 .table-button:hover {
-    font-weight: bold;
     color: var(--black);
     background: var(--white);
 }
@@ -49,7 +48,6 @@ td {
 .row-highlight:hover {
     background: var(--white);
     color: var(--black);
-    font-weight: bold;
 }
 .table-grow {
     transition: max-height 1s ease;

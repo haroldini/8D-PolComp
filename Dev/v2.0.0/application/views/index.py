@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, session
 import json
 
+from application.controllers.results import ResultsController as Results
+
 v = Blueprint('index', __name__)
 
 @v.route("/", methods=["POST", "GET"])
@@ -20,9 +22,7 @@ def index():
 
     data = {
         "recent": json.dumps(recent),
-        "completed_count": 100,
-        "started_count": 200,
-        "recorded_count": 50,
+        "completed_count": Results.get_count()
     }
     return render_template("pages/index.html", data=data)
 

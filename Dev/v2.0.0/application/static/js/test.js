@@ -22,16 +22,16 @@ function next_question(answer) {
         text.innerText = questions[qn]["text"];
         console.log(answers)
     
-    // Goto results page, pass answers to backend
+    // Goto form page, pass answers to backend
     } else if (qn+1 == questions.length) {
         $(function () {
             $.ajax({
                 type: "POST",
                 url: "/test",
                 contentType:'application/json',
-                data : JSON.stringify({"action": "to_results", "answers": answers}),
+                data : JSON.stringify({"action": "to_form", "answers": answers}),
                 success: function () {
-                    window.location = "/results";
+                    window.location = "/form";
                 },
                 error: function(req, err) {
                     console.log("error: ", err)
@@ -64,7 +64,6 @@ function prev_question() {
     } else if (qn < questions.length) {
         qn -= 1;
         id = questions[qn]["id"];
-        answers.splice(-1);
         progress.style.width = (100*qn/questions.length)+"%";
         text.innerText = questions[qn]["text"];
     }

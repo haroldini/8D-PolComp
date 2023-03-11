@@ -1,4 +1,3 @@
-from sqlalchemy import Column, Numeric, String, Integer
 from application import db
 
 class Questions(db.Model):
