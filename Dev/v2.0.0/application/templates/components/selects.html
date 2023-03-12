@@ -8,32 +8,32 @@
         $('.select-age').select2({
             placeholder: 'Age',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-country').select2({
             placeholder: 'Nationality',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-religion').select2({
             placeholder: 'Religion',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-ethnicity').select2({
             placeholder: 'Ethnicity',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-education').select2({
             placeholder: 'Education',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-party').select2({
             placeholder: 'Party Affiliation',
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: true,
         });
         $('.select-identity').select2({
             placeholder: 'Identities',
@@ -438,6 +438,7 @@
     <select name="party" class="select-party input-box">
         <option></option>
         <option value="Prefer not to say">Prefer not to say</option>
+        <option value="I cannote vote">I cannot vote</option>
         <option value="I do not vote">I do not vote</option>
         <option value="No Party">My party is not here</option>
         <option value="No Country">My country is not here</option>
@@ -634,7 +635,7 @@
     </select>
 </div>
 <div class="input-box">
-    <select name="identity" class="select-identity input-box"  multiple="multiple">
+    <select name="identity" class="select-identity"  multiple="multiple">
         <option value="None">None</option>
         <option value="Centrist">Centrist</option>
         <option value="Liberal">Liberal</option>

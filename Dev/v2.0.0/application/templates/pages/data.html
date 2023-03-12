@@ -8,6 +8,31 @@
 {% block TITLE %} | Data{% endblock %}
 {% block CONTENT %}
 
+<div class="components-25-75">
+    <div class="component-border component" style="justify-content:center">
+        <p class="text text-subtitle">Data Explorer</p>
+        <p class="text">Customise the filters below and click 'Apply Filters' to query 8D-PolComp's database. You can add filtersets to compare different groups.</p>
+        <br>
+        <button class="button blue-button" onclick="add_filterset(event)"><i class="fa-solid fa-play"></i>Apply Filters</button>
+        <button class="button blue-button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filterset</button>
+        <br>
+        <button class="button blue-button" onclick="add_filterset(event)"><i class="fa-solid fa-arrows-left-right"></i>Select X-Axis</button>
+        <button class="button blue-button" onclick="add_filterset(event)"><i class="fa-solid fa-arrows-up-down"></i>Select Y-Axis</button>
+    </div>
+    <div class="component-border component">
+        {% include "components/compass.html" %}
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border component">
+        <div class="">
+        </div>
+        <div class="components-50-50">
+            {% include "components/filterset.html" %}
+            {% include "components/filterset.html" %}
+        </div>
+    </div>
+</div>
 <div class="components-50-50">
     <div class="component-border component table-container">
         <p class="text text-subtitle">Questions</p>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="2000" viewBox="0 0 50 1000">
+
+
+    <defs>
+
+        <marker id="arrowend" viewBox="0 0 13 10" refX="2" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto">
+            <path d="M 0 0  C 0 0, 3 5, 0 10   L 0 10  L 13 5" fill="#f3f3f3"/>
+        </marker>
+
+        <marker id="arrowstart" viewBox="0 0 13 10" refX="11" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto">
+            <path d="M 13 0  C 13 0, 10 5, 13 10   L 13 10  L 0 5" fill="#f3f3f3"/>
+        </marker>
+
+    </defs>
+
+    <line y1="50" x1="25" y2="950" x2="25" stroke="#f3f3f3" stroke-width="15" marker-start="url(#arrowstart)" marker-end="url(#arrowend)"/>
+
+</svg>

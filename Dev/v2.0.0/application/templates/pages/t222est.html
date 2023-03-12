@@ -1,0 +1,33 @@
+<style>
+    .wrapper {
+        display: flex;
+        width: 80%;
+        margin: 1em auto;
+        border: 2px solid red;
+      }
+      .child {
+        flex: 1;
+        border: 2px solid green;
+      }
+      .child:nth-child(2) {
+        position: relative;
+        overflow: auto;
+        /*overflow: hidden; */ /* removed for demo purposes */
+      }
+      .inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+</style>
+<div class="wrapper">
+  <div class="child">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis tenetur, laboriosam! Ab facilis, officia id delectus eaque expedita quia, incidunt eligendi aut, minus temporibus tenetur.</div>
+  <div class="child">
+    <div class="inner">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae molestiae, libero inventore nobis et veritatis, laborum vitae, vel eaque omnis ad adipisci quia velit blanditiis qui. Cum voluptas quisquam itaque possimus accusamus repellendus quia iure
+      asperiores. Unde, rerum nihil maiores nisi, iusto voluptate id cumque incidunt, perspiciatis facilis perferendis explicabo.
+    </div>
+  </div>
+</div>

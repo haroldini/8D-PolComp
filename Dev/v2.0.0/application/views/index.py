@@ -8,6 +8,7 @@ v = Blueprint('index', __name__)
 @v.route("/", methods=["POST", "GET"])
 def index():
     session.clear()
+    print(Results.get_recent_results()[0].demographics)
     
     data = {
         "recent": Results.get_recent_results()[0].scores,

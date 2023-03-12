@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <script>
     function goto_results() {
-        let demographics = "123"
-        console.log(demographics)
         $(function () {
+            let identities = []
+            for (identity of $('.select-identity').select2('data')) {
+                identities.push(identity["id"])
+            }
+            let demographics = {
+                "age": $('.select-age').select2('data')[0]["id"],
+                "country": $('.select-country').select2('data')[0]["id"],
+                "religion": $('.select-religion').select2('data')[0]["id"],
+                "ethnicity": $('.select-ethnicity').select2('data')[0]["id"],
+                "education": $('.select-education').select2('data')[0]["id"],
+                "party": $('.select-party').select2('data')[0]["id"],
+                "identities": identities,
+            }
+            console.log(demographics)
+
             $.ajax({
                 type: "POST",
                 url: "/form",
@@ -16,7 +29,7 @@
                     console.log("error: ", err)
                 }
             })
-        });
+        })
     }
 </script>
 
@@ -28,19 +41,19 @@
     <p style="margin: 0;">Results</p>
 </div>
 <div class="components-50-50">
+    <div class="component-border component">
+        <div style="width: 100%;">
+            {% include "components/selects.html" %}
+        </div>
+    </div>
     <div class="component">
         <div class="component-border" style="height: 100%;">
-            <p class="text">To improve 8D-PolComp's data, please answer as many of the following optional questions as you can.</p>
+            <p class="text">To improve 8D-PolComp's data, please answer as many of these optional questions as you can.</p>
             <p class="text">These questions are completely optional, anonymous, and will not influence your results.</p>
         </div>
         <div class="component-border">
             <button class="button blue-button" onclick="goto_results()"><i class="fa-solid fa-right-long"></i>Save & Continue</button>
             <button class="button grey-button" onclick="goto_results()"><i class="fa-solid fa-face-sad-tear"></i>Skip</button>
-        </div>
-    </div>
-    <div class="component-border component">
-        <div style="width: 100%;">
-            {% include "components/selects.html" %}
         </div>
     </div>
 </div>

@@ -11,7 +11,7 @@
 }
 html {
     scroll-behavior: smooth;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 body {
     position: relative;
@@ -245,7 +245,7 @@ form {
     align-items: center;
     overflow: auto;
 }
-.components-50-50, .components-80-20, .components-75-25 {
+.components-50-50, .components-80-20, .components-25-75 {
     width: 100%;
     display: flex;
     align-items: stretch;
@@ -263,13 +263,13 @@ form {
     flex: 6;
     min-width: 80%;
 }
-.components-75-25 .component:nth-child(even){
+.components-25-75 .component:nth-child(odd){
     flex: 1;
-    min-width: 90px;
+    min-width: 250px;
 }
-.components-75-25 .component:nth-child(odd){
+.components-25-75 .component:nth-child(even){
     flex: 2;
-    min-width: 100px;
+    min-width: 300px;
 }
 
 .text {
@@ -412,12 +412,14 @@ form {
 }
 .blue-button {
     background: var(--blue) !important;
+    transition: opacity 0.15s ease-in-out !important;
 }
 .blue-button:hover {
     opacity: 75%;
 }
 .green-button {
     background: var(--green) !important;
+    transition: opacity 0.15s ease-in-out;
 }
 .green-button:hover {
     opacity: 75%;
@@ -426,6 +428,7 @@ form {
     width: 50%;
     max-width: 15rem;
     background: var(--grey) !important;
+    transition: opacity 0.15s ease-in-out;
 }
 .grey-button:hover {
     opacity: 75%;
@@ -449,6 +452,64 @@ form {
     max-width: 30rem;
     height: auto;
     min-height: 3rem;
+    margin: auto;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0.5rem;
+}
+
+.scroll-second > .component {
+    flex: 1; 
+}
+.scroll-second > .component:nth-child(2) {
+    position: relative;
+    overflow: auto;
+}
+.inner-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 2rem;
+}
+.inner-absolute:nth-last-child(0) {
+    padding-bottom: 10rem;
+    margin-bottom: 10rem;
+}
+.age-box-container {
+    max-width: 30rem;
+    height: auto;
+    min-height: 3rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    padding: 0;
+    margin: auto;
+    display: flex;
+
+}
+.age-box {
+    all: unset;
+    cursor: text;
+    border: none;
+    outline: none;
+    min-height: 100%;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--green);
+    font-weight: 600;
+    color: var(--black);
+}
+.age-box::placeholder {
+    font-weight: 600;
+    color: var(--dark-grey);
+}
+.a-l {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+.a-r {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
 }
