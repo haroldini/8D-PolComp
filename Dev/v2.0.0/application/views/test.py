@@ -45,7 +45,7 @@ def test():
             return {"status": "success"}, 200
 
     # Get question texts, pass to front.
-    texts = json.dumps(Questions.get_texts(test=False))
+    texts = json.dumps(Questions.get_texts(test=True))
 
     session["template"] = "test"
     print("TEMPLATE: ", session["template"])

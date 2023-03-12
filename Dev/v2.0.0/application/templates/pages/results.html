@@ -1,6 +1,23 @@
 <!DOCTYPE html>
-
 <meta id="compass-data" data-compass="{{ results }}">
+<script>
+    function restart_test() {
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: "/results",
+                contentType:'application/json',
+                data : JSON.stringify({"action": "to_instructions"}),
+                success: function () {
+                    window.location = "/instructions";
+                },
+                error: function(req, err) {
+                    console.log("error: ", err)
+                }
+            })
+        });
+    }
+</script>
 
 {% extends "layouts/base.html" %}
 
