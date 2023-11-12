@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<script src="/static/js/data.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css')}}">
+<meta id="compass-data" data-compass='{{ data["compass_datasets"] }}'>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Data{% endblock %}
+{% block CONTENT %}
+
+<div class="component-border component">
+    <div class="components-50-50">
+        <div class="component-border component" style="justify-content: center;">
+            <p class="text text-subtitle fade-border header-underline">Filtersets</p>
+            <p class="text">Customise the filters and click 'Apply Filters' to query 8D-PolComp's database. You can add up to four filtersets to compare different groups.</p>
+            <p class="text">The sampling order, size, and date range can also be changed using the input boxes.</p>
+        </div>
+        <div class="component-border component">
+            <div class="input-box-container" style="width: 100%;">
+                <input type="number" name="sample-size" class="age-box a-l" placeholder="Sampling" value="1000" min="1" max="10000">
+                <div style="width: 50%; height: auto;" class="age-box a-r">
+                    <input type="radio" class="radio-selector" name="sorting" id="random" value="random" checked>
+                    <input type="radio" class="radio-selector a-r" name="sorting" id="recent" value="recent">
+                </div>
+            </div>
+            <div class="input-box-container" style="width: 100%;">
+                <input onclick="this.showPicker()" type="date" name="min-date" class="age-box a-l" value="2023-01-01" min="2023-01-01" max="2030-01-01">
+                <input id="todays-date" onclick="this.showPicker()" type="date" name="max-date" class="age-box a-r" min="2021-01-01">
+            </div>
+            <br>
+            <button id="addfiltersetbtn" class="button blue-button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filterset</button>
+            <button id="rmfiltersetbtn" disabled class="button blue-button disabled" onclick="remove_filterset(event)"><i class="fa-solid fa-minus"></i>Remove Filterset</button>
+            <button id="applyfilters" class="button blue-button" onclick="apply_filters(event)"><i class="fa-solid fa-play"></i>Apply Filters</button>
+        </div>
+    </div>
+    <div class="component-border component" style="overflow: hidden;">
+        <div class="showmore-var filterset-grow" id="filters-div">
+            <div class="filterset-container">
+                <div id="filterset1" class="component-border filterset">
+                    {% with i=1, color="#0db52e" %}
+                        {% include "components/filterset.html" %}
+                    {% endwith %}
+                </div>
+                <div id="filterset2" class="component-border hidden filterset">
+                    {% with i=2, color="#0d56b5" %}
+                        {% include "components/filterset.html" %}
+                    {% endwith %}
+                </div>
+                <div id="filterset3" class="component-border hidden filterset">
+                    {% with i=3, color="#7a0db5" %}
+                        {% include "components/filterset.html" %}
+                    {% endwith %}
+                </div>
+                <div id="filterset4" class="component-border hidden filterset">
+                    {% with i=4, color="#bf2b11" %}
+                        {% include "components/filterset.html" %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        <span class="show-more fade-border" id="filters-link"><button class="inline-link large-link link" onclick="show_more('filters', 'Hide Filters', 'Show Filters')">Show Filters</button></span>
+    </div>
+</div>
+
+<div class="components-50-50">
+    <div class="component-border">
+        <div class="components-25-75" id="results-section">
+            <div class="component-border component" style="justify-content:center">
+                <p class="text text-subtitle fade-border header-underline">Results Explorer</p>
+                <p class="text">This 8D-PolComp shows the scoring of each test result meeting each of your filterset criteria. The filtersets' averages are displayed with larger dots of the same colour.</p>
+                <p class="text">If you've completed the test, your results will also be shown in the chart, marked by four pink dots.</p>
+                <p class="text">Using the histogram below, you can also explore the distribution of scores for each of your filtersets across a specific axis.</p>
+            </div>
+            <div class="component">
+                {% include "components/compass.html" %}
+            </div>
+        </div>
+        {% include "components/histogram.html" %}
+    </div>
+</div>
+
+<div class="components-50-50">
+    <div class="component-border">
+        <div class="components-25-75">
+            <div class="component">              
+                <div class="component-border fill" style="flex-direction: column;">
+                    <p class="text text-subtitle fade-border header-underline">Question Explorer</p>
+                    <p class="text">Select a question from the table below to display how 8D-PolComp users meeting your filter criteria responded to it.</p>
+                    <p class="text">The table also shows the weightings each question is given for each axis.</p>
+                    <br>
+                </div>
+            </div>
+            <div class="component">
+                {% include "components/pie.html" %}
+            </div>
+        </div>
+        <div class="components-50-50">
+            <div class="component-border component table-container">
+                <p class="text text-subtitle">Questions Table</p>
+                <div class="table-container showmore-var table-grow" id="questions-div">
+                    <table id="questions-table" class="questions-table tablesorter">
+                        <thead>
+                            <tr>
+                                {% for key in ["ID", "Question", "Society", "Politics", "Economics", "State", "Diplomacy", "Government", "Technology", "Religion"] %}
+                                    <th scope="col" class="table-button">{{key}}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in data["questions"] %}
+                                <tr id='qid_{{ question["id"] }}' class="row-highlight" onclick="select_table_row(event)">
+                                    {% for key in ["id", "text", "society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"] %}
+                                        <td scope="col">{{question[key]}}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <span class="show-more fade-border" id="questions-link"><button class="inline-link large-link link" onclick="show_more('questions')">Show more...</button></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border">
+        <div class="components-75-25">
+            <div class="component component-border">
+                <div class="legacy-card-container" style="overflow: auto;">
+                    <div class="legacy-card">
+                        <img id="legacy-img" class="legacy-img" style="min-width: 15rem;" src='static/images/legacy-data/2500 Submissions.png'>
+                    </div>
+                </div>
+                <div style="display: flex; width: 100%; padding: 0.5rem;">
+                    <button onclick="change_legacy_card('prev')" style="width: 50%;" class="arrow-btn a-l"><i style="width: 100%; height: 100%;" class="fa-solid fa-arrow-left"></i></button>
+                    <button onclick="change_legacy_card('next')" style="width: 50%;" class="arrow-btn a-r"><i style="width: 100%; height: 100%;" class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                <div class="component-border">
+                    <button class="button blue-button" onclick="get_legacy_data(event.currentTarget)"><i class="fa-solid fa-database"></i><span>Export Legacy Data</span></button>
+                </div>
+            </div>
+            <div class="component component-border" style="justify-content: center;">
+                <p class="text text-subtitle fade-border header-underline">Legacy Data</p>
+                <p class="text">Prior to 8D-PolComp's full rewrite in March 2023, 3,369 submissions were recorded from 6,384 tests completed. This data can be downloaded from the link below.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="component component-border">
+    <a id="download-legacy-csv" style="display: none;"></a>
+    <button class="button blue-button" onclick="get_all_results(event.currentTarget)"><i class="fa-solid fa-database"></i><span>Export All Data</span></button>
+</div>
+{% endblock %}

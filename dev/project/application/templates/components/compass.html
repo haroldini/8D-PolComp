@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
+
+<div class="component-border flex fill">
+    <div class="scroll-container center-content" {% if not is_results_page is defined %} id="compass_save" {% endif %}>
+        <svg id="spinner" width="100%" height="100%" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <rect class="spinner_9y7u" x="0" y="0" rx="0" width="11" height="11" fill="#c9e5bd"/>
+            <rect class="spinner_9y7u spinner_DF2s" x="0" y="0" rx="0" width="11" height="11" fill="#93daf8"/>
+            <rect class="spinner_9y7u spinner_q27e" x="0" y="0" rx="0" width="11" height="11" fill="#afafaf"/>
+        </svg>
+        <div id="polcomp" class="c-container">
+            <div class="c-grid">
+                <div class="c-div1"><canvas class="quadrant-canvas" id="upper_left"></canvas></div>
+                <div class="c-div2"><canvas class="quadrant-canvas" id="upper_right"></canvas></div>
+                <div class="c-div3"><canvas class="quadrant-canvas" id="lower_left"></canvas></div>
+                <div class="c-div4"><canvas class="quadrant-canvas" id="lower_right"></canvas></div>
+                <div class="c-div5 c-img-h"></div>
+                <div class="c-div6 c-img-h"></div>
+                <div class="c-div7 c-img-v"></div>
+                <div class="c-div8 c-img-v"></div>
+                <div class="c-div9 c-img-v"></div>
+                <div class="c-div10 c-img-v"></div>
+                <div class="c-div11 c-img-h"></div>
+                <div class="c-div12 c-img-h"></div>
+                <div class="c-div13 row-text label-left">Conservatism</div>
+                <div class="c-div14 row-text label-right">Progressivism</div>
+                <div class="c-div15 row-text label-left">Socialism</div>
+                <div class="c-div16 row-text label-right">Capitalism</div>
+                <div class="c-div17 col-text label-top">Moderatism</div>
+                <div class="c-div18 col-text label-bottom">Radicalism</div>
+                <div class="c-div19 col-text label-top">Authority</div>
+                <div class="c-div20 col-text label-bottom">Liberty</div>
+                <div class="c-div21 col-text label-top">Democracy</div>
+                <div class="c-div22 col-text label-bottom">Autocracy</div>
+                <div class="c-div23 col-text label-top">Secularism</div>
+                <div class="c-div24 col-text label-bottom">Theocracy</div>
+                <div class="c-div25 row-text label-left">Nationalism</div>
+                <div class="c-div26 row-text label-right">Cosmopolitanism</div>
+                <div class="c-div27 row-text label-left">Transhumanism</div>
+                <div class="c-div28 row-text label-right">Primitivism</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not is_results_page is defined %}
+    <div class="component-border save-btns">
+        <div id="savebtns" class="fill">
+            <button style="margin-right: 1rem;" class="button save-button" onclick="save_image(event.currentTarget, 'compass_save')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+            <button class="button save-button" onclick="export_csv(event.currentTarget)"><i class="fa-solid fa-table"></i><span>Export CSV</span></button>
+            <a id="download-csv" style="display: none;"></a>
+        </div>
+        <div id="statusmsg" class="fill">
+            <p>Loading...</p>
+        </div>
+    </div>
+{% endif %}
+<script src="/static/js/polcomp.js"></script>

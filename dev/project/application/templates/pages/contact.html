@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Contact{% endblock %}
+{% block CONTENT %}
+<div class="component-border component">
+    <p class="text text-subtitle">Donate</p>
+    <div class="component-border component">
+        <p class="text">If you like 8D-PolComp, please donate to help keep the site running :)</p>
+        <a class=" donate-button center-content flex" target="_blank" href="https://www.paypal.com/donate/?hosted_button_id=E7WNDELRDZPZN"><i class="fa-solid fa-heart"></i>Click Here to Donate!</a>
+    </div>
+</div>
+<div class="component-border component">
+    <p class="text text-subtitle">Contact</p>
+    <div class="component-border component">
+        <p class="text">If you have any questions, suggestions, or have any issues with the site, please email me at 8dpolcomp@gmail.com. You can also contact me on Twitter <span class="inline-link"><a class="link" href="https://twitter.com/8dpolcomp">@8DPolComp</a></span>.</p>
+    </div>
+</div>
+{% endblock %}
+

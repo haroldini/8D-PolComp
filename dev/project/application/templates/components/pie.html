@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
+
+<div class="component-border">
+    <div class="fill pie-container">
+        <p class="text fade-border header-underline" style="min-height: 6rem;" id="question_text"></p>
+        <div style="width: 100%; height: 100%;" id="save_pie">
+            <canvas id="pie-canvas"></canvas>
+        </div>
+        <div style="display: flex; width: 100%; margin-top: 1rem;">
+            <button class="arrow-btn a-l" style="width: 50%;"><i class="fa-solid fa-arrow-left" style="width: 100%; height: 100%;" onclick="change_selected_question('prev')"></i></button>
+            <button class="arrow-btn a-r" style="width: 50%;"><i class="fa-solid fa-arrow-right" style="width: 100%; height: 100%;" onclick="change_selected_question('next')"></i></button>
+        </div>
+    </div>
+</div>
+<div class="component-border save-btns">
+    <div id="savebtns" class="fill">
+        <button class="button save-button" onclick="save_image(event.currentTarget, 'save_pie')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+    </div>
+</div>
+
+<script src="/static/js/pie.js"></script>

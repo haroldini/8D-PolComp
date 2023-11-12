@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<meta id="compass-data" data-compass='{{ data["compass_datasets"] }}'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %}{% endblock %}
+{% block CONTENT %}
+<div class="components-50-50">
+    <div class="component-border component">
+        <p class="text">8D-PolComp is a political test and data collection app that places users on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
+        <p class="text">Alternatively, continue reading to learn more.</p>
+        <a class="button center-content flex blue-button" href="/test"><i class="fa-solid fa-right-long"></i>Take the Test</a>
+    </div>
+    <div class="component-border component">
+        <p class="text">Some users choose to submit additional data with their results, such as their nationality, age, as well as their political affiliations.</p>
+        <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
+        <a class="button center-content flex blue-button" href="/data"><i class="fa-solid fa-chart-simple"></i>Data</a>
+    </div>
+    <div class="component-border component">
+        <p class="text">If you like 8D-PolComp, consider donating to help keep the site running. You can also contact me at the link below if you have any suggestions.</p>
+        <div class="wrapper">
+            <div class="wrapped">
+                <a class="button center-content flex" href="/contact"><i class="fa-solid fa-circle-dollar-to-slot"></i>Donate</a>
+            </div>
+            <div class="wrapped">
+                <a class="button center-content flex" href="/contact"><i class="fa-solid fa-envelope"></i>Contact</a>
+            </div>
+        </div>
+    </div>
+    <div class="component-border component" style="justify-content: center;">
+        <p class="text">All political tests are subject to bias, including 8D-PolComp. It may be more useful to compare your results to those of other participants, rather than relative to the axes the test places you on. You can do this on the <span class="inline-link"><a href="/data" class="link">Data</a></span> page.</p>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border">
+        <p class="text text-subtitle">Sample Compasses</p>
+        <div class="components-80-20">
+            <div class="component">
+                {% include "components/compass.html" %}
+            </div>
+            <div class="component-border component icon-container">
+                <button onmouseover="update_index_chart(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
+                <button onmouseover="update_index_chart(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
+                <button onmouseover="update_index_chart(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>
+                <button onmouseover="update_index_chart(event, 'rand')" class="icon-button" style="background-image: url('/static/images/samples/icons/rand.png');"></button>
+                <button onmouseover="update_index_chart(event, 'reagan')" class="icon-button" style="background-image: url('/static/images/samples/icons/reagan.png');"></button>
+                <button onmouseover="update_index_chart(event, 'stalin')" class="icon-button" style="background-image: url('/static/images/samples/icons/stalin.png');"></button>
+                <button onmouseover="update_index_chart(event, 'recent')" class="icon-button icon-selected" style="background-image: url('/static/images/samples/icons/recent.png');"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border">
+        <p class="text text-subtitle">The Axes</p>
+        <div class="components-50-50">
+            <div class="component-border component">
+                <div class="show-more-header">
+                    <p class="text text-subtitle">Upper-Left</p>
+                    <p class="text">The upper-left compass measures your attitudes towards social and cultural change, and how you believe this change should be politically executed.</p>
+                </div>
+                <div class="quadrant-sample">
+                    <div class="s-grid tl-grid">
+                        <div class="tl-div1"><canvas class="quadrant-canvas s-sample" id="upper_left_sample"></canvas></div>
+                        <div class="tl-div1"> </div>
+                        <div class="tl-div2 c-img-h"> </div>
+                        <div class="tl-div3 c-img-v"> </div>
+                        <div class="tl-div4 row-text label-left">Conservatism</div>
+                        <div class="tl-div5 row-text label-right">Progressivism</div>
+                        <div class="tl-div6 col-text label-top">Moderatism</div>
+                        <div class="tl-div7 col-text label-bottom">Radicalism</div>
+                    </div>
+                </div>
+                <div class="showmore-var grow" id="upper-left-div">
+                    <p class="text text-subtitle">Society</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Conservatism">Conservatism</a></span> is a political and social philosophy promoting traditional social institutions. Adherents of conservatism often oppose modernism and seek a return to traditional values.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Progressivism">Progressivism</a></span> is a political philosophy in support of social reform. Progressives reject traditions and social norms, and seek to change them politically.</p>
+                    <p class="text text-subtitle">Politics</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Political_moderate">Moderatism</a></span> designates a rejection of radical or extreme views. A moderate is considered someone occupying any mainstream position avoiding extreme views and major social change.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Radical_politics">Radicalism</a></span> denotes the intent to transform or replace the fundamental principles of a society or political system, often through social change, structural change, revolution or radical reform. The process of adopting radical views is termed radicalisation.</p>
+                </div>
+                <span class="show-more fade-border" id="upper-left-link"><button class="inline-link large-link link" onclick="show_more('upper-left')">Show more...</button></span>
+            </div>
+            <div class="component-border component"> 
+                <div class="show-more-header">
+                    <p class="text text-subtitle">Upper-Right</p>
+                    <p class="text">The upper-right compass is the traditional 2-dimensional political compass you're probably familiar with. It measures your attitudes towards economic policy, as well as state authority and individual liberty.</p>
+                </div>
+                <div class="quadrant-sample">
+                    <div class="s-grid tr-grid">
+                        <div class="tr-div1"><canvas class="quadrant-canvas s-sample" id="upper_right_sample"></canvas></div>
+                        <div class="tr-div1"> </div>
+                        <div class="tr-div2 c-img-h"> </div>
+                        <div class="tr-div3 c-img-v"> </div>
+                        <div class="tr-div4 row-text label-left">Socialism</div>
+                        <div class="tr-div5 row-text label-right">Capitalism</div>
+                        <div class="tr-div6 col-text label-top">Authority</div>
+                        <div class="tr-div7 col-text label-bottom">Liberty</div>
+                    </div>
+                </div>
+                <div class="showmore-var grow" id="upper-right-div">
+                    <p class="text text-subtitle">Economics</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Capitalism">Capitalism</a></span> is an economic system based on the private ownership of the means of production and their operation for profit. Central characteristics of capitalism include capital accumulation, competitive markets, a price system, and private property.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Socialism">Socialism</a></span> is an economic philosophy characterised by social ownership of the means of production. Social ownership can be public, collective, cooperative, or of equity.</p>
+                    <p class="text text-subtitle">State</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Authoritarianism">Authoritarianism</a></span> is an embrace of unregulated exercise of political power. Authoritarians often arbitrarily deprive the public, especilly minorities, of civil liberties, and have little tolerance for meaningful opposition.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Libertarianism">Libertarians</a></span> advocate being free within society from control or oppressive restrictions imposed by authority on one's way of life, behaviour, or political views.</p>
+                </div>
+                <span class="show-more fade-border" id="upper-right-link"><button class="inline-link large-link link"  onclick="show_more('upper-right')">Show more...</button></span>
+            </div>
+        </div>
+        <div class="components-50-50">
+            <div class="component-border component">
+                <div class="show-more-header">
+                    <p class="text text-subtitle">Lower-Left</p>
+                    <p class="text">The lower-left compass measures your attitudes towards governmental power distribution, and your nation's relationships with other nations.</p>
+                </div>
+                <div class="quadrant-sample">
+                    <div class="s-grid bl-grid">
+                        <div class="bl-div1"><canvas class="quadrant-canvas s-sample" id="lower_left_sample"></canvas></div>
+                        <div class="bl-div1"> </div>
+                        <div class="bl-div2 c-img-h"> </div>
+                        <div class="bl-div3 c-img-v"> </div>
+                        <div class="bl-div4 row-text label-left">Nationalism</div>
+                        <div class="bl-div5 row-text label-right">Cosmopolitanism</div>
+                        <div class="bl-div6 col-text label-top">Democracy</div>
+                        <div class="bl-div7 col-text label-bottom">Autocracy</div>
+                    </div>
+                </div>
+                <div class="showmore-var grow" id="lower-left-div">
+                    <p class="text text-subtitle">Diplomacy</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Nationalism">Nationalism</a></span> holds that each nation should govern itself, free from outside interference. It further aims to build and maintain a single national identity, based on shared social characteristics of culture, ethnicity, geographic location, language, politics, religion, and traditions. Nationalists often oppose oppose immigration, and believe their nation (and people) to be superior to others.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Cosmopolitanism">Cosmopolitanism</a></span> can be defined as a global politics that, firstly, projects a sociality of common political engagement among all human beings across the globe, and, secondly, suggests that this sociality should be either ethically or organizationally privileged over other forms of sociality.</p>
+                    <p class="text text-subtitle">Government</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Autocracy">Autocracy</a></span> is a system of government in which supreme power over a state is concentrated in the hands of one person, whose decisions are subject to neither external legal restraints nor regularized mechanisms of popular control. It is the polar opposite to democracy.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Democracy">Democracy</a></span> is a form of government in which the people have the authority to choose their governing legislators. Cornerstones include freedom of assembly and speech, inclusiveness and equality, membership, consent, voting, right to life and minority rights. The greater the public participation in politics, the more democratic the society.</p>
+                </div>
+                <span class="show-more fade-border" id="lower-left-link"><button class="inline-link large-link link" onclick="show_more('lower-left')">Show more...</button></span>
+            </div>
+            <div class="component-border component">
+                <div class="show-more-header">
+                    <p class="text text-subtitle">Lower-Right</p>
+                    <p class="text">The lower-right compass measures your attitudes towards science and technological advancement, and the role of religion in government.</p>       
+                </div>
+                <div class="quadrant-sample">
+                    <div class="s-grid br-grid">
+                        <div class="br-div1"><canvas class="quadrant-canvas s-sample" id="lower_right_sample"></canvas></div>
+                        <div class="br-div1"> </div>
+                        <div class="br-div2 c-img-h"> </div>
+                        <div class="br-div3 c-img-v"> </div>
+                        <div class="br-div4 row-text label-left">Transhumanism</div>
+                        <div class="br-div5 row-text label-right">Primitivism</div>
+                        <div class="br-div6 col-text label-top">Secularism</div>
+                        <div class="br-div7 col-text label-bottom">Theocracy</div>
+                    </div>
+                </div>
+                <div class="showmore-var grow" id="lower-right-div">
+                    <p class="text text-subtitle">Technology</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Primitivism">Primitivism</a></span> is an ideology that advocates for returning to a primitive lifestyle or a pre-industrial lifestyle. They are opposed to technology during and after the Industrial revolution. Primitivists believe alienation from nature to be the root cause of many societal ills.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Transhumanism">Transhumanism</a></span> is a philosophical movement, the proponents of which advocate and predict the enhancement of the human condition by developing and making widely available sophisticated technologies able to greatly enhance longevity, mood and cognitive abilities. Transhumanists support technological growth and believe it will bring a better life for all humans.</p>
+                    <p class="text text-subtitle">Religion</p>
+                    <p class="text"><span class="inline-link"><a class="link" href="https://en.wikipedia.org/wiki/Theocracy">Theocracy</a></span> is a form of government in which a deity of some type is recognized as the supreme ruling authority, giving divine guidance to human intermediaries that manage the day-to-day affairs of the government. Theocrats believe their faith should be the divine rule of the land, and have little tolerance for other religions.</p>
+                    <p class="text"><span class="inline-link green"><a class="link" href="https://en.wikipedia.org/wiki/Secularism">Secularism</a></span> is most commonly defined as the separation of religion from civic affairs and the state, and may be broadened to a similar position concerning the need to suppress religion in any public sphere. Secularists believe all religions should be treated equally by government, that is, no religion should have any influence in governance.</p>
+                </div>
+                <span class="show-more fade-border" id="lower-right-link"><button class="inline-link large-link link" onclick="show_more('lower-right')">Show more...</button></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border component">
+        <p class="text text-subtitle">Learn More</p>
+        <div class="component-border">
+            <p class="text">If you'd like to learn more about your views, check out the Political Compass and 8values at the links below.</p>
+            <div class="wrapper">
+                <div class="wrapped">
+                    <a class="button center-content flex" href='https://www.politicalcompass.org/'>Political Compass</a>
+                </div>
+                <div class="wrapped">
+                <a class="button center-content flex" href='https://8values.github.io/'>8values</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script src="/static/js/index.js"></script>
+
+{% endblock %}

@@ -1,0 +1,102 @@
+{
+    "Right-Wing": {
+        "state": 0.03,
+        "society": -0.24,
+        "politics": -0.11,
+        "religion": -0.14,
+        "diplomacy": -0.3,
+        "economics": 0.18,
+        "government": 0.03,
+        "technology": 0.04
+    },
+    "Left-Wing": {
+        "state": -0.38,
+        "society": 0.42,
+        "politics": -0.35,
+        "religion": 0.51,
+        "diplomacy": 0.35,
+        "economics": -0.56,
+        "government": 0.41,
+        "technology": -0.16
+    },
+    "Conservative": {
+        "state": 0.06,
+        "society": -0.27,
+        "politics": 0.0,
+        "religion": -0.12,
+        "diplomacy": -0.32,
+        "economics": 0.03,
+        "government": 0.03,
+        "technology": 0.05
+    },
+    "Progressive": {
+        "state": -0.38,
+        "society": 0.41,
+        "politics": -0.26,
+        "religion": 0.52,
+        "diplomacy": 0.32,
+        "economics": -0.44,
+        "government": 0.39,
+        "technology": -0.19
+    },
+    "Libertarian": {
+        "state": -0.35,
+        "society": 0.21,
+        "politics": -0.19,
+        "religion": 0.31,
+        "diplomacy": 0.11,
+        "economics": 0.08,
+        "government": 0.37,
+        "technology": -0.04
+    },
+    "Nationalist": {
+        "state": 0.06,
+        "society": -0.21,
+        "politics": -0.21,
+        "religion": -0.02,
+        "diplomacy": -0.39,
+        "economics": -0.03,
+        "government": -0.02,
+        "technology": 0.0
+    },
+    "Democratic Socialist": {
+        "state": -0.39,
+        "society": 0.41,
+        "politics": -0.26,
+        "religion": 0.52,
+        "diplomacy": 0.37,
+        "economics": -0.58,
+        "government": 0.45,
+        "technology": -0.17
+    },
+    "Communist": {
+        "state": -0.32,
+        "society": 0.37,
+        "politics": -0.57,
+        "religion": 0.48,
+        "diplomacy": 0.3,
+        "economics": -0.71,
+        "government": 0.31,
+        "technology": -0.16
+    },
+    "Antifascist": {
+        "state": -0.47,
+        "society": 0.51,
+        "politics": -0.42,
+        "religion": 0.57,
+        "diplomacy": 0.44,
+        "economics": -0.56,
+        "government": 0.47,
+        "technology": -0.18
+    },
+    "Environmentalist": {
+        "state": -0.41,
+        "society": 0.42,
+        "politics": -0.35,
+        "religion": 0.43,
+        "diplomacy": 0.33,
+        "economics": -0.51,
+        "government": 0.4,
+        "technology": -0.1
+    }
+}

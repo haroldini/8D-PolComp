@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
+
+<div id="demographics-container" style="display:none;">
+    <div class="select-box select-box-super-mini">
+        <select name="age" data-style="select-box select-box-super-mini" data-width="100%" class="selectpicker select-age" data-size="10" title="Age" data-live-search="false">
+            <option value="-1">Prefer not to say</option>
+            {% for age in demo["age"] %}
+                <option value="{{ age }}">{{ age }}</option>
+            {% endfor %}
+            <option value="101">Over 100</option>
+        </select>
+    </div>
+    <div class="select-box select-box-mini">
+        <select name="country" data-style="select-box select-box-mini" data-width="100%" class="selectpicker select-country" data-size="10" title="Country" data-live-search="true">
+            <option value="">Prefer not to say</option>
+            {% for country in demo["country"] %}
+                <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="select-box select-box-super-mini">
+        <select name="education" data-style="select-box select-box-super-mini" data-width="100%" class="selectpicker select-education" data-actions-box="false" data-size="10" title="Education" data-live-search="false">
+            <option value="">Prefer not to say</option>
+            {% for education in demo["education"] %}
+                <option value="{{ education }}">{{ education }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="select-box select-box-super-mini">
+        <select name="ethnicity" data-style="select-box select-box-super-mini" data-width="100%" class="selectpicker select-ethnicity" data-actions-box="false" data-size="10" title="Ethnicity" data-live-search="false">
+            <option value="">Prefer not to say</option>
+            {% for ethnicity in demo["ethnicity"] %}
+                <option value="{{ ethnicity }}">{{ ethnicity }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="select-box select-box-super-mini">
+        <select name="religion" data-style="select-box select-box-super-mini" data-width="100%" class="selectpicker select-religion" data-actions-box="false" data-size="10" title="Religion" data-live-search="false">
+            <option value="">Prefer not to say</option>
+            {% for religion in demo["religion"] %}
+                <option value="{{ religion }}">{{ religion }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div id="identities-container" style="display:block;">
+    <div class="select-box select-box-mini">
+        <select name="party" data-style="select-box select-box-mini" data-width="100%" class="selectpicker select-party" data-actions-box="false" data-size="10" title="Party" data-live-search="true">
+            <option value="">Prefer not to say</option>
+            {% for country, parties in demo["party"].items() %}
+                <optgroup label="{{ country }}">
+                    {% for party in parties %}
+                        <option data-tokens="{{ country }}" value="{{ country }}-{{ party }}">{{ party }}</option>
+                    {% endfor %}
+                </optgroup>
+            {% endfor %}
+        </select>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
+    <div class="select-box select-box-super-mini">
+        <select name="identities" data-style="select-box select-box-super-mini a-l" data-width="100%" class="selectpicker select-identities" data-size="10" title="Identities" data-live-search="false" multiple data-selected-text-format="count > 2">
+            <option value="">Prefer not to say</option>
+            {% for identities in demo["identities"] %}
+            <option value="{{ identities }}">{{ identities }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <b><p class="text blue">You may select multiple identities</p></b>
+</div>

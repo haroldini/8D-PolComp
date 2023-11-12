@@ -1,0 +1,64 @@
+<p class="text text-subtitle fade-border header-underline" style="margin-bottom: 1.5rem;">Filterset {{i}}</p>
+<div class="input-box-container">
+    <input type="number" name="min-age" class="age-box a-l" placeholder="Min Age" min="13" max="100">
+    <input type="number" name="max-age" class="age-box a-r" placeholder="Max Age" min="13" max="100">
+</div>
+<div class="select-box">
+    <select name="country" data-style="select-box" data-width="100%" class="selectpicker select-country" data-actions-box="true" data-size="10" title="Country" data-live-search="true" multiple data-selected-text-format="count > 2">
+        {% for country in demo["country"] %}
+            <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="select-box">
+    <select name="religion" data-style="select-box" data-width="100%" class="selectpicker select-religion" data-actions-box="true" data-size="10" title="Religion" data-live-search="true" multiple data-selected-text-format="count > 2">
+        {% for religion in demo["religion"] %}
+            <option value="{{ religion }}">{{ religion }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="select-box">
+    <select name="ethnicity"  data-style="select-box" data-width="100%" class="selectpicker select-ethnicity" data-actions-box="true" data-size="10" title="Ethnicity" data-live-search="true" multiple data-selected-text-format="count > 2">
+        {% for ethnicity in demo["ethnicity"] %}
+            <option value="{{ ethnicity }}">{{ ethnicity }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="select-box">
+    <select name="education"  data-style="select-box" data-width="100%" class="selectpicker select-education" data-actions-box="true" data-size="10" title="Education" data-live-search="true" multiple data-selected-text-format="count > 2">
+        {% for education in demo["education"] %}
+            <option value="{{ education }}">{{ education }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="select-box">
+    <select name="party" data-style="select-box" data-width="100%" class="selectpicker select-party" data-actions-box="true" data-size="10" title="Party" data-live-search="true" multiple data-selected-text-format="count > 2">
+        {% for country, parties in demo["party"].items() %}
+            <optgroup label="{{ country }}">
+                {% for party in parties %}
+                    <option data-tokens="{{ country }}" value="{{ country }}-{{ party }}">{{ party }}</option>
+                {% endfor %}
+            </optgroup>
+        {% endfor %}
+    </select>
+</div>
+<div class="input-box-container select-box" style="width: 100%;">
+    <div style="width: 75%;" class="age-box a-l">
+        <select name="identities" data-style="select-box a-l" data-width="100%" class="selectpicker select-identities" data-actions-box="true" data-size="10" title="Identities" data-live-search="true" multiple data-selected-text-format="count > 2">
+            {% for identities in demo["identities"] %}
+                <option value="{{ identities }}">{{ identities }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div style="width: 25%; height: auto;" class="age-box a-r">
+        <input style="width: 50% !important;" type="radio" class="radio-selector" name="any-all{{i}}" id="any" value="any" checked>
+        <input style="width: 50% !important;" type="radio" class="radio-selector a-r" name="any-all{{i}}" id="all" value="all">
+    </div>
+</div>
+
+<br>
+<div class="input-box-container blue-button">
+    <label for="color_{{i}}" class="color-box-label" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
+    <input tabindex=0 id="color_{{i}}" class="color-box" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>
+</div>
+<p class="text" style="margin-top: 1rem;"><span id="count_{{i}}" style="font-weight: 600; color: var(--blue);">0</span> Results Found</p>

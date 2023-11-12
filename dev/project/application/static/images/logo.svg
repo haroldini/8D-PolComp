@@ -1,0 +1,21 @@
+
+<svg id="spinner" width="100%" height="100%" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <clipPath id="round-corner-bl">
+            <rect x="0" y="11" width="13" height="13" rx="2" ry="2"/>
+         </clipPath>
+         <clipPath id="round-corner-br">
+            <rect x="11" y="11" width="13" height="13" rx="2" ry="2"/>
+         </clipPath>
+         <clipPath id="round-corner-tr">
+            <rect x="11" y="0" width="13" height="13" rx="2" ry="2"/>
+         </clipPath>
+         <clipPath id="round-corner-tl">
+            <rect x="0" y="0" width="13" height="13" rx="2" ry="2"/>
+         </clipPath>
+    </defs>
+    <rect clip-path="url(#round-corner-bl)" x="0" y="13" width="11" height="11" fill="#c9e5bd"/>
+    <rect clip-path="url(#round-corner-br)" x="13" y="13" width="11" height="11" fill="#afafaf"/>
+    <rect clip-path="url(#round-corner-tr)" x="13" y="0" width="11" height="11" fill="#93daf8"/>
+    <rect clip-path="url(#round-corner-tl)" x="0" y="0" width="11" height="11" fill="#afafaf"/>
+</svg>

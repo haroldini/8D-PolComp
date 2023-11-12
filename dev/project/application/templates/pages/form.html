@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
+
+<script>
+    // Declare order for demographics box cycling
+    let first_box = "identities-container"
+    let current_box = first_box
+    const input_box_order = {
+        "identities-container": "demographics-container",
+        "demographics-container": "end"
+    }
+    // Triggers when save & continue button pressed
+    // Authenticates captcha, takes user to results page
+    function goto_results() {
+
+        // Cycle through boxes
+        let next_box = input_box_order[current_box]
+        if (next_box != "end") {
+            console.log(current_box)
+            document.getElementById(current_box).style.display = "none"
+            document.getElementById(next_box).style.display = "block"
+            
+            // Update the button text on final section
+            current_box = next_box
+            next_box = input_box_order[current_box]
+            if (next_box == "end") {
+                document.getElementById("next-btn-text").innerText = "Save & Continue"
+                document.getElementById("captcha").style.display="flex"
+            }
+        // Goto results page when all boxes complete
+        } else {
+            $(function () {
+                if ($('select[name=age]').val() == 0) {
+                    form_age = -1
+                } else {
+                    form_age = Number($('select[name=age]').val())
+                }
+                let demographics = {
+                    "age": form_age,
+                    "country": $('select[name=country]').val(),
+                    "religion": $('select[name=religion]').val(),
+                    "ethnicity": $('select[name=ethnicity]').val(),
+                    "education": $('select[name=education]').val(),
+                    "party": $('select[name=party]').val(),
+                    "identities": $('select[name=identities]').val(),
+                }
+    
+                $.ajax({
+                    type: "POST",
+                    url: "/form",
+                    contentType:'application/json',
+                    data : JSON.stringify({
+                        "action": "to_results", 
+                        "recaptcha": grecaptcha.getResponse(),
+                        "demographics": demographics,
+                    }),
+                    success: function () {
+                        window.location = "/results";
+                    },
+                    error: function(req, err) {
+                        document.getElementById("recaptcha-status").innerText = req.responseJSON.status
+                    }
+                })
+            })
+        }
+
+    }
+</script>
+
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="component-border">
+    <p class="text text-subtitle">Optional Questions</p>
+    <div class="components-50-50">
+        <div class="component-border component">
+            <div style="width: 100%;">
+                {% include "components/selects.html" %}
+            </div>
+        </div>
+        <div class="component">
+            <div class="component-border" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                <p class="text">To improve 8D-PolComp's data, please answer as many of these questions as you can. They are completely optional, and will not influence your results.</p>
+                <p class="text" style="font-weight: 600">Your responses to the test will be stored in 8D-PolComp's public database, alongside any of these optional questions you choose to answer.</p>
+            </div>
+            <div class="component-border">
+                <div id="captcha" style="display: none; justify-content: center; align-items: center; transform:scale(0.77);" class="g-recaptcha" data-sitekey="{{ site_key }}" data-action="to_results"></div>
+                <p id='recaptcha-status' class="text" style="font-weight: 600; color: salmon; align-self: bottom;"></p>
+                <button class="button blue-button" onclick="goto_results()"><i class="fa-solid fa-right-long"></i><span id="next-btn-text">Next</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/form.js"></script>
+
+{% endblock %}

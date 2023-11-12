@@ -1,0 +1,296 @@
+.radio-selector {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green);
+    color: var(--dark-grey);
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+}
+.radio-selector:focus {
+    text-decoration: solid underline 4px;
+}
+.radio-selector:hover {
+    background: var(--blue);
+}
+.radio-selector:checked {
+    background-color: var(--blue);
+}
+.radio-container {
+    width: 25%;
+    height: 100%;
+}
+#any::after {
+    position: relative;
+    content: "Any";
+    font-size: 0.75rem;
+    left: 0;
+    top: 0;
+}
+#all::after {
+    position: relative;
+    content: "All";
+    font-size: 0.75rem;
+    left: 0;
+    top: 0;
+}
+#random::after {
+    position: relative;
+    content: "Random";
+    font-size: 0.75rem;
+    left: 0;
+    top: 0;
+}
+#recent::after {
+    position: relative;
+    content: "Recent";
+    font-size: 0.75rem;
+    left: 0;
+    top: 0;
+}
+.color-box-label {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+    min-height: 100%;
+    border-radius: 0.25rem;
+    margin: 0;
+    padding: 0;
+    font-weight: 600;
+    color: var(--dark-grey);
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
+}
+.color-box {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+    min-height: 100%;
+    margin: 0;
+    margin-left: 1rem;
+    padding: 0;
+    font-weight: 600;
+    color: var(--dark-grey);
+    transition: background-color 0.2s ease-in-out;
+}
+.color-box-label:focus-within {
+    outline: var(--blue) solid 2px;
+    outline-offset: 4px;
+}
+.input-box-container {
+    max-width: 30rem;
+    height: 3rem;
+    min-height: 3rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0;
+    margin: auto;
+    display: flex;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+.age-box {
+    all: unset;
+    cursor: text;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+    min-height: 100%;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--green);
+    font-weight: 600;
+    color: var(--black);
+    transition: background-color 0.2s ease-in-out;
+}
+.age-box:hover, .age-box:focus {
+    background: var(--blue);
+}
+.age-box::placeholder {
+    font-weight: 600;
+    color: var(--dark-grey);
+}
+.a-l {
+    border-top-left-radius: 0.5rem !important;
+    border-bottom-left-radius: 0.5rem !important;
+}
+.a-r {
+    border-top-right-radius: 0.5rem !important;
+    border-bottom-right-radius: 0.5rem !important;
+}
+.input-box {
+    min-width: 10rem;
+    max-width: 30rem;
+    width: 100%;
+    height: auto;
+    min-height: 3rem;
+    margin: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+.hg-container {
+    height: 24rem;
+    width: 100%;
+}
+.hg-grid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4% 1fr;
+    grid-template-rows: 84% 4% 12%;
+}
+    
+.hg-div1 { grid-area: 1 / 1 / 2 / 4; }
+.hg-div2 { grid-area: 2 / 1 / 3 / 4; }
+.hg-div3 { grid-area: 3 / 1 / 4 / 2; }
+.hg-div4 { grid-area: 3 / 3 / 4 / 4; }
+.hg-div5 { 
+    grid-area: 3 / 1 / 4 / 4; 
+    background: linear-gradient(90deg, var(--blue), var(--green));
+}
+.hg-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#histogram-canvas {
+    max-height: 100%;
+    border-radius: 0.5rem;
+}
+.pie-container {
+    max-height: 40rem;
+    aspect-ratio: 1;
+    flex-direction: column;
+}
+.filterset {
+    overflow-y: auto;
+    min-width: 300px;
+    scroll-snap-align: center;
+}
+.filterset-btn-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+.filterset-container {
+    width: 100%;
+    height: 100% !important;
+    display: flex;
+    flex-direction: row !important;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+
+.filterset-grow {
+    transition: max-height 1s ease;
+    max-height: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.wrapper-25-75 {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+.wrapper-25-75 > *:nth-child(odd) {
+    flex: 1;
+    min-width: 300px;
+}
+.wrapper-25-75 > *:nth-child(even) {
+    flex: 2;
+    min-width: 300px;
+}
+
+@media only screen and (max-width: 500px) {
+    .wrapper-25-75 > *:nth-child(odd) {
+        min-width: 75%;
+    }
+    .wrapper-25-75 > *:nth-child(even) {
+        min-width: 75%;
+    }
+    .filterset {
+        position: relative;
+        max-height: auto;
+        min-width: 250px;
+    }
+}
+
+#select-histogram * {
+    color: var(--white);
+    background-color: var(--black);
+}
+#select-histogram *:hover {
+    color: var(--black);
+    background-color: var(--blue);
+}
+#question_text {
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.legacy-card-container {
+    display: block;
+    padding: 0.5rem;
+    width: 100%;
+    height: 100%;
+}
+.legacy-card {
+    width: 100%;
+    max-height: 75vh;
+    background: var(--dark-black);
+    border-radius: 0.5rem;
+}
+.legacy-img {
+    height: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-height: min(65vh, 40rem);
+}
+.arrow-btn {
+    z-index: 1;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-decoration: none;
+    font: inherit;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    outline-offset: 0;
+    color: var(--blue);
+    background: var(--dark-black);
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
+}
+.arrow-btn:hover {
+    background: var(--blue);
+    color: var(--black);
+    text-decoration: none;
+}
+.arrow-btn:focus {
+    outline: var(--blue) solid 2px;
+    outline-offset: 4px;
+}

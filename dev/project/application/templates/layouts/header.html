@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<a href="/" class="center-content flex header-link link">
+    <span class="flex">
+        <img src="/static/images/logo.svg" class="inline-logo flex">
+        <h1 class="header-text flex">8D-PolComp</h1>
+    </span>
+</a>
+<div class="nav-bar center-content">
+    {% for page, links in { "Home":{"urls":["index.index", "contact.contact"], "url":"index.index"},
+                            "Test":{"urls":["test.test", "instructions.instructions", "form.form", "results.results"], "url":"test.test"}, 
+                            "Data":{"urls":["data.data"], "url":"data.data"}
+                        }.items() %}
+            {% if links["urls"]|url_in_url_list %}
+                <div class="nav-item active-page center-content">
+                    <a href="{{ url_for(links['url']) }}" class="nav-link flex center-content link">{{page}}</a>
+                </div>
+            {% else %}
+                <div class="nav-item center-content">
+                    <a href="{{ url_for(links['url']) }}" class="nav-link flex center-content link">{{page}}</a>
+                </div>
+            {% endif %}
+    {% endfor %}
+</div>

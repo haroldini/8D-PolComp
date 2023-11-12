@@ -1,0 +1,136 @@
+.select-box {
+    background: var(--green);
+    padding: 0;
+    min-width: 10rem;
+    max-width: 30rem;
+    width: 100%;
+    height: auto;
+    min-height: 3rem;
+    margin: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.select-box:hover {
+    background: var(--blue);
+}
+.select-box select {
+    width: 100%;
+    border: none;
+}
+.select-box button {
+    margin: 0;
+    border: none;
+}
+.select-box button::after {
+    color: var(--dark-grey);
+    height: 100%;
+    margin: 0.25rem;
+    border-width: 0.35rem;
+}
+.select-box button .filter-option .filter-option-inner .filter-option-inner-inner {
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--dark-grey);
+    text-align: center;
+}
+.select-box .dropdown-menu {
+    position: relative !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: none !important;
+    background: var(--black);
+    color: var(--white);
+    height: 20rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--green);
+}
+.select-box .dropdown-item {
+    color: var(--white);
+    font-size: 0.75rem;
+}
+.select-box .dropdown-item:hover {
+    background: var(--blue);
+    color: var(--black);
+}
+.select-box .dropdown-item:focus {
+    background: var(--blue);
+    color: var(--black);
+}
+.select-box .dropdown-menu .inner {
+    overflow-x: hidden;
+    height: 13.5rem !important;
+    max-height: 13.5rem !important;
+}
+.select-box-mini .dropdown-menu .inner {
+    overflow-x: hidden;
+    height: 16.5rem !important;
+    max-height: 16.5rem !important;
+}
+.select-box-super-mini .dropdown-menu .inner {
+    overflow-x: hidden;
+    height: 19.5rem !important;
+    max-height: 19.5rem !important;
+}
+.select-box .dropdown-menu .inner ul {
+    top: 0;
+}
+.select-box .dropdown-menu .inner ul .selected .check-mark {
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.select-box .dropdown-menu .active {
+    background: var(--blue);
+    color: var(--black);
+}
+.select-box .bs-searchbox {
+    width: 100%;
+    padding: 0.25rem;
+    margin: auto;
+    height: 3rem;
+}
+.select-box .bs-searchbox .form-control:hover {
+    background: var(--dark-grey);
+}
+.select-box .bs-searchbox .form-control {
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    color: var(--white);
+    border: 2px solid var(--green);
+}
+.select-box .bs-actionsbox {
+    width: 100%;
+    padding: 0.25rem;
+    margin: auto;
+    height: 3rem;
+}
+.select-box .btn-group {
+    width: 100%;
+    height: 100%;
+    border-radius: 2rem;
+}
+.select-box .btn-group .actions-btn{
+    width: 100%;
+    color: var(--dark-grey);
+    background: var(--green);
+    font-weight: 600;
+}
+.select-box .btn-group .actions-btn:hover{
+    background: var(--blue);
+}
+.a-l .select-box {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.bootstrap-select .btn:focus {
+    background: var(--blue);
+    outline: none !important;
+}
+.bootstrap-select .btn:focus * {
+    text-decoration: solid underline 4px;
+}

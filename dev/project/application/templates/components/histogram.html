@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
+
+<div class="component-border">
+    <p class="text text-subtitle fade-border header-underline">Results Histogram</p>
+    <div class="component">
+        <div class="hg-container">
+            <div class="hg-grid" id="save_histogram">
+                <div class="hg-div1"><canvas id="histogram-canvas"></canvas></div>
+                <div class="hg-div2"></div>
+                <div class="hg-div5"></div>
+                <div class="hg-div3 row-text label-left hg-text" style="color: var(--black); font-weight: 600;" id="hist-label-l"></div>
+                <div class="hg-div4 row-text label-right hg-text" style="color: var(--black); font-weight: 600;" id="hist-label-r"></div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="component">
+    <div class="component-border save-btns center-content">    
+        <select id="select-histogram" style="margin-right: 1rem; text-align: center;" name="age" class="button save-button" onchange="update_histogram(event.target.value)">
+            <option value="society" selected>Society</option>
+            <option value="politics">Politics</option>
+            <option value="economics">Economics</option>
+            <option value="state">State</option>
+            <option value="diplomacy">Diplomacy</option>
+            <option value="government">Government</option>
+            <option value="technology">Technology</option>
+            <option value="religion">Religion</option>
+        </select>
+        <button class="button save-button" onclick="save_image(event.currentTarget, 'save_histogram')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+    </div>
+</div>
+    
+<script src="/static/js/histogram.js"></script>
+    

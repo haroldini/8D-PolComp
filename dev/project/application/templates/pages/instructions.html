@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<script>
+    // Takes user to /test
+    function start_test() {
+        $.ajax({
+            type: "POST",
+            url: "{{ url_for('instructions.instructions') }}",
+            contentType:'application/json',
+            data : JSON.stringify({
+                "action": "to_test"
+            }),
+            success: function () {
+                window.location = "/test";
+            },
+            error: function(req, err) {
+                console.log("error ", err)
+            }
+        })
+    }
+</script>
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="component-border">
+    <p class="text text-subtitle">Instructions</p>
+    <div class="components-50-50">
+        <div class="component-border">
+            <p class="text">You will be shown a series of political statements, and your responses to them will be recorded. At the end of the test, your responses will be used to determine your position across eight ideological axes.</p>
+        </div>
+    </div>
+    <div class="components-50-50">
+        <div class="component-border">
+            <button class="button blue-button" onclick="start_test()"><i class="fa-solid fa-right-long"></i>Continue</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

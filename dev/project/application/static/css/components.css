@@ -1,0 +1,101 @@
+.component-border {
+    margin: 0.5rem;
+    padding: 1rem;
+    border: 0px solid var(--dark-grey);
+    border-radius: 0.5rem;
+    background: var(--dark-black);
+    /* border-image: linear-gradient(45deg, var(--blue), var(--green)); */
+    border-image-slice: 1;
+    width: calc(100% - 1rem);
+}
+.component-border .component-border {
+    border-radius: 0.5rem;
+    background: var(--black);
+}
+.component-border .component-border .component-border {
+    border-radius: 0.5rem;
+    background: var(--dark-black);
+}
+.component {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: auto;
+}
+.components-50-50, .components-80-20, .components-25-75, .components-75-25 {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+.components-50-50 > * {
+    flex: 1;
+    min-width: 300px;
+}
+.components-80-20 .component:nth-child(even){
+    flex: 1;
+    min-width: 110px;
+}
+.components-80-20 .component:nth-child(odd){
+    flex: 6;
+    min-width: 80%;
+}
+.components-25-75 .component:nth-child(odd){
+    flex: 1;
+    min-width: 250px;
+}
+.components-25-75 .component:nth-child(even){
+    flex: 2;
+    min-width: 300px;
+}
+.components-75-25 .component:nth-child(even){
+    flex: 1;
+    min-width: 250px;
+}
+.components-75-25 .component:nth-child(odd){
+    flex: 2;
+    min-width: 300px;
+}
+
+
+.components-80-20 .not-component:nth-child(even){
+    flex: 1;
+    min-width: 90px;
+}
+.components-80-20 .not-component:nth-child(odd){
+    flex: 6;
+    min-width: 80%;
+}
+.components-25-75 .not-component:nth-child(odd){
+    flex: 1;
+    min-width: 250px;
+}
+.components-25-75 .not-component:nth-child(even){
+    flex: 2;
+    min-width: 300px;
+}
+
+@media only screen and (max-width: 500px) {
+    .components-50-50 > * {
+        min-width: 75%;
+    }
+    .components-80-20 .component:nth-child(even){
+        min-width: 75%;
+    }
+    .components-80-20 .component:nth-child(odd){
+        min-width: 75%;
+    }
+    .components-25-75 .component:nth-child(odd){
+        min-width: 75%;
+    }
+    .components-25-75 .component:nth-child(even){
+        min-width: 75%;
+    }
+    .components-75-25 .component:nth-child(even){
+        min-width: 75%;
+    }
+    .components-75-25 .component:nth-child(odd){
+        min-width: 75%;
+    }
+}

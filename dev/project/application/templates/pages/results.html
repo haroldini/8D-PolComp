@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<meta id="compass-data" data-compass="{{ data['compass_datasets'] }}">
+<meta id="matches-data" data-matches="{{ data['closest_matches'] }}">
+
+{% extends "layouts/base.html" %}
+
+{% block TITLE %} | Test{% endblock %}
+{% block CONTENT %}
+<div class="components-50-50">
+    <div class="component-border" id="compass_save">
+        <div class="components-50-50">
+            <div class="component-border">
+                <p class="text text-subtitle">8D-PolComp Results</p>
+            </div>
+        </div>
+            <div class="components-75-25">
+                <div class="component">
+                    {% with is_results_page=True %}
+                    {% include "components/compass.html" %}
+                    {% endwith %}
+                </div>
+                <div class="component flex">
+                    <div class="component-border flex hidden">
+                        <select id="select-match-axis" style="text-align: center;" name="age" class="button save-button" onchange="update_matches(event.target.value)">
+                            <option value="overall" selected>Overall</option>
+                            <option value="society">Society</option>
+                            <option value="politics">Politics</option>
+                            <option value="economics">Economics</option>
+                            <option value="state">State</option>
+                            <option value="diplomacy">Diplomacy</option>
+                            <option value="government">Government</option>
+                            <option value="technology">Technology</option>
+                            <option value="religion">Religion</option>
+                        </select>
+                    </div>
+                    <div class="component-border fill space-between">    
+                        <p class="text text-subtitle">Closest Matches</p>
+                        <div class="fill">
+                            <canvas id="matches-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="components-50-50">
+                <div class="component-border">
+                <p class="text green"><b>Test #{{ data["completed_count"] }}</b></p>
+            </div>
+            <div class="component-border">
+                <p class="text blue"><b>8DPolComp.com</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border component" >
+        <p class="text">If you'd like to share your results, click the button below to save your 8D-PolComp.</p>
+        <button class="button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Results')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+        <div id="statusmsg" class="fill">
+            <p>Loading...</p>
+        </div>
+    </div>
+    <div class="component-border component">
+        <b><p class="text blue">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>
+        <a class="button center-content flex blue-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
+    </div>
+    <div class="component-border component">
+        <p class="text">The compass above shows four charts, each depicting two ideological axes. Closest matches are determined from the average test results for previous participants who identified with each label.</p>
+    </div>
+    <div class="component-border component">
+        <p class="text">Thank you for submitting your results, click the button below if you'd like to take the test again!</p>
+        <a class="button center-content flex" href="" onclick="restart_test()"><i class="fa-solid fa-rotate"></i>Restart Test</a>
+    </div>
+</div>
+
+<script src="/static/js/results.js"></script>
+
+{% endblock %}

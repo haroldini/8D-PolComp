@@ -1,0 +1,164 @@
+
+.icon-button {
+	all: unset;
+	cursor: pointer;
+
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    display: block;
+    height: 1fr;
+    aspect-ratio: 1;
+
+    transition: outline-offset 0.2s ease-out;
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.icon-button:focus {
+    outline: none;
+}
+.icon-selected {
+    outline: var(--blue) solid 4px !important;
+    outline-offset: 0.25rem !important;
+}
+.sample-container {
+    justify-content: center;
+}
+
+.icon-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: space-between;
+    align-items: center;
+    overflow: visible;
+}
+@media only screen and (max-width: 709.5px) {
+    .icon-container {
+        flex-direction: row !important;
+    }
+}
+
+.icon-container >* {
+    display: flex;
+    flex: 1;
+}
+
+
+#upper_left_sample {
+    border-top-left-radius: 5% ;
+}
+#upper_right_sample {
+    border-top-right-radius: 5% ;
+}
+#lower_left_sample {
+    border-bottom-left-radius: 5% ;
+}
+#lower_right_sample {
+    border-bottom-right-radius: 5% ;
+}
+.quadrant-sample {
+    width: 100%;
+    aspect-ratio: 1;
+    container-type: inline-size;
+}
+.s-grid {
+    font-size: min(3.5cqw, 3.5cqh);
+    display: grid;
+    justify-content: center;
+    vertical-align: middle;
+    width: calc(100% - 1rem);
+    grid-column-gap: 4%;
+    grid-row-gap: 4%;
+    aspect-ratio: 1;
+    margin: auto;
+}
+.s-sample {
+    width: 100%;
+}
+.tl-grid {
+    grid-template-columns: 8% 4% repeat(2, 1fr);
+    grid-template-rows: 8% 4% repeat(2, 1fr);
+}
+    
+.tl-div1 { grid-area: 3 / 3 / 5 / 5; }
+.tl-div2 { grid-area: 2 / 3 / 3 / 5; }
+.tl-div3 { grid-area: 3 / 2 / 5 / 3; }
+.tl-div4 { grid-area: 1 / 3 / 2 / 4; }
+.tl-div5 { grid-area: 1 / 4 / 2 / 5; }
+.tl-div6 { grid-area: 3 / 1 / 4 / 2; }
+.tl-div7 { grid-area: 4 / 1 / 5 / 2; }
+
+
+.tr-grid {
+    grid-template-columns: repeat(2, 1fr) 4% 8%;
+    grid-template-rows: 8% 4% repeat(2, 1fr);
+}
+
+.tr-div1 { grid-area: 3 / 1 / 5 / 3; }
+.tr-div2 { grid-area: 2 / 1 / 3 / 3; }
+.tr-div3 { grid-area: 3 / 3 / 5 / 4; }
+.tr-div4 { grid-area: 1 / 1 / 2 / 2; }
+.tr-div5 { grid-area: 1 / 2 / 2 / 3; }
+.tr-div6 { grid-area: 3 / 4 / 4 / 5; }
+.tr-div7 { grid-area: 4 / 4 / 5 / 5; }
+
+.br-grid {
+    grid-template-columns: repeat(2, 1fr) 4% 8%;
+    grid-template-rows: repeat(2, 1fr) 4% 8%;
+}
+
+.br-div1 { grid-area: 1 / 1 / 3 / 3; }
+.br-div2 { grid-area: 3 / 1 / 4 / 3; }
+.br-div3 { grid-area: 1 / 3 / 3 / 4; }
+.br-div4 { grid-area: 4 / 1 / 5 / 2; }
+.br-div5 { grid-area: 4 / 2 / 5 / 3; }
+.br-div6 { grid-area: 1 / 4 / 2 / 5; }
+.br-div7 { grid-area: 2 / 4 / 3 / 5; }
+
+.bl-grid {
+    grid-template-columns: 8% 4% repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr) 4% 8%;
+}
+    
+.bl-div1 { grid-area: 1 / 3 / 3 / 5; }
+.bl-div2 { grid-area: 3 / 3 / 4 / 5; }
+.bl-div3 { grid-area: 1 / 2 / 3 / 3; }
+.bl-div4 { grid-area: 4 / 3 / 5 / 4; }
+.bl-div5 { grid-area: 4 / 4 / 5 / 5; }
+.bl-div6 { grid-area: 1 / 1 / 2 / 2; }
+.bl-div7 { grid-area: 2 / 1 / 3 / 2; }
+
+.donate-button {
+    margin: 1rem;
+    font: inherit;
+    color: inherit;
+    font-weight: 600;
+    outline: var(--blue) solid 2px;
+    border-radius: 2rem;
+    background-image: linear-gradient(45deg, var(--dark-black), var(--dark-black));
+    width: 50%;
+    border-image-slice: 1;
+    min-width: 15rem;
+    max-width: 20rem;
+    height: 5rem;
+    transition: color 0.2s ease-in-out, background-image 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.15s ease-in-out, outline 0.15s ease-in-out; 
+}
+.donate-button:hover, .donate-button:focus {
+    border: 4px solid var(--black);
+    font-weight: 700;
+    outline-offset: 6px;
+    background-image: linear-gradient(45deg, var(--blue), var(--green));
+    color: var(--black);
+    text-decoration: none;
+}
+.donate-button:hover .fa-solid,
+.donate-button:focus .fa-solid,
+.donate-button .fa-solid {
+    display: none;
+}
+.donate-button:hover .fa-solid,
+.donate-button:focus .fa-solid {
+    display: inline;
+}
