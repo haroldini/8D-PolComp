@@ -35,15 +35,12 @@ def get_closest_matches(results):
         distances = [(identity, (1-2*abs(results[axis] - identity_avgs[axis]))/1) for identity, identity_avgs in avgs.items()]
         distances_by_axis[axis] = sorted(distances, key=lambda x: x[1], reverse=True)
         
-        print(axis)
-        print(distances_by_axis[axis])
-        print()
     return distances_by_axis
 
 
 @v.route("/results/<int:result_id>", methods=["GET"])
 @v.route("/results", methods=["GET", "POST"])
-def results(result_id):
+def results(result_id=None):
 
     if result_id is not None:
         
@@ -68,9 +65,9 @@ def results(result_id):
             "closest_matches": json.dumps(closest_matches)
         }
 
-        session["template"] = "results"
-        return render_template(f"pages/{session['template']}.html", data=data)
-    
+        return render_template(f"pages/results.html", data=data)
+
+
     # Redirect to correct template.
     if not "template" in session:
         session["template"] = "instructions"
