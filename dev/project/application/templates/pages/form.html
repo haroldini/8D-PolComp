@@ -16,7 +16,6 @@
         // Cycle through boxes
         let next_box = input_box_order[current_box]
         if (next_box != "end") {
-            console.log(current_box)
             document.getElementById(current_box).style.display = "none"
             document.getElementById(next_box).style.display = "block"
             
@@ -54,8 +53,9 @@
                         "recaptcha": grecaptcha.getResponse(),
                         "demographics": demographics,
                     }),
-                    success: function () {
-                        window.location = "/results";
+                    success: function (req) {
+                        let results_id = req.results_id
+                        window.location = "/results/"+results_id;
                     },
                     error: function(req, err) {
                         document.getElementById("recaptcha-status").innerText = req.responseJSON.status

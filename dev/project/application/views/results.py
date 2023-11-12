@@ -38,62 +38,39 @@ def get_closest_matches(results):
     return distances_by_axis
 
 
-@v.route("/results/<int:result_id>", methods=["GET"])
-@v.route("/results", methods=["GET", "POST"])
-def results(result_id=None):
-
-    if result_id is not None:
-        
-        # Get custom id results. if doesn't exist, return instructions
-        id_results = Results.get_results_from_id(result_id+1)
-        if id_results is None:
-            session["template"] = "instructions"
-            return redirect(url_for(f"{session['template']}.{session['template']}"))
-        
-        # Process custom results
-        scores = id_results.scores
-        closest_matches = get_closest_matches(scores)
-        data = {
-            "compass_datasets": json.dumps([{
-                "name": f"Result {result_id}",
-                "color": "aquamarine",
-                "count": 1,
-                "point_props": [1, 8],
-                "all_scores": [scores],
-            }]),
-            "completed_count": Results.get_count(),
-            "closest_matches": json.dumps(closest_matches)
-        }
-
-        return render_template(f"pages/results.html", data=data)
-
-
-    # Redirect to correct template.
-    if not "template" in session:
+def serve_results_by_id(results_id, result_name, color):
+    # Get custom id results. if doesn't exist, return instructions
+    id_results = Results.get_results_from_id(results_id+1)
+    if id_results is None:
         session["template"] = "instructions"
-    if session["template"] != "results":
         return redirect(url_for(f"{session['template']}.{session['template']}"))
     
+    # Process custom results
+    scores = id_results.scores
+    data = {
+        "compass_datasets": json.dumps([{
+            "name": result_name,
+            "color": color,
+            "count": 1,
+            "point_props": [1, 8],
+            "all_scores": [scores],
+        }]),
+        "results_id": results_id,
+        "closest_matches": json.dumps(get_closest_matches(scores))
+    }
+    return render_template(f"pages/results.html", data=data)
+
+
+@v.route("/results/<int:results_id>", methods=["GET", "POST"])
+def results(results_id=None):
+
+    # Serve specific result if given
+    if results_id is not None:
+        return serve_results_by_id(results_id, f"Test #{results_id}", "salmon")
+
     # Restart test button pressed
     if request.method == "POST":
-        print("restarting")
         data = request.get_json()
         if data["action"] == "to_instructions":
             session["template"] = "instructions"
         return {"status": "success"}, 200
-    
-    closest_matches = get_closest_matches(session["results"])
-
-    # Create compass data to pass to chartjs
-    data = {
-        "compass_datasets": json.dumps([{
-            "name": "your_results",
-            "color": "salmon",
-            "count": 1,
-            "point_props": [1, 8],
-            "all_scores": [session["results"]],
-        }]),
-        "completed_count": Results.get_count(),
-        "closest_matches": json.dumps(closest_matches)
-    }
-    return render_template(f"pages/{session['template']}.html", data=data)

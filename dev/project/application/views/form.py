@@ -76,6 +76,15 @@ def validate_results(demographics, scores, answers):
     return {"demographics": demographics, "scores": scores, "answers": answers}, True
 
 
+def get_answer_counts():
+    session["answer_counts"] = {
+        str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0} 
+        for q_id in session["answers"].keys()}
+    keys = {2: "Strongly Agree", 1: "Agree", 0: "Neutral", -1: "Disagree", -2: "Strongly Disagree"}
+    for q_id, q_ans in session["answers"].items():
+        session["answer_counts"][q_id][keys[q_ans]] += 1
+
+
 @v.route("/form", methods=["GET", "POST"])
 def form():
 
@@ -95,27 +104,24 @@ def form():
             return {"status": "Captcha Verification Failed"}, 401
 
         # Count answers for each question to add user data to pie
-        session["answer_counts"] = {
-            str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0} 
-            for q_id in session["answers"].keys()}
-        keys = {2: "Strongly Agree", 1: "Agree", 0: "Neutral", -1: "Disagree", -2: "Strongly Disagree"}
-        for q_id, q_ans in session["answers"].items():
-            session["answer_counts"][q_id][keys[q_ans]] += 1
+        get_answer_counts()
 
-        # Add user's result to database ######################################################################################################### REMOVE BEFORE PUSHING
-        test = False
-        if not test:
+        # Add user's result to database
+        test = True
+        if test:
+            session["results_id"] = "1006"
+        else:
             results, valid = validate_results(
                 demographics = data["demographics"],
                 scores = session["results"],
                 answers = session["answers"])
             if valid != True:
                 return {"status": f"Result Validation Failed: {valid}. Contact developer to report issue."}, 401
-            Results.add_result(results)
+            session["results_id"] = Results.add_result(results, return_id=True)
 
-        # Return success, ajax will redirect to results
-        session["template"] = "results"
-        return {"status": "success"}, 200
+        # Return success, ajax will redirect to results, set new path for link to instructions
+        session["template"] = "instructions"
+        return {"status": "success", "results_id": session["results_id"]}, 200
 
     with open(os.path.join(current_app.config['REL_DIR'], "application/data/demographics/demographics.json"), "r", encoding="utf-8") as f:
         demo = json.load(f)

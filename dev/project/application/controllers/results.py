@@ -39,9 +39,13 @@ class ResultsController:
     def get_results_from_id(id):
         return Results.query.filter_by(id=id).first()
 
-    def add_result(results):    
-        db.session.add(Results(**results))
+    def add_result(results, return_id):    
+        new_result = Results(**results)
+        db.session.add(new_result)
+        db.session.flush()
         db.session.commit()
+        if return_id:
+            return new_result.id
 
     # Filter a provided query object using the filterset given
     def get_filtered_dataset(query, filterset, limit=None):

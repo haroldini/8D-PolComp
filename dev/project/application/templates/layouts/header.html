@@ -5,19 +5,26 @@
         <h1 class="header-text flex">8D-PolComp</h1>
     </span>
 </a>
+
+
 <div class="nav-bar center-content">
-    {% for page, links in { "Home":{"urls":["index.index", "contact.contact"], "url":"index.index"},
-                            "Test":{"urls":["test.test", "instructions.instructions", "form.form", "results.results"], "url":"test.test"}, 
-                            "Data":{"urls":["data.data"], "url":"data.data"}
-                        }.items() %}
-            {% if links["urls"]|url_in_url_list %}
-                <div class="nav-item active-page center-content">
-                    <a href="{{ url_for(links['url']) }}" class="nav-link flex center-content link">{{page}}</a>
-                </div>
-            {% else %}
-                <div class="nav-item center-content">
-                    <a href="{{ url_for(links['url']) }}" class="nav-link flex center-content link">{{page}}</a>
-                </div>
-            {% endif %}
+    {% with pages={
+        "Home": {"url": url_for("index.index"), "redirects": [""]},
+        "Test": {"url": url_for("test.test"), "redirects": ["instructions", "test", "form"]},
+        "Results": {"url": url_for("results.results", results_id=session["results_id"]) if "results_id" in session else url_for("instructions.instructions"), "redirects": ["results"]},
+        "Data": {"url": url_for("data.data"), "redirects": ["data"]},
+        
+    } %}
+    {% for name, page in pages.items() %}
+        {% if request.path.split("/")[1] in page["redirects"] %}
+        <div class="nav-item active-page center-content">
+            <a href="{{ page['url'] }}" class="nav-link flex center-content link">{{name}}</a>
+        </div>
+        {% else %}
+        <div class="nav-item center-content">
+            <a href="{{ page['url'] }}" class="nav-link flex center-content link">{{name}}</a>
+        </div>
+        {% endif %}
     {% endfor %}
+    {% endwith %}
 </div>
