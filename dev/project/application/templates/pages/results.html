@@ -35,7 +35,7 @@
                     </div>
                     <div class="component-border fill space-between">    
                         <p class="text text-subtitle">Closest Matches</p>
-                        <div class="fill">
+                        <div class="fill" style="min-height: 250px;">
                             <canvas id="matches-chart"></canvas>
                         </div>
                     </div>
@@ -53,8 +53,9 @@
 </div>
 <div class="components-50-50">
     <div class="component-border component" >
-        <p class="text">If you'd like to share your results, click the button below to save your 8D-PolComp.</p>
-        <button class="button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Results')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+        <p class="text text-subtitle green">Share Results</p>
+        <button class="button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')"><i class="fa-solid fa-clipboard"></i><span>Copy Link</span></button>
+        <button class="button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
         <div id="statusmsg" class="fill">
             <p>Loading...</p>
         </div>

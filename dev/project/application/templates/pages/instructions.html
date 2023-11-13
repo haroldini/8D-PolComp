@@ -4,7 +4,7 @@
     function start_test() {
         $.ajax({
             type: "POST",
-            url: "{{ url_for('instructions.instructions') }}",
+            url: "/api/to_test",
             contentType:'application/json',
             data : JSON.stringify({
                 "action": "to_test"

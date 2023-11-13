@@ -73,3 +73,34 @@ function scroll_to(id) {
     document.getElementById(id).style.scrollMarginTop = "2rem"
     document.getElementById(id).scrollIntoView()
 }
+
+// Copies current url to clipboard
+async function copy_link(tar, btn_text="Copy Link") {
+    disable_button(tar, "Copied")
+    let currentPath = new URL(window.location.href)
+    navigator.clipboard.writeText(currentPath)
+    .then(function () {
+        setTimeout(function () {
+            enable_button(tar, btn_text);
+        }, 2500);
+    })
+}
+
+// Saves chart from target id to device
+async function save_image(tar, div_id, btn_text="Save Image") {
+    disable_button(tar)
+    let scale = 5;
+    let domNode = document.getElementById(div_id)
+    domtoimage.toBlob(domNode, {
+        width: domNode.clientWidth * scale,
+        height: domNode.clientHeight * scale,
+        style: {
+        transform: 'scale('+scale+')',
+        transformOrigin: 'top left'
+        }
+    })
+    .then(function (blob) {
+        enable_button(tar, btn_text)
+        window.saveAs(blob, '8DPolComp-Image.png');
+    });
+}

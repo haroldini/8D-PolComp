@@ -3,7 +3,7 @@ function restart_test() {
     $(function () {
         $.ajax({
             type: "POST",
-            url: "/results",
+            url: "/api/to_instructions",
             contentType:"application/json",
             data : JSON.stringify({
                 "action": "to_instructions"
@@ -21,7 +21,7 @@ function restart_test() {
 
 function create_matches_chart(closest_matches, axis="overall") {
     // Extract labels and data values
-    let num_matches_shown = 10
+    let num_matches_shown = 8
     let entries = closest_matches[axis].slice(0, num_matches_shown);
     let labels = entries.map(entry => entry[0]);
     let values = entries.map(entry => entry[1]);
@@ -110,7 +110,7 @@ function create_matches_chart(closest_matches, axis="overall") {
 
 
 // Updates results histogram when an axis is selected
-function update_matches(axis, num_matches_shown=10) {
+function update_matches(axis, num_matches_shown=8) {
     let closest_matches = $("#matches-data").data("matches")
     let entries = closest_matches[axis].slice(0, num_matches_shown);
     let labels = entries.map(entry => entry[0]);

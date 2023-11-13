@@ -92,7 +92,7 @@ function apply_filters() {
                 "action": "apply_filters", 
                 "data": data
             }),
-            url: "/data",
+            url: "/api/data",
             success: async function (req) {
                 await sleep(Math.random()*1500+500)
                 datasets = JSON.parse(req).compass_datasets
@@ -158,10 +158,9 @@ function get_all_results(event) {
             type: "POST",
             contentType:'application/json',
             data : JSON.stringify({
-                "action": 
-                "get_all_results",
+                "action": "get_all_results",
             }),
-            url: "/data",
+            url: "/api/data",
             success: async function (req) {
                 await sleep(Math.random()*1500+500)
                 all_results = JSON.parse(req).all_results
@@ -187,10 +186,9 @@ function get_legacy_data(event) {
             type: "POST",
             contentType:'application/json',
             data : JSON.stringify({
-                "action": 
-                "get_legacy_results",
+                "action": "get_legacy_results",
             }),
-            url: "/data",
+            url: "/api/data",
             success: async function (req) {
                 await sleep(Math.random()*1500+500)
                 legacy_results = JSON.parse(req).legacy_results

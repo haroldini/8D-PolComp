@@ -61,16 +61,9 @@ def serve_results_by_id(results_id, result_name, color):
     return render_template(f"pages/results.html", data=data)
 
 
-@v.route("/results/<int:results_id>", methods=["GET", "POST"])
+@v.route("/results/<int:results_id>", methods=["GET"])
 def results(results_id=None):
 
     # Serve specific result if given
     if results_id is not None:
         return serve_results_by_id(results_id, f"Test #{results_id}", "salmon")
-
-    # Restart test button pressed
-    if request.method == "POST":
-        data = request.get_json()
-        if data["action"] == "to_instructions":
-            session["template"] = "instructions"
-        return {"status": "success"}, 200

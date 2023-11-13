@@ -18,7 +18,7 @@ def create_app():
     
     # Register view blueprints
     with app.app_context():
-        from application.views import index, instructions, test, form, results, data, contact
+        from application.views import index, instructions, test, form, results, data, contact, api
         app.register_blueprint(index.v)
         app.register_blueprint(instructions.v)
         app.register_blueprint(test.v)
@@ -26,5 +26,6 @@ def create_app():
         app.register_blueprint(results.v)
         app.register_blueprint(data.v)
         app.register_blueprint(contact.v)
+        app.register_blueprint(api.v)
 
     return app

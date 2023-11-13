@@ -23,7 +23,7 @@
 }
 .scroll-container {
     width: 100%;
-    max-width: min(60vh, 80vw);
+    /* max-width: min(60vh, 80vw); */
     overflow: auto;
 }
     

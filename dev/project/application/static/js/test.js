@@ -28,13 +28,13 @@ function next_question(answer) {
         $(function () {
             $.ajax({
                 type: "POST",
-                url: "/test",
+                url: "/api/to_form",
                 contentType:'application/json',
                 data : JSON.stringify({
                     "action": "to_form", 
                     "answers": answers
                 }),
-                success: function () {
+                success: function (req) {
                     window.location = "/form";
                 },
                 error: function(req, err) {
@@ -57,8 +57,8 @@ function prev_question() {
                 data : JSON.stringify({
                     "action": "to_instructions"
                 }),
-                url: "/test",
-                success: function () {
+                url: "/api/to_instructions",
+                success: function (req) {
                     window.location = "/instructions";
                 },
                 error: function(req, err) {

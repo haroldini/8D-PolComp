@@ -254,25 +254,6 @@ function update_chart_data() {
     }
 }
 
-// Saves chart from target id to device
-async function save_image(tar, div_id, btn_text="Save Image") {
-    disable_button(tar)
-    let scale = 10;
-    let domNode = document.getElementById(div_id)
-    domtoimage.toBlob(domNode, {
-        width: domNode.clientWidth * scale,
-        height: domNode.clientHeight * scale,
-        style: {
-        transform: 'scale('+scale+')',
-        transformOrigin: 'top left'
-        }
-    })
-    .then(function (blob) {
-        enable_button(tar, btn_text)
-        window.saveAs(blob, '8DPolComp-Image.png');
-    });
-}
-
 // Converts datasets to csv string
 function get_csv(datasets) {
     lst = []

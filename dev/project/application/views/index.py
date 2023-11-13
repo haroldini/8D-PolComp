@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template
 import json
 
-
 from application.controllers.results import ResultsController as Results
 
 
 v = Blueprint('index', __name__)
+
 
 @v.route("/", methods=["GET"])
 def index():  
