@@ -125,7 +125,6 @@ window.onload = function() {
     
     // Creates default histogram & pie chart
     let closest_matches = $("#matches-data").data("matches")
-    console.log(closest_matches)
     matches_chart = create_matches_chart(closest_matches)
     
 };

@@ -11,7 +11,6 @@ v = Blueprint('api', __name__)
 
 
 def validate_results(demographics, scores, answers):
-    print({"demographics": demographics, "scores": scores, "answers": answers})
 
     # Validate scores
     valid_axes = ["diplomacy", "economics", "government", "politics", "religion", "society", "state", "technology"]
@@ -175,7 +174,6 @@ def data_api():
             is_valid = validate_filtersets(filter_data)
             if is_valid != False:
                 return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
-            print(data)
 
             datasets = Results.get_filtered_datasets(filter_data)
             if "answer_counts" in session:

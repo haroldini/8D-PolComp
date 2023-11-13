@@ -234,7 +234,6 @@ function change_legacy_card(direction) {
             current_legacy_card += 1
         }
         current_filename = legacy_filenames[current_legacy_card]
-        console.log(current_filename)
         document.getElementById("legacy-img").src = `static/images/legacy-data/${legacy_filenames[current_legacy_card]}.png`
     }
 }
