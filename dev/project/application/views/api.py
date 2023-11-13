@@ -120,7 +120,7 @@ def to_results():
     get_answer_counts()
 
     # Add user's result to database
-    test = True
+    test = False
     if test:
         session["results_id"] = "1006"
     else:
