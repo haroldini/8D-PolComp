@@ -120,8 +120,7 @@ def to_results():
     get_answer_counts()
 
     # Add user's result to database
-    test = False
-    if test:
+    if current_app.config["DEV"]:
         session["results_id"] = "1006"
     else:
         results, valid = validate_results(
@@ -129,8 +128,9 @@ def to_results():
             scores = session["results"],
             answers = session["answers"])
         if valid != True:
+            print("not valid")
             return {"status": f"Result Validation Failed: {valid}. Contact developer to report issue."}, 401
-        session["results_id"] = Results.add_result(results, return_id=True)
+        session["results_id"] = Results.add_result(results, return_id=True) - 1 # -1 needed because db IDs start at 0
 
     # Return success, ajax will redirect to results, set new path for link to instructions
     session["template"] = "instructions"

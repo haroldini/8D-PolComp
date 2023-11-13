@@ -55,6 +55,7 @@
                     }),
                     success: function (req) {
                         let results_id = req.results_id
+                        console.log(results_id)
                         window.location = "/results/"+results_id;
                     },
                     error: function(req, err) {
