@@ -1,4 +1,7 @@
-<input id="label_{{i}}" type="text" name="label" class="text text-subtitle fade-border header-underline" style="margin-bottom: 1.5rem;" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
+<div class="input-box-container" style="margin-bottom: 1rem;">
+    <input id="label_{{i}}" class="age-box width-100 blue-button rounded" type="text" name="label" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
+</div>
+
 <div class="input-box-container">
     <input type="number" name="min-age" class="age-box a-l" placeholder="Min Age" min="13" max="100">
     <input type="number" name="max-age" class="age-box a-r" placeholder="Max Age" min="13" max="100">
@@ -42,7 +45,7 @@
         {% endfor %}
     </select>
 </div>
-<div class="input-box-container select-box" style="width: 100%;">
+<div class="input-box-container select-box" style="width: 100%; margin-bottom: 1rem;">
     <div style="width: 75%;" class="age-box a-l">
         <select name="identities" data-style="select-box a-l" data-width="100%" class="selectpicker select-identities" data-actions-box="true" data-size="10" title="Identities" data-live-search="true" multiple data-selected-text-format="count > 2">
             {% for identities in demo["identities"] %}
@@ -56,7 +59,6 @@
     </div>
 </div>
 
-<br>
 <div class="input-box-container blue-button">
     <label for="color_{{i}}" class="color-box-label" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
     <input tabindex=0 id="color_{{i}}" class="color-box" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>

@@ -1,3 +1,12 @@
+.all-unset {
+    all: unset;
+}
+.width-100 {
+    width: 100%;
+}
+.rounded {
+    border-radius: 0.5rem !important;
+}
 .center-content {
     justify-content: center;
     align-items: center;
@@ -108,7 +117,6 @@
     color: var(--black);
     background: var(--green);
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
-    
 }
 .button:hover {
     background: var(--blue);
@@ -118,6 +126,11 @@
 .button:focus {
     outline: var(--blue) solid 2px;
     outline-offset: 2px;
+}
+.text-input {
+
+    color: var(--black);
+    text-decoration: none;
 }
 .large-link {
     font: inherit;
@@ -145,8 +158,6 @@
     flex-direction: column;
     justify-content: flex-start;
 }
-
-
 .show-more  {
     width: 100%;
     padding-top: 1rem;
