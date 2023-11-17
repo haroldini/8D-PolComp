@@ -320,13 +320,11 @@ function get_updated_count(ele) {
             url: "/api/get_filterset_count",
             success: async function (req) {
                 let counts = JSON.parse(req).counts[0]
-                console.log(counts)
                 document.getElementById("count_"+dataset_id).innerText = counts
                 ele.classList.remove("disabled-text")
                 spinner.classList.remove("spin-fa-icon")
             },
             error: function(req, err) {
-                console.log(req)
                 show_error(req.responseJSON.status)
                 ele.classList.remove("disabled-text")
                 spinner.classList.remove("spin-fa-icon")
