@@ -63,4 +63,8 @@
     <label for="color_{{i}}" class="color-box-label" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
     <input tabindex=0 id="color_{{i}}" class="color-box" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>
 </div>
-<p class="text" style="margin-top: 1rem;"><span id="count_{{i}}" style="font-weight: 600; color: var(--blue);">0</span> Results Found</p>
+ 
+<button class="inline-link link text-link" id="{{i}}" onclick="get_updated_count(this)">
+    <p class="text"><i class="fa-solid fa-arrows-rotate" id="count_spinner_{{i}}"></i><span id="count_{{i}}">0</span> Results Found</p>
+</button>
+    

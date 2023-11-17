@@ -167,35 +167,47 @@ def to_instructions():
 
 @v.route("/api/data", methods=["POST"])
 def data_api():
-    if request.method == "POST":
-        data = request.get_json()
-        if data["action"] == "apply_filters":
-            filter_data = data["data"]
-            is_valid = validate_filtersets(filter_data)
-            if is_valid != False:
-                return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
+    data = request.get_json()
+    if data["action"] == "apply_filters":
+        filter_data = data["data"]
+        is_valid = validate_filtersets(filter_data)
+        if is_valid != False:
+            return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
 
-            datasets = Results.get_filtered_datasets(filter_data)
-            if "answer_counts" in session:
-                datasets.insert(0, {
-                    "name": "your_results",
-                    "label": "Your Results",
-                    "custom_dataset": False,
-                    "result_id": session["results_id"],
-                    "color": "salmon",
-                    "count": 1,
-                    "point_props": [1, 8],
-                    "all_scores": [session["results"]],
-                    "answer_counts": session["answer_counts"]
-                })
-            return json.dumps({"status": "success", "compass_datasets": datasets}), 200
+        datasets = Results.get_filtered_datasets(filter_data)
+        if "answer_counts" in session:
+            datasets.insert(0, {
+                "name": "your_results",
+                "label": "Your Results",
+                "custom_dataset": False,
+                "result_id": session["results_id"],
+                "color": "salmon",
+                "count": 1,
+                "point_props": [1, 8],
+                "all_scores": [session["results"]],
+                "answer_counts": session["answer_counts"]
+            })
+        return json.dumps({"status": "success", "compass_datasets": datasets}), 200
 
-        elif data["action"] == "get_all_results":
-            all_results = Results.get_all_dct()
-            return json.dumps({"status": "success", "all_results": all_results}), 200
+    elif data["action"] == "get_all_results":
+        all_results = Results.get_all_dct()
+        return json.dumps({"status": "success", "all_results": all_results}), 200
 
-        elif data["action"] == "get_legacy_results":
-            with open(os.path.join(current_app.config['REL_DIR'], "application/data/legacy-data/record.csv"), "r", encoding="utf-8") as f:
-                return json.dumps({"status": "success", "legacy_results": f.read()}), 200
-        else:
-            return json.dumps({"status": f"Error: Unknown action. Contact the developer if you think this is a mistake."}), 401 
+    elif data["action"] == "get_legacy_results":
+        with open(os.path.join(current_app.config['REL_DIR'], "application/data/legacy-data/record.csv"), "r", encoding="utf-8") as f:
+            return json.dumps({"status": "success", "legacy_results": f.read()}), 200
+    else:
+        return json.dumps({"status": f"Error: Unknown action. Contact the developer if you think this is a mistake."}), 401 
+
+
+@v.route("/api/get_filterset_count", methods=["POST"])
+def get_filterset_count():
+    data = request.get_json()
+    if data["action"] == "get_filterset_count":
+        filter_data = data["data"]
+        is_valid = validate_filtersets(filter_data)
+        if is_valid != False:
+            return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
+
+        counts = Results.get_filtered_dataset_count(filter_data)
+        return json.dumps({"status": "success", "counts": counts}), 200

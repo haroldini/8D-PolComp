@@ -106,6 +106,7 @@ class ResultsController:
             results = res.limit(limit)
         return results.all()
 
+
     # Returns list of dataset dictionaries containing scores, average scores and answers.
     def get_filtered_datasets(filter_data):
         datasets = []
@@ -166,7 +167,17 @@ class ResultsController:
             }) 
 
         return datasets
-    
+
+
+    # Returns count of results found for a given list of filtersets
+    # Receives same structure as get_filtered_datasets, with key containing filtersets
+    def get_filtered_dataset_count(filter_data):
+        datasets = ResultsController.get_filtered_datasets(filter_data)
+        counts = {dataset["custom_id"]: dataset["count"] for dataset in datasets}
+        print(counts)
+        return counts
+        
+
     # Returns a dictionary with identities as keys and average values for each axis
     def get_avg_identities(identity_keys, min_results=50):
         avg_identities = {}

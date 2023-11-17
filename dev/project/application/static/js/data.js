@@ -266,6 +266,75 @@ function change_legacy_card(direction) {
     }
 }
 
+function get_updated_count(ele) {
+    let dataset_id = ele.id
+    let filtersets = []
+    let select_names = ["country", "religion", "ethnicity", "education", "party", "identities"]
+    filterset_div = document.getElementById("filterset"+dataset_id)
+    
+    $(function () {
+
+        let spinner = document.getElementById("count_spinner_"+dataset_id)
+        spinner.classList.add("spin-fa-icon")
+        ele.classList.add("disabled-text")
+
+        let data = {}
+        data.order = document.querySelector("input[name='sorting']:checked").value;
+        data.limit = document.querySelector("input[name='sample-size']").value;
+        data["min-date"] = document.querySelector("input[name='min-date']").value;
+        data["max-date"] = document.querySelector("input[name='max-date']").value;
+
+        filterset = {}
+
+        // Changes default age entries from "0" to null
+        if (filterset_div.querySelector("input[name='min-age']").value == 0) {
+            filterset["min-age"] = null
+        } else {
+            filterset["min-age"] = Number(filterset_div.querySelector("input[name='min-age']").value);
+        }
+        if (filterset_div.querySelector("input[name='max-age']").value == 0) {
+            filterset["max-age"] = null
+        } else {
+            filterset["max-age"] = Number(filterset_div.querySelector("input[name='max-age']").value);
+        }
+
+        // Gets other filterset data
+        filterset["any-all"] = filterset_div.querySelector("input[name='any-all"+String(dataset_id)+"']:checked").value
+        filterset["label"] = filterset_div.querySelector("input[name='label']").value
+        filterset["color"] = document.getElementById(`color_${String(dataset_id)}`).value
+        for (select_name of select_names) {
+            let selects_data = $('#'+filterset_div.id).find('select[name='+select_name+']').val();
+            filterset[select_name] = selects_data
+        }
+        filtersets.push(filterset)
+
+        // Requests data
+        data.filtersets = filtersets
+        $.ajax({
+            type: "POST",
+            contentType:'application/json',
+            data : JSON.stringify({
+                "action": "get_filterset_count", 
+                "data": data
+            }),
+            url: "/api/get_filterset_count",
+            success: async function (req) {
+                let counts = JSON.parse(req).counts[0]
+                console.log(counts)
+                document.getElementById("count_"+dataset_id).innerText = counts
+                ele.classList.remove("disabled-text")
+                spinner.classList.remove("spin-fa-icon")
+            },
+            error: function(req, err) {
+                console.log(req)
+                show_error(req.responseJSON.status)
+                ele.classList.remove("disabled-text")
+                spinner.classList.remove("spin-fa-icon")
+            }
+        });
+    });
+
+}
 
 window.onload = function() {
 
