@@ -74,7 +74,8 @@ function apply_filters() {
             }
 
             // Gets other filterset data
-            filterset["any-all"] = filterset_div.querySelector("input[name='any-all"+String(j)+"']:checked").value;
+            filterset["any-all"] = filterset_div.querySelector("input[name='any-all"+String(j)+"']:checked").value
+            filterset["label"] = filterset_div.querySelector("input[name='label']").value
             filterset["color"] = document.getElementById(`color_${String(j)}`).value
             for (select_name of select_names) {
                 let selects_data = $('#'+filterset_div.id).find('select[name='+select_name+']').val();
@@ -114,33 +115,60 @@ function apply_filters() {
 // Updates counts shown below filtersets after query complete.
 function update_counts() {
     for (dataset of datasets) {
-        if (dataset.name.includes("filterset_")) {
-            let fs_i = dataset.name.split("_")[1]
-            document.getElementById("count_"+fs_i).innerText = dataset.count
+        if (dataset.custom_dataset == true) {
+            dataset_id = dataset.custom_id+1
+            document.getElementById("count_"+dataset_id).innerText = dataset.count
         }
     }
 }
 
 // Applies new color to all charts
 function set_filterset_color(event) {
-    let filterset_name = "filterset_"+event.target.id.split("_").pop()
+    let target_id = event.target.id.split("_")[1]-1
+    let target_label = datasets.filter(x => x.custom_id === target_id)[0].label
+    
     for (quadrant in quadrants) {
         let chart = quadrants[quadrant].chart
         for (chart_dataset of chart.data.datasets) {
-            if (chart_dataset.label.includes(filterset_name)) {
+            if (chart_dataset.label.includes(target_label)) {
                 chart_dataset.pointBackgroundColor = add_transparency(event.target.value, 0.5);
             }
         }
         chart.update()
     }
     for (dataset of datasets) {
-        if (dataset.name == filterset_name) {
+        if (dataset.custom_id == target_id) {
             dataset.color = event.target.value
         }
     }
     let hist_axis = document.getElementById("select-histogram").value
     update_histogram(hist_axis)
-    update_pie(question_id)
+    update_pie(question_id, question_id)
+}
+
+// Applies new filterset label to all charts
+function set_filterset_label(event) {
+    let target_id = event.target.id.split("_")[1]-1
+    let prev_target_label = datasets.filter(x => x.custom_id === target_id)[0].label
+    let new_target_label = event.target.value
+
+    for (quadrant in quadrants) {
+        let chart = quadrants[quadrant].chart
+        for (chart_dataset of chart.data.datasets) {
+            if (chart_dataset.dataset_id == target_id) {
+                chart_dataset.label = new_target_label
+            }
+        }
+        chart.update()
+    }
+    for (dataset of datasets) {
+        if (dataset.custom_id == target_id) {
+            dataset.label = new_target_label
+        }
+    }
+    let hist_axis = document.getElementById("select-histogram").value
+    update_histogram(hist_axis)
+    update_pie(question_id, question_id)
 }
 
 // Applies new question to pie chart
@@ -257,6 +285,6 @@ window.onload = function() {
     pie = create_pie(question_id)
     document.getElementById("qid_"+question_id).classList.add("row-selected")
     document.getElementById("question_text").innerText = document.getElementById("qid_"+question_id).getElementsByTagName("td")[1].textContent
-    document.getElementById("count_1").innerText = datasets.filter(x => x.name === "filterset_1")[0].count
+    document.getElementById("count_1").innerText = datasets.filter(x => x.custom_id === 0)[0].count
 };
 

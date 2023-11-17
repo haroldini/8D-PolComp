@@ -89,7 +89,7 @@ async function copy_link(tar, btn_text="Copy Link") {
 // Saves chart from target id to device
 async function save_image(tar, div_id, btn_text="Save Image") {
     disable_button(tar)
-    let scale = 5;
+    let scale = 2;
     let domNode = document.getElementById(div_id)
     domtoimage.toBlob(domNode, {
         width: domNode.clientWidth * scale,
@@ -101,6 +101,6 @@ async function save_image(tar, div_id, btn_text="Save Image") {
     })
     .then(function (blob) {
         enable_button(tar, btn_text)
-        window.saveAs(blob, '8DPolComp-Image.png');
+        window.saveAs(blob, '8dpolcomp-image.png');
     });
 }

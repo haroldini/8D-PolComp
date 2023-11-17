@@ -21,6 +21,7 @@ def data():
         'min-date': '2023-01-01',
         'max-date': datetime.now().isoformat(),
         'filtersets': [{
+            'label': 'Filterset 1',
             'min-age': None, 
             'max-age': None, 
             'any-all': 'any', 
@@ -37,6 +38,9 @@ def data():
     if "answer_counts" in session:
         datasets.insert(0, {
             "name": "your_results",
+            "label": "Your Results",
+            "custom_dataset": False,
+            "result_id": session["results_id"],
             "color": "salmon",
             "count": 1,
             "point_props": [1, 8],

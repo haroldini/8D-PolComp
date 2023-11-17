@@ -1,4 +1,4 @@
-<p class="text text-subtitle fade-border header-underline" style="margin-bottom: 1.5rem;">Filterset {{i}}</p>
+<input id="label_{{i}}" type="text" name="label" class="text text-subtitle fade-border header-underline" style="margin-bottom: 1.5rem;" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
 <div class="input-box-container">
     <input type="number" name="min-age" class="age-box a-l" placeholder="Min Age" min="13" max="100">
     <input type="number" name="max-age" class="age-box a-r" placeholder="Max Age" min="13" max="100">
@@ -18,14 +18,14 @@
     </select>
 </div>
 <div class="select-box">
-    <select name="ethnicity"  data-style="select-box" data-width="100%" class="selectpicker select-ethnicity" data-actions-box="true" data-size="10" title="Ethnicity" data-live-search="true" multiple data-selected-text-format="count > 2">
+    <select name="ethnicity" data-style="select-box" data-width="100%" class="selectpicker select-ethnicity" data-actions-box="true" data-size="10" title="Ethnicity" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for ethnicity in demo["ethnicity"] %}
             <option value="{{ ethnicity }}">{{ ethnicity }}</option>
         {% endfor %}
     </select>
 </div>
 <div class="select-box">
-    <select name="education"  data-style="select-box" data-width="100%" class="selectpicker select-education" data-actions-box="true" data-size="10" title="Education" data-live-search="true" multiple data-selected-text-format="count > 2">
+    <select name="education" data-style="select-box" data-width="100%" class="selectpicker select-education" data-actions-box="true" data-size="10" title="Education" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for education in demo["education"] %}
             <option value="{{ education }}">{{ education }}</option>
         {% endfor %}

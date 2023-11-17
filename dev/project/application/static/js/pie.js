@@ -5,7 +5,7 @@ function get_pie_datasets(question_id) {
     let pie_datasets = []
     for (dataset of datasets) {
         pie_datasets.push({
-                label: dataset.name.replace("_", " "),
+                label: dataset.label,
                 backgroundColor: dataset.color,
                 data: dataset.answer_counts[question_id],
                 borderWidth: 1

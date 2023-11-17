@@ -23,7 +23,7 @@ function get_axis_datavalues(axis_name) {
                 dataset_axis_data.push(data[axis_name])
             }
         }
-        axis_data[dataset.name] = dataset_axis_data
+        axis_data[dataset.label] = dataset_axis_data
     }    
     return axis_data
 }
@@ -35,7 +35,7 @@ function get_binned_datasets(values) {
     hist_labels = [-1]
     labels_generated = false
     for (filterset in values) {
-        let color = datasets.filter(x => x.name === filterset)[0].color
+        let color = datasets.filter(x => x.label === filterset)[0].color
         
         const hist_generator = d3.bin().domain([-1,1]).thresholds(20);
         let bins = hist_generator(values[filterset])

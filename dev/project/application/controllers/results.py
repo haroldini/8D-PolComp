@@ -151,7 +151,11 @@ class ResultsController:
                 median_scores = {}
 
             datasets.append({
-                "name": f"filterset_{i+1}",
+                "name": f"custom_{i}",
+                "label": filterset["label"],
+                "custom_dataset": True,
+                "custom_id": i,
+                "result_id": None,
                 "color": filterset["color"],
                 "count": len(all_scores),
                 "raw_answer_counts": raw_answer_counts,

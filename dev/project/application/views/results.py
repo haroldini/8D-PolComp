@@ -49,7 +49,10 @@ def serve_results_by_id(results_id, result_name, color):
     scores = id_results.scores
     data = {
         "compass_datasets": json.dumps([{
-            "name": result_name,
+            "name": f"test_no_{result_name.replace(' ', '_')}",
+            "label": f"Test #{result_name}",
+            "custom_dataset": False,
+            "result_id": results_id,
             "color": color,
             "count": 1,
             "point_props": [1, 8],

@@ -107,7 +107,8 @@ function get_pc_data(quadrant, quadrants) {
                 pointBorderWidth: radius/4,
                 pointBorderColor: add_transparency("#262626", transparency),
                 data: data_values,
-                label: dataset.name,
+                label: dataset.label,
+                filterset_id: null,
                 borderWidth: {
                     bottom: 0,
                     top: 1,
@@ -123,27 +124,29 @@ function get_pc_data(quadrant, quadrants) {
         let [transparency, radius] = calc_point_props(dataset, dataset.count)
 
         // Average scores displayed on top
-        if ("mean_scores" in dataset) {
-            mean_vals = [{
-                x: dataset.mean_scores[quadrants[quadrant].x],
-                y: dataset.mean_scores[quadrants[quadrant].y]
-            }]
-            pc_data.datasets.push({
-                pointRadius: radius,
-                pointBackgroundColor: add_transparency(dataset.color, transparency),
-                pointStyle: 'circle',
-                pointBorderWidth: radius/2,
-                pointBorderColor: add_transparency("#262626", transparency),
-                data: mean_vals,
-                label: dataset.name+" Average",
-                tooltipEnabled: false,
-                borderWidth: {
-                    bottom: 0,
-                    top: 1,
-                    left: 1,
-                    right: 1
-                }
-            })
+        if (dataset["count"] > 1) {
+            if ("mean_scores" in dataset) {
+                mean_vals = [{
+                    x: dataset.mean_scores[quadrants[quadrant].x],
+                    y: dataset.mean_scores[quadrants[quadrant].y]
+                }]
+                pc_data.datasets.push({
+                    pointRadius: radius,
+                    pointBackgroundColor: add_transparency(dataset.color, transparency),
+                    pointStyle: 'circle',
+                    pointBorderWidth: radius/2,
+                    pointBorderColor: add_transparency("#262626", transparency),
+                    data: mean_vals,
+                    label: dataset.label+" Average",
+                    tooltipEnabled: false,
+                    borderWidth: {
+                        bottom: 0,
+                        top: 1,
+                        left: 1,
+                        right: 1
+                    }
+                })
+            }
         }
     }
 
@@ -164,7 +167,8 @@ function get_pc_data(quadrant, quadrants) {
             pointBorderWidth: radius/4,
             pointBorderColor: add_transparency("#262626", transparency),
             data: data_values,
-            label: dataset.name,
+            label: dataset.label,
+            filterset_id: null,
             borderWidth: {
                 bottom: 0,
                 top: 1,

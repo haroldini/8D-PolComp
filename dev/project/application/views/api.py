@@ -179,6 +179,9 @@ def data_api():
             if "answer_counts" in session:
                 datasets.insert(0, {
                     "name": "your_results",
+                    "label": "Your Results",
+                    "custom_dataset": False,
+                    "result_id": session["results_id"],
                     "color": "salmon",
                     "count": 1,
                     "point_props": [1, 8],
