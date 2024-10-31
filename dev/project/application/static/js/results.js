@@ -69,7 +69,7 @@ function create_matches_chart(closest_matches, axis="overall", num_matches_shown
                 x: {
                     display: false,
                     min: 0,
-                    max: 1,
+                    max: 1.2,
                 },
                 y: {
                     display: true,
