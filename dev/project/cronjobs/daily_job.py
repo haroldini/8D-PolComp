@@ -27,6 +27,7 @@ class DailyJob():
         with open(demo_path, 'r', encoding='utf-8') as f:
             demographics = json.load(f)
             identities = demographics["identities"]
+            identities.append("Average Result")
         
         with open(avgs_path, 'w', encoding='utf-8') as f:
             avg_identities = Results.get_avg_identities(identities, min_results=50)

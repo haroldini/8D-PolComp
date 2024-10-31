@@ -1,3 +1,8 @@
+// Defaults for selected axis and number of matches shown
+let selected_axis = "overall"
+let selected_num_matches_shown = 8
+
+
 // Takes user to /instructions
 function restart_test() {
     $(function () {
@@ -19,9 +24,8 @@ function restart_test() {
 }
 
 
-function create_matches_chart(closest_matches, axis="overall") {
+function create_matches_chart(closest_matches, axis="overall", num_matches_shown=8) {
     // Extract labels and data values
-    let num_matches_shown = 8
     let entries = closest_matches[axis].slice(0, num_matches_shown);
     let labels = entries.map(entry => entry[0]);
     let values = entries.map(entry => entry[1]);
@@ -110,15 +114,34 @@ function create_matches_chart(closest_matches, axis="overall") {
 
 
 // Updates results histogram when an axis is selected
-function update_matches(axis, num_matches_shown=8) {
-    let closest_matches = $("#matches-data").data("matches")
-    let entries = closest_matches[axis].slice(0, num_matches_shown);
+function update_matches(axis="overall", num_matches_shown=8) {
+    let closest_matches = $("#matches-data").data("matches");
+    if (axis != null) {
+        selected_axis = axis;
+    }
+    if (num_matches_shown != null) {
+        selected_num_matches_shown = num_matches_shown;
+    }
+    let entries = closest_matches[selected_axis].slice(0, selected_num_matches_shown);
     let labels = entries.map(entry => entry[0]);
     let values = entries.map(entry => entry[1]);
 
     matches_chart.data.labels = labels
     matches_chart.data.datasets[0].data = values
     matches_chart.update()
+}
+
+// Updates results when number of matches shown is changed
+function swap_num_matches(btn) {
+    let state = btn.innerHTML;
+    if (state == "-" && selected_num_matches_shown > 1) {
+        selected_num_matches_shown =8;
+        btn.innerHTML = "+";
+    } else if (state == "+") {
+        selected_num_matches_shown = 15;
+        btn.innerHTML = "-";
+    }
+    update_matches(null, selected_num_matches_shown);
 }
 
 window.onload = function() {

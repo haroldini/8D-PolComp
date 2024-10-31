@@ -200,7 +200,7 @@ class ResultsController:
                     'ethnicity': [], 
                     'education': [], 
                     'party': [], 
-                    'identities': [identity_key]
+                    'identities': [identity_key] if identity_key != "Average Result" else []
                     }]
             })
 

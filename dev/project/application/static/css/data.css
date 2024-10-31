@@ -129,10 +129,14 @@
 .a-l {
     border-top-left-radius: 0.5rem !important;
     border-bottom-left-radius: 0.5rem !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
 .a-r {
     border-top-right-radius: 0.5rem !important;
     border-bottom-right-radius: 0.5rem !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
 }
 .input-box {
     min-width: 10rem;

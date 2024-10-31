@@ -9,13 +9,16 @@ from application.controllers.results import ResultsController as Results
 v = Blueprint('results', __name__)
 
 
-def euclidean_distances(results, avgs):
-    """Calculate the Euclidean distance between two dictionaries of axes"""
+def euclidean_distances(results, avgs, power=1.3):
+    """
+    Calculate a powered Euclidean distance between two dictionaries of axes. power is a parameter to adjust the distance calculation.
+    power > 1 will increase the distance between two points, power < 1 will decrease the distance. 1 is linear.
+    """
     distances = {}
     max_dist = np.sqrt(len(results.keys())*2)
     for identity, avg in avgs.items():
         keys = set(results.keys()).union(avg.keys())
-        distance = 1 / (1 + np.linalg.norm([results.get(key, 0) - avg.get(key, 0) for key in keys]))
+        distance = 1 / (1 + np.linalg.norm([abs(results.get(key, 0) - avg.get(key, 0))**power for key in keys]))
         distances[identity] = distance
     return sorted(distances.items(), key=lambda x: x[1], reverse=True)
 
@@ -27,13 +30,13 @@ def get_closest_matches(results):
 
     # Get closest matches overall
     axes = results.keys()
-    distances_by_axis = {"overall": euclidean_distances(results, avgs)}
+    distances_by_axis = {"overall": euclidean_distances(results, avgs, power=1)}
 
     # Get closest matches for each axis
     for axis in axes:
         n_ax = len(axes)
-        distances = [(identity, (1-2*abs(results[axis] - identity_avgs[axis]))/1) for identity, identity_avgs in avgs.items()]
-        distances_by_axis[axis] = sorted(distances, key=lambda x: x[1], reverse=True)
+        single_axis_result = {axis: results[axis]}
+        distances_by_axis[axis] = euclidean_distances(single_axis_result, avgs, power=1.5)
         
     return distances_by_axis
 
