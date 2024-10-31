@@ -186,10 +186,11 @@ class ResultsController:
         for identity_key in identity_keys:
             datasets = ResultsController.get_filtered_datasets(filter_data={
                 'order': 'random', 
-                'limit': '1000', 
+                'limit': '1000000', 
                 'min-date': '2023-01-01',
                 'max-date': datetime.now().isoformat(),
                 'filtersets': [{
+                    'label': 'All',
                     'min-age': None, 
                     'max-age': None, 
                     'any-all': 'any', 
