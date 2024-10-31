@@ -10,7 +10,7 @@ function maxScale(array) {
 
 // Get list of result values for target axis
 function get_axis_datavalues(axis_name) {
-    let invert_axes = ["economics", "state", "politics", "technology"]
+    let invert_axes = ["diplomacy", "government", "religion", "society"]
 
     let axis_data = {}
     
@@ -61,14 +61,14 @@ function get_binned_datasets(values) {
 }
 
 const axis_labels = {
-    society: ["Conservatism", "Progressivism"],
-    politics: ["Moderatism", "Radicalism"],
-    economics: ["Capitalism", "Socialism"],
-    state: ["Authority", "Liberty"],
-    diplomacy: ["Nationalism", "Cosmopolitanism"],
-    government: ["Autocracy", "Democracy"],
-    technology: ["Primitivism", "Transhumanism"],
-    religion: ["Theocracy", "Secularism"]
+    society: ["Progressivism", "Conservatism"],
+    politics: ["Radicalism", "Moderatism"],
+    economics: ["Socialism", "Capitalism"],
+    state: ["Liberty", "Authority"],
+    diplomacy: ["Cosmopolitanism", "Nationalism"],
+    government: ["Democracy", "Autocracy"],
+    technology: ["Transhumanism", "Primitivism"],
+    religion: ["Secularism", "Theocracy"]
 }
 
 // Create results histogram chart from binned counts for each axis.

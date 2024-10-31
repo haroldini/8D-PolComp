@@ -163,7 +163,7 @@
 .hg-div4 { grid-area: 3 / 3 / 4 / 4; }
 .hg-div5 { 
     grid-area: 3 / 1 / 4 / 4; 
-    background: linear-gradient(90deg, var(--blue), var(--green));
+    background: linear-gradient(90deg, var(--green), var(--blue));
 }
 .hg-text {
     display: flex;
