@@ -31,24 +31,25 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     margin: 0.5rem;
 }
 ::-webkit-scrollbar-track {
     background-color: #202020;
-    border-radius: 7.5px;
 }
 ::-webkit-scrollbar-corner {
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(180deg, var(--blue), var(--green));
-    border-radius: 7.5px;
+    background-image: linear-gradient(180deg, var(--green) 50%, var(--blue) 50%);
+    border: solid 2px var(--black);
+    border-radius: 9px;
 }
 ::-webkit-scrollbar-thumb:horizontal{
-    background-image: linear-gradient(90deg, var(--blue), var(--green));
-    border-radius: 7.5px;
+    background-image: linear-gradient(90deg, var(--green) 50%, var(--blue) 50%);
+    border: solid 2px var(--black);
+    border-radius: 9px;
 }
 
 form {
@@ -58,8 +59,7 @@ form {
 .header {
     background: var(--black);
     color: var(--black);
-    border-bottom: solid 0.25rem var(--white);
-    background-image: linear-gradient(90deg, var(--blue), var(--green));
+    background-image: linear-gradient(135deg, var(--green), var(--blue));
     font-weight: 600;
     width: 100%;
 }

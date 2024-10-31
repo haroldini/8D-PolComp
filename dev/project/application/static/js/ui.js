@@ -91,16 +91,19 @@ async function save_image(tar, div_id, btn_text="Save Image") {
     disable_button(tar)
     let scale = 2;
     let domNode = document.getElementById(div_id)
-    domtoimage.toBlob(domNode, {
+    let backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--black').trim()
+
+    domtoimage.toJpeg(domNode, {
         width: domNode.clientWidth * scale,
         height: domNode.clientHeight * scale,
         style: {
-        transform: 'scale('+scale+')',
-        transformOrigin: 'top left'
+            transform: 'scale('+scale+')',
+            transformOrigin: 'top left',
+            backgroundColor: backgroundColor
         }
     })
     .then(function (blob) {
         enable_button(tar, btn_text)
-        window.saveAs(blob, '8dpolcomp-image.png');
+        window.saveAs(blob, '8dpolcomp-image.jpg');
     });
 }
