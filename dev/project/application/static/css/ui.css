@@ -303,7 +303,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
     
     .spin-fa-icon::before {
-        content: "\f2f9"; /* Unicode for the fa-arrows-rotate icon */
+        content: "\f2f9";
         display: inline-block;
-        animation: spin-fa-icon 1s linear infinite; /* Corrected animation name */
+        animation: spin-fa-icon 1s linear infinite;
     }
