@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
 
-<div class="component-border flex fill">
+<div class="component-border flex fill" oncontextmenu="return false;" style="cursor: default;">
     <div class="scroll-container center-content" {% if not is_results_page is defined %} id="compass_save" {% endif %}>
         <svg id="spinner" width="100%" height="100%" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <rect class="spinner_9y7u" x="0" y="0" rx="0" width="11" height="11" fill="#c9e5bd"/>

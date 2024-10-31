@@ -329,7 +329,8 @@ function hide_spinner() {
         applyfilters.disabled = false
     }
 }
-function show_error(e_msg="Error loading data, try again.") {
+
+function show_polcomp_error(e_msg="Error loading data, try again.") {
     let spinner = document.getElementById("spinner")
     let statusmsg = document.getElementById("statusmsg")
     let applyfilters = document.getElementById("applyfilters")

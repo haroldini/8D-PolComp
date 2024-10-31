@@ -95,7 +95,7 @@ function apply_filters() {
             }),
             url: "/api/data",
             success: async function (req) {
-                await sleep(Math.random()*1500+500)
+                await sleep(Math.random()*500+250)
                 datasets = JSON.parse(req).compass_datasets
                 let hist_axis = $(document).find("#select-histogram").find(":selected").val();
                 update_chart_data()
@@ -105,8 +105,7 @@ function apply_filters() {
                 hide_spinner()
             },
             error: function(req, err) {
-                console.log(req)
-                show_error(req.responseJSON.status)
+                show_polcomp_error(JSON.parse(req.responseText).status)
             }
         });
     });
@@ -325,7 +324,7 @@ function get_updated_count(ele) {
                 spinner.classList.remove("spin-fa-icon")
             },
             error: function(req, err) {
-                show_error(req.responseJSON.status)
+                show_polcomp_error(JSON.parse(req.responseText).status)
                 ele.classList.remove("disabled-text")
                 spinner.classList.remove("spin-fa-icon")
             }

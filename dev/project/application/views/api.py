@@ -101,7 +101,7 @@ def calculate_results(answers):
 def validate_filtersets(filtersets):
     if filtersets["order"] not in ["random", "recent"]:
         return "Invalid sampling order."
-    if not 0 < int(filtersets["limit"]) < 10000:
+    if not 0 < int(filtersets["limit"]) <= 10000:
         return "Sample size must be between 0 and 10,000."
     
     return False
@@ -172,7 +172,7 @@ def data_api():
         filter_data = data["data"]
         is_valid = validate_filtersets(filter_data)
         if is_valid != False:
-            return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
+            return json.dumps({"status": f"Filterset validation failed: {is_valid}"}), 401 
 
         datasets = Results.get_filtered_datasets(filter_data)
         if "answer_counts" in session:
