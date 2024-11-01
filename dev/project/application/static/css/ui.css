@@ -120,10 +120,10 @@
     outline-offset: 0;
     color: var(--black);
     background: var(--green);
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
+    transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out, opacity 0.1s ease-in-out, outline-offset 0.1s ease-in-out, outline 0.1s ease-in-out; 
 }
 .button:hover {
-    background: var(--blue);
+    opacity: 75%;
     color: var(--black);
     text-decoration: none;
 }
@@ -192,21 +192,33 @@
 .blue-button:hover {
     opacity: 75%;
 }
+.grey-button {
+    background-color: var(--grey) !important;
+    outline-color: var(--grey) !important;
+    transition: opacity 0.2s ease-in-out background-color 0.2s ease-in-out;
+}
+.grey-button:hover {
+    opacity: 75%;
+}
+.grey-button:focus {
+    outline: var(--grey) solid 2px !important;
+    outline-offset: 2px;
+}
 .green-button {
     background-color: var(--green) !important;
+    outline-color: var(--green) !important;
     transition: opacity 0.2s ease-in-out background-color 0.2s ease-in-out;
 }
 .green-button:hover {
     opacity: 75%;
 }
-.grey-button {
+.green-button:focus {
+    outline: var(--green) solid 2px !important;
+    outline-offset: 2px;
+}
+.narrow-button {
     width: 50%;
     max-width: 15rem;
-    background: var(--grey) !important;
-    transition: opacity 0.2s ease-in-out background-color 0.2s ease-in-out;
-}
-.grey-button:hover {
-    opacity: 75%;
 }
 .scroll-second > .component {
     flex: 1; 

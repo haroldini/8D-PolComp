@@ -22,9 +22,9 @@
                 </div>
                 <div class="component flex">
                     <div class="component-border space-between">
-                        <p class="text text-subtitle green" style="margin: 0;">Closest Matches</p>
+                        <p class="text text-subtitle blue" style="margin: 0;">Closest Matches</p>
                         <div class="input-box-container" style="width: 100%; margin-top:0;">
-                            <select id="select-matches-axes" style="text-align: center; width: 75%; border-radius:0;" name="select-matches-axes" class="button" onchange="update_matches(axis=event.target.value, num_matches_shown=null)">
+                            <select id="select-matches-axes" style="text-align: center; width: 75%; border-radius:0;" name="select-matches-axes" class="button blue-button" onchange="update_matches(axis=event.target.value, num_matches_shown=null)">
                                 <option value="overall" selected>All Axes</option>
                                 <option value="society">Society</option>
                                 <option value="politics">Politics</option>
@@ -35,7 +35,7 @@
                                 <option value="technology">Technology</option>
                                 <option value="religion">Religion</option>
                             </select>
-                            <button class="button" style="min-width: 2rem; width: 25%; border-radius:0;" onclick="swap_num_matches(this)" id="num_matches_swap_button">+</button>
+                            <button class="button grey-button" style="min-width: 2rem; width: 25%; border-radius:0;" onclick="swap_num_matches(this)" id="num_matches_swap_button">+</button>
                         </div>
                     </div>  
                     <div class="component-border fill space-between">    
@@ -58,24 +58,20 @@
 </div>
 <div class="components-50-50">
     <div class="component-border component" >
-        <p class="text text-subtitle green">Share Results</p>
-        <button class="button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')"><i class="fa-solid fa-clipboard"></i><span>Copy Link</span></button>
-        <button class="button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+        <p class="text text-subtitle blue">Share Results</p>
+        <button class="button blue-button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')"><i class="fa-solid fa-clipboard"></i><span>Copy Link</span></button>
+        <button class="button blue-button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
         <div id="statusmsg" class="fill">
             <p>Loading...</p>
         </div>
     </div>
     <div class="component-border component">
-        <b><p class="text blue">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>        
-        <a class="button center-content flex blue-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
-    </div>
-    <div class="component-border component">
-        <b><p class="text blue">Explore your closest matches for a specific axis using the drop-down above.</p></b>
+        <b><p class="text green">Explore your closest matches for a specific axis using the drop-down above.</p></b>
         <p class="text">Closest matches are calculated by finding the identities whose participants' average results most closely matched your results.</p>
     </div>
     <div class="component-border component">
-        <p class="text">Thank you for submitting your results, click the button below if you'd like to take the test again!</p>
-        <a class="button center-content flex" href="" onclick="restart_test()"><i class="fa-solid fa-rotate"></i>Restart Test</a>
+        <b><p class="text green">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>        
+        <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
 </div>
 

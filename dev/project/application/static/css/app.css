@@ -42,7 +42,7 @@ body {
     background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(180deg, var(--green) 50%, var(--blue) 50%);
+    background-image: linear-gradient(0deg, var(--green) 50%, var(--blue) 50%);
     border: solid 2px var(--black);
     border-radius: 9px;
 }
@@ -71,7 +71,8 @@ form {
     min-height: 12rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    border-top: solid 0.25rem var(--white);
+    border-top: 0.25rem solid transparent;
+    border-image: linear-gradient(to right, var(--blue), var(--green)) 1;
     background: var(--dark-black);
     color: var(--white);
 }

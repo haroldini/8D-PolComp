@@ -1,5 +1,5 @@
 <div class="input-box-container" style="margin-bottom: 1rem;">
-    <input id="label_{{i}}" class="age-box width-100 blue-button rounded bold" type="text" name="label" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
+    <input id="label_{{i}}" class="age-box width-100 grey-button rounded bold" type="text" name="label" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
 </div>
 
 <div class="input-box-container">
@@ -60,8 +60,8 @@
 </div>
 
 <div class="input-box-container blue-button">
-    <label for="color_{{i}}" class="color-box-label" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
-    <input tabindex=0 id="color_{{i}}" class="color-box" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>
+    <label for="color_{{i}}" class="color-box-label grey-button" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
+    <input tabindex=0 id="color_{{i}}" class="color-box grey-button" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>
 </div>
  
 <button class="inline-link link text-link" id="{{i}}" onclick="get_updated_count(this)">

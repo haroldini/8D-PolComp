@@ -7,16 +7,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--green);
-    color: var(--dark-grey);
+    background: var(--grey);
+    color: var(--black);
     font-weight: 600;
-    transition: background-color 0.2s ease-in-out;
+    transition: opacity 0.2s ease-in-out background-color 0.2s ease-in-out;
 }
 .radio-selector:focus {
     text-decoration: solid underline 4px;
 }
 .radio-selector:hover {
-    background: var(--blue);
+    opacity: 75%;
 }
 .radio-selector:checked {
     background-color: var(--blue);
@@ -65,7 +65,7 @@
     margin: 0;
     padding: 0;
     font-weight: 600;
-    color: var(--dark-grey);
+    color: var(--black);
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
 }
 .color-box {
@@ -81,7 +81,7 @@
     margin-left: 1rem;
     padding: 0;
     font-weight: 600;
-    color: var(--dark-grey);
+    color: var(--black);
     transition: background-color 0.2s ease-in-out;
 }
 .color-box-label:focus-within {

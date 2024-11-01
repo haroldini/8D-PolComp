@@ -8,33 +8,24 @@
 {% block CONTENT %}
 <div class="components-50-50">
     <div class="component-border component">
-        <p class="text">8D-PolComp is a political test and data collection app that places users on 8 ideological axes. Click the button below to join {{data["completed_count"]}} others and find where you stand politically.</p>
-        <p class="text">Alternatively, continue reading to learn more.</p>
+        <p class="text">8D-PolComp is a political test and data collection app that places users on 8 unique ideological axes, from economics to social values. </p>
+        <b><p class="text blue">Click the button below to see how you compare to {{ "{:,}".format(data["completed_count"])}} others in the political landscape.</p></b>
         <a class="button center-content flex blue-button" href="/test"><i class="fa-solid fa-right-long"></i>Take the Test</a>
     </div>
     <div class="component-border component">
-        <p class="text">Some users choose to submit additional data with their results, such as their nationality, age, as well as their political affiliations.</p>
-        <p class="text">View & filter this data using the comprehensive visualisation tool available on the Data page.</p>
-        <a class="button center-content flex blue-button" href="/data"><i class="fa-solid fa-chart-simple"></i>Data</a>
-    </div>
-    <div class="component-border component">
-        <p class="text">If you like 8D-PolComp, consider donating to help keep the site running. You can also contact me at the link below if you have any suggestions.</p>
-        <div class="wrapper">
-            <div class="wrapped">
-                <a class="button center-content flex" href="/contact"><i class="fa-solid fa-circle-dollar-to-slot"></i>Donate</a>
-            </div>
-            <div class="wrapped">
-                <a class="button center-content flex" href="/contact"><i class="fa-solid fa-envelope"></i>Contact</a>
-            </div>
-        </div>
-    </div>
-    <div class="component-border component" style="justify-content: center;">
-        <p class="text">All political tests are subject to bias, including 8D-PolComp. It may be more useful to compare your results to those of other participants, rather than relative to the axes the test places you on. You can do this on the <span class="inline-link"><a href="/data" class="link">Data</a></span> page.</p>
+        <p class="text">Some users choose to submit additional data with their results, such as their nationality, age, and political affiliations.</p>
+        <b><p class="text green">View & filter this data using the comprehensive visualisation tool on the Data page.</p></b>
+        <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-chart-simple"></i>Data</a>
     </div>
 </div>
 <div class="components-50-50">
     <div class="component-border">
         <p class="text text-subtitle">Sample Compasses</p>
+        <div class="component component-border">
+            <p>8D-PolComp visualises your political alignment across eight ideological axes, shown across four separate charts. Each axis represents a distinct poltical spectrum, covering your alignment on economics, governance, diplomacy, and more.</p>
+            <p>Click the button below to view the most recent user submission and explore the chart in detail.</p>
+            <a class="button center-content flex grey-button" href="{{ url_for('results.results', results_id=data['recent_results_id']-1) }}"><i class="fa-solid fa-chart-simple"></i>Most Recent Submission</a>
+        </div>
         <div class="components-80-20">
             <div class="component">
                 {% include "components/compass.html" %}
@@ -171,18 +162,30 @@
 <div class="components-50-50">
     <div class="component-border component">
         <p class="text text-subtitle">Learn More</p>
-        <div class="component-border">
-            <p class="text">If you'd like to learn more about your views, check out the Political Compass and 8values at the links below.</p>
-            <div class="wrapper">
-                <div class="wrapped">
-                    <a class="button center-content flex" href='https://www.politicalcompass.org/'>Political Compass</a>
-                </div>
-                <div class="wrapped">
-                <a class="button center-content flex" href='https://8values.github.io/'>8values</a>
+        <p class="text">If you'd like to learn more about your views, check out the Political Compass and 8values at the links below.</p>
+        <div class="wrapper">
+            <div class="wrapped">
+                <a class="button grey-button center-content flex" href='https://www.politicalcompass.org/'>Political Compass</a>
+            </div>
+            <div class="wrapped">
+            <a class="button grey-button center-content flex" href='https://8values.github.io/'>8values</a>
             </div>
         </div>
     </div>
-</div>
+    <div class="component-border component">
+        <p class="text">If you enjoy 8D-PolComp, please consider donating to help keep the site running. You can also reach out via the link below if you have any suggestions.</p>
+        <div class="wrapper">
+            <div class="wrapped">
+                <a class="button blue-button center-content flex" href="/contact"><i class="fa-solid fa-circle-dollar-to-slot"></i>Donate</a>
+            </div>
+            <div class="wrapped">
+                <a class="button grey-button center-content flex" href="/contact"><i class="fa-solid fa-envelope"></i>Contact</a>
+            </div>
+        </div>
+    </div>
+    <div class="component-border component" style="justify-content: center;">
+        <p class="text">All political tests are subject to bias, including 8D-PolComp. It may be more useful to compare your results to those of other participants, rather than relative to the axes the test places you on. You can do this on the <span class="inline-link"><a href="/data" class="link">Data</a></span> page.</p>
+    </div>
 
 </div>
 
