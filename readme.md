@@ -21,7 +21,7 @@
 │   └── run.py                 # Main entry point to run the application
 ├── env/                       # Virtual environment directory
 ├── resources/                 # Additional resources or documentation
-├── readme-content/            # Supplementary files for README
+├── readme_content/            # Supplementary files for README
 ├── .gitignore                 # Git ignore file
 ├── README.md                  # Project README
 └── requirements.txt           # Project dependencies
@@ -37,4 +37,18 @@ The project uses the following key libraries:
 - **Requests** (v2.32.3): For making HTTP requests if needed.
 - **scikit-learn** (v1.5.2): Provides the `MaxAbsScaler` for scaling data in data visualizations.
 - **sqlalchemy-filtering** (v0.1.2): Used for advanced querying and filtering of data based on user-defined criteria.
+---
+# Media
 
+### Demonstrating advanced filtering and querying capabilities, powered by SQLAlchemy ORM to interface with a PostgreSQL database. Features include data comparison through Chart.js visualizations like histograms, 8D-PolComp charts, and individual question analysis, with custom CSS animations and formatting.
+![ChartJS](readme_content/data.gif)
+
+### Showcasing the mobile-friendly, responsive layout of the web app, built with Flexbox, CSS Grid, and media queries for seamless adaptability across devices. Dynamic element sizing with percentage widths, alongside rem and em units.
+![Responsive Layout](readme_content/responsive.gif)
+
+### Demonstrating interactive results charts and graphs powered by Chart.js, featuring customisable options, intuitive formatting, and responsive design for dynamic data exploration.
+![ChartJS](readme_content/chart_js.gif)
+
+
+### A questionnaire with data served from PostgreSQL. Includes a form with Google reCAPTCHA for security, analytics tracking, and final results submitted to a PostgreSQL results table.
+![ChartJS](readme_content/test.gif)
