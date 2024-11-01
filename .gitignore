@@ -2,7 +2,7 @@
 .env
 config
 resources
-dev/project/application/data/demographics/axis_averages.json
+8dpolcomp/application/data/demographics/axis_averages.json
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
