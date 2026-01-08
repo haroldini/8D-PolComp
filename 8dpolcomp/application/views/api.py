@@ -109,32 +109,55 @@ def validate_filtersets(filtersets):
 
 @v.route("/api/to_results", methods=["POST"])
 def to_results():
-    data = request.get_json()
-    captcha_response = data["recaptcha"]
-    secret_url = f"{current_app.config['RECAPTCHA_VERIFY_URL']}?secret={current_app.config['RECAPTCHA_SECRET_KEY']}&response={captcha_response}"
-    verify_response = requests.post(url=secret_url).json()
-    if not verify_response["success"]:
-        return {"status": "Captcha Verification Failed"}, 401
 
-    # Count answers for each question to add user data to pie
-    get_answer_counts()
+    try:
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict):
+            return {"status": "Invalid request. Please refresh and try again."}, 400
 
-    # Add user's result to database
-    if current_app.config["DEV"]:
-        session["results_id"] = "1006"
-    else:
-        results, valid = validate_results(
-            demographics = data["demographics"],
-            scores = session["results"],
-            answers = session["answers"])
-        if valid != True:
-            print("not valid")
-            return {"status": f"Result Validation Failed: {valid}. Contact developer to report issue."}, 401
-        session["results_id"] = Results.add_result(results, return_id=True) - 1 # -1 needed because db IDs start at 0
+        captcha_response = data.get("captcha")
+        if not captcha_response:
+            return {"status": "Captcha missing. Please complete the captcha and try again."}, 400
+        
+        # Validate captcha
+        try:
+            verify_response = requests.post(
+                url=current_app.config["HCAPTCHA_VERIFY_URL"],
+                data={
+                    "secret": current_app.config["HCAPTCHA_SECRET_KEY"],
+                    "response": captcha_response,
+                    "remoteip": request.remote_addr
+                },
+                timeout=3
+            ).json()
+        except requests.RequestException:
+            return {"status": "Captcha verification unavailable. Please try again."}, 503
+        if not verify_response.get("success"):
+            return {"status": "Captcha verification failed. Please try again."},
 
-    # Return success, ajax will redirect to results, set new path for link to instructions
-    session["template"] = "instructions"
-    return {"status": "success", "results_id": session["results_id"]}, 200
+        # Count answers for each question to add user data to pie
+        get_answer_counts()
+
+        # Add user's result to database
+        if current_app.config["DEV"]:
+            session["results_id"] = "1006"
+        else:
+            results, valid = validate_results(
+                demographics = data["demographics"],
+                scores = session["results"],
+                answers = session["answers"]
+            )
+            if valid is not True:
+                return {"status": f"Result Validation Failed: {valid}. Refresh and try again."}, 401
+            session["results_id"] = Results.add_result(results, return_id=True) - 1 # -1 for 0-start indexed db IDs
+
+        # Return success, ajax will redirect to results, set new path for link to instructions
+        session["template"] = "instructions"
+        return {"status": "success", "results_id": session["results_id"]}, 200
+    
+    except Exception:
+        print("Unhandled error in /api/to_results")
+        return {"status": "Server error. Please refresh and try again."}, 500
 
 
 @v.route("/api/to_form", methods=["POST"])

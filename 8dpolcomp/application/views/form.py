@@ -20,4 +20,4 @@ def form():
         f.close()
 
     session["template"] = "form"
-    return render_template(f"pages/{session['template']}.html", site_key=current_app.config["RECAPTCHA_SITE_KEY"], demo=demo)
+    return render_template(f"pages/{session['template']}.html", site_key=current_app.config["HCAPTCHA_SITE_KEY"], demo=demo)
