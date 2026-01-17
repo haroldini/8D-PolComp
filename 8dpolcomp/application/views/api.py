@@ -1,43 +1,174 @@
 
-import os
 import json
+import logging
+import os
+from datetime import date, datetime
+from typing import Any, Dict, List, Literal, Optional
 
 import requests
-from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
+from flask import Blueprint, session, request, current_app
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, conint, confloat, field_validator, model_validator
 
 from application.controllers.results import ResultsController as Results
 from application.controllers.questions import QuestionsController as Questions
 
 
-v = Blueprint('api', __name__)
+logger = logging.getLogger(__name__)
 
 
-def validate_results(demographics, scores, answers):
+v = Blueprint("api", __name__)
 
-    # Validate scores
-    valid_axes = ["diplomacy", "economics", "government", "politics", "religion", "society", "state", "technology"]
-    for axis, score in scores.items():
-        if axis not in valid_axes:
-            return None, False
-        if not -1 <= score <= 1:
-            return None, False
 
-    # Validate answers
-    for q_id, answer in answers.items():
-        if not 0 <= int(q_id) <= 100:
-            return None, False
-        if not -2 <= int(answer) <= 2:
-            return None, False
+# --------- Pydantic Schemas ---------
 
-    # Validate demographics
-    with open(f"{current_app.config['REL_DIR']}application/data/demographics/demographics.json", "r", encoding="utf-8") as f:
-        demo_valid = json.load(f)
-        f.close()
+
+Axis = Literal["diplomacy", "economics", "government", "politics", "religion", "society", "state", "technology"]
+
+
+class ToFormBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    answers: Dict[int, conint(ge=-2, le=2)]
+
+    @field_validator("answers")
+    @classmethod
+    def validate_answer_keys(cls, v):
+        for q_id in v.keys():
+            if not 1 <= int(q_id) <= 100:
+                raise ValueError("Invalid question ID")
+        return v
+
+
+class ToTestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["to_test"]
+
+
+class ToInstructionsBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["to_instructions"]
+
+
+class ToResultsBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    captcha: str
+    demographics: Dict[str, Any]
+
+
+class FiltersetModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    label: str
+    min_age: Optional[conint(ge=0, le=101)] = Field(default=None, alias="min-age")
+    max_age: Optional[conint(ge=0, le=101)] = Field(default=None, alias="max-age")
+    any_all: Literal["any", "all"] = Field(default="any", alias="any-all")
+    color: str
+    country: List[str] = []
+    religion: List[str] = []
+    ethnicity: List[str] = []
+    education: List[str] = []
+    party: List[str] = []
+    identities: List[str] = []
+
+    @model_validator(mode="after")
+    def validate_age_range(self):
+        if self.min_age is not None and self.max_age is not None:
+            if self.min_age > self.max_age:
+                raise ValueError("min-age cannot exceed max-age")
+        return self
+
+
+class FilterDataModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    order: Literal["random", "recent"]
+    limit: conint(gt=0, le=10000)
+    min_date: datetime = Field(alias="min-date")
+    max_date: datetime = Field(alias="max-date")
+    filtersets: List[FiltersetModel]
+
+    @model_validator(mode="after")
+    def validate_dates(self):
+        if self.min_date > self.max_date:
+            raise ValueError("min-date cannot exceed max-date")
+        return self
+
+    def to_legacy_dict(self):
+        """
+        Convert to the dict format ResultsController expects:
+        keys like "min-date", "max-date", "min-age", "any-all", etc.
+
+        Returns:
+            dict
+        """
+
+        payload = self.model_dump(by_alias=True)
+        payload["min-date"] = self.min_date.date().isoformat()
+        payload["max-date"] = self.max_date.date().isoformat()
+        return payload
+
+
+class DataApiBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["apply_filters", "get_all_results", "get_legacy_results"]
+    data: Optional[dict] = None
+
+
+class FilterCountBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["get_filterset_count"]
+    data: dict
+
+
+# --------- Internal validators ---------
+
+
+class ScoresModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    diplomacy: confloat(ge=-1, le=1)
+    economics: confloat(ge=-1, le=1)
+    government: confloat(ge=-1, le=1)
+    politics: confloat(ge=-1, le=1)
+    religion: confloat(ge=-1, le=1)
+    society: confloat(ge=-1, le=1)
+    state: confloat(ge=-1, le=1)
+    technology: confloat(ge=-1, le=1)
+
+
+def _load_demo_valid():
+    demo_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/demographics.json")
+    with open(demo_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[Dict[str, Any] | None, str | None]:
+    """
+    Validate demographics against the demographics.json file schema.
+
+    Returns:
+        (validated_demographics, error_message)
+    """
+
+    try:
+        demo_valid = _load_demo_valid()
+    except Exception:
+        logger.exception("[demographics] Failed to load demographics.json for validation")
+        return None, "Validation unavailable"
+
+    if not isinstance(demographics, dict):
+        return None, "Demographics are invalid"
+
     for dem_key, dem_val in demographics.items():
 
         # Unknown demographic key = invalid
         # Empty demographic value = valid
-        if not dem_key in demo_valid.keys():
+        if dem_key not in demo_valid.keys():
             return None, f"{dem_key} is not a valid demographic"
         if dem_key != "identities" and dem_val == "":
             continue
@@ -46,8 +177,12 @@ def validate_results(demographics, scores, answers):
         if dem_key == "age":
             if dem_val == -1:
                 continue
-            elif dem_val in [int(age_val) for age_val in demo_valid[dem_key]]:
-                continue
+            try:
+                allowed = [int(age_val) for age_val in demo_valid[dem_key]]
+                if int(dem_val) in allowed:
+                    continue
+            except Exception:
+                return None, f"{dem_val} is not a valid {dem_key}"
             return None, f"{dem_val} is not a valid {dem_key}"
 
         # For party key - acceptable vals are contained within countries
@@ -55,183 +190,444 @@ def validate_results(demographics, scores, answers):
             acceptable_vals = []
             for country, party_list in demo_valid["party"].items():
                 for party in party_list:
-                    acceptable_vals.append(country+"-"+party)
-           
+                    acceptable_vals.append(country + "-" + party)
+
             if dem_val in acceptable_vals:
                 continue
             return None, f"{dem_val} is not a valid {dem_key}"
-        
+
         # For identity key, just check for valid values across each identity in list
-        elif dem_key == "identities": 
+        elif dem_key == "identities":
             if dem_val == []:
                 continue
+            if not isinstance(dem_val, list):
+                return None, "Identities must be a list"
+            cleaned = []
             for identity in dem_val:
                 if identity == "":
-                    demographics[dem_key] = []
                     continue
                 if identity not in demo_valid[dem_key]:
                     return None, f"{identity} is not a valid {dem_key}"
-                
+                cleaned.append(identity)
+            demographics["identities"] = cleaned
+
         # For other keys - just check for valid values inside demo_valid for key.
         elif dem_val not in demo_valid[dem_key]:
             return None, f"{dem_val} is not a valid {dem_key}"
 
-    return {"demographics": demographics, "scores": scores, "answers": answers}, True
+    return demographics, None
+
+
+def _validate_session_answers_and_scores() -> tuple[Dict[str, Any] | None, str | None]:
+    """
+    Validate session["answers"] and session["results"] before DB insertion.
+
+    Returns:
+        (validated_payload, error_message)
+    """
+
+    if "answers" not in session or "results" not in session:
+        return None, "Session expired. Please refresh and try again."
+
+    answers = session.get("answers")
+    scores = session.get("results")
+
+    try:
+        parsed_answers = ToFormBody(answers={int(k): int(v) for k, v in answers.items()}).answers
+    except Exception:
+        logger.warning("[session validate] answers invalid")
+        return None, "Session expired. Please refresh and try again."
+
+    try:
+        parsed_scores = ScoresModel(**scores).model_dump()
+    except Exception:
+        logger.warning("[session validate] scores invalid")
+        return None, "Session expired. Please refresh and try again."
+
+    return {"answers": parsed_answers, "scores": parsed_scores}, None
 
 
 def get_answer_counts():
+    """
+    Compute per-question answer counts for the current session answers.
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        KeyError: If session["answers"] is missing.
+    """
+
     session["answer_counts"] = {
-        str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0} 
-        for q_id in session["answers"].keys()}
+        str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0}
+        for q_id in session["answers"].keys()
+    }
     keys = {2: "Strongly Agree", 1: "Agree", 0: "Neutral", -1: "Disagree", -2: "Strongly Disagree"}
     for q_id, q_ans in session["answers"].items():
-        session["answer_counts"][q_id][keys[q_ans]] += 1
+        session["answer_counts"][str(q_id)][keys[q_ans]] += 1
 
 
 def calculate_results(answers):
+    """
+    Convert answers -> axis score result dict.
+
+    Args:
+        answers (dict[int, int]): question_id -> answer value
+
+    Returns:
+        dict: axis -> score (rounded)
+
+    Raises:
+        KeyError: If question scoring data missing.
+    """
+
     # From dict of {question: answer, ...}, calculate results as dict of {axis: score, ...}
     scores = Questions.get_scores(test=False)
 
     r_scores = {}
     for q_id, q_scores in scores.items():
-        r_scores[q_id] = { axis: q_score*answers[q_id] for axis, q_score in q_scores.items() }
-    r_sums = { axis: sum([ v[axis] for v in r_scores.values() ]) for axis in r_scores[1].keys() }
+        r_scores[q_id] = {axis: q_score * answers[q_id] for axis, q_score in q_scores.items()}
+
+    first = next(iter(r_scores.values()))
+    r_sums = {axis: sum([v[axis] for v in r_scores.values()]) for axis in first.keys()}
+
     max_scores = Questions.get_max_scores()
-    return { axis: round(val/max_scores[axis], 2) for axis, val in r_sums.items() }
+    return {axis: round(val / max_scores[axis], 2) for axis, val in r_sums.items()}
 
 
-def validate_filtersets(filtersets):
-    if filtersets["order"] not in ["random", "recent"]:
-        return "Invalid sampling order."
-    if not 0 < int(filtersets["limit"]) <= 10000:
-        return "Sample size must be between 0 and 10,000."
-    
-    return False
+# --------- Routes ---------
+
+
+@v.route("/api/to_form", methods=["POST"])
+def to_form():
+    """
+    Accept answers payload, calculate axis results, and move user to demographics form.
+
+    Args:
+        JSON body:
+            answers (dict[int,int]): question_id -> answer
+
+    Returns:
+        dict: {"status": "success"}
+
+    Raises:
+        400: Invalid request body.
+        500: Unexpected server error.
+    """
+
+    try:
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        try:
+            body = ToFormBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/to_form] ValidationError: %s", str(e))
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        answers = {int(q): int(a) for q, a in body.answers.items()}
+        results = calculate_results(answers)
+
+        session["answers"] = answers
+        session["results"] = results
+        session["template"] = "form"
+
+        return {"status": "success"}, 200
+
+    except Exception:
+        logger.exception("[/api/to_form] Unhandled error")
+        return {"status": "Server error. Please refresh and try again."}, 500
+
+
+@v.route("/api/to_test", methods=["POST"])
+def to_test():
+    """
+    Move user state into the test page.
+
+    Args:
+        JSON body:
+            action (str): must be "to_test"
+
+    Returns:
+        dict: {"status": "success"}
+
+    Raises:
+        400: Invalid request.
+        500: Unexpected server error.
+    """
+
+    try:
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        try:
+            ToTestBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/to_test] ValidationError: %s", str(e))
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        session["template"] = "test"
+        return {"status": "success"}, 200
+
+    except Exception:
+        logger.exception("[/api/to_test] Unhandled error")
+        return {"status": "Server error. Please refresh and try again."}, 500
+
+
+@v.route("/api/to_instructions", methods=["POST"])
+def to_instructions():
+    """
+    Reset user flow back to instructions page.
+
+    Args:
+        JSON body:
+            action (str): must be "to_instructions"
+
+    Returns:
+        dict: {"status": "success"}
+
+    Raises:
+        400: Invalid request.
+        500: Unexpected server error.
+    """
+
+    try:
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        try:
+            ToInstructionsBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/to_instructions] ValidationError: %s", str(e))
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        session["template"] = "instructions"
+        return {"status": "success"}, 200
+
+    except Exception:
+        logger.exception("[/api/to_instructions] Unhandled error")
+        return {"status": "Server error. Please refresh and try again."}, 500
 
 
 @v.route("/api/to_results", methods=["POST"])
 def to_results():
+    """
+    Finalise a test submission and persist results.
+
+    Validates captcha, validates session results/answers, validates demographics payload,
+    and (in non-dev) inserts into DB.
+
+    Args:
+        JSON body:
+            captcha (str): hCaptcha token.
+            demographics (dict): User demographics data.
+
+    Returns:
+        dict: {"status": "success", "results_id": <id>} on success
+        dict: {"status": "<message>"} on error
+
+    Raises:
+        400: Invalid request / missing required fields.
+        401: Captcha failure / validation failure.
+        503: Captcha verification unavailable.
+        500: Unexpected server error.
+    """
 
     try:
-        data = request.get_json(silent=True)
-        if not isinstance(data, dict):
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
-        captcha_response = data.get("captcha")
-        if not captcha_response:
-            return {"status": "Captcha missing. Please complete the captcha and try again."}, 400
-        
+        try:
+            body = ToResultsBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/to_results] ValidationError: %s", str(e))
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
         # Validate captcha
         try:
             verify_response = requests.post(
                 url=current_app.config["HCAPTCHA_VERIFY_URL"],
                 data={
                     "secret": current_app.config["HCAPTCHA_SECRET_KEY"],
-                    "response": captcha_response,
+                    "response": body.captcha,
                     "remoteip": request.remote_addr
                 },
                 timeout=3
             ).json()
         except requests.RequestException:
+            logger.warning("[/api/to_results] Captcha verification unavailable")
             return {"status": "Captcha verification unavailable. Please try again."}, 503
+
         if not verify_response.get("success"):
-            return {"status": "Captcha verification failed. Please try again."},
+            logger.info("[/api/to_results] Captcha verification failed")
+            return {"status": "Captcha verification failed. Please try again."}, 401
+
+        # Validate session answers/results
+        session_payload, err = _validate_session_answers_and_scores()
+        if err:
+            logger.warning("[/api/to_results] %s", err)
+            return {"status": err}, 400
+
+        # Validate demographics payload against file
+        demographics, dem_err = _validate_demographics_against_file(body.demographics or {})
+        if dem_err:
+            logger.warning("[/api/to_results] Demographics validation failed: %s", dem_err)
+            return {"status": f"Result Validation Failed: {dem_err}. Refresh and try again."}, 401
 
         # Count answers for each question to add user data to pie
-        get_answer_counts()
+        try:
+            get_answer_counts()
+        except Exception:
+            logger.exception("[/api/to_results] Failed to compute answer counts")
+            return {"status": "Server error. Please refresh and try again."}, 500
 
         # Add user's result to database
-        if current_app.config["DEV"]:
-            session["results_id"] = "1006"
-        else:
-            results, valid = validate_results(
-                demographics = data["demographics"],
-                scores = session["results"],
-                answers = session["answers"]
-            )
-            if valid is not True:
-                return {"status": f"Result Validation Failed: {valid}. Refresh and try again."}, 401
-            session["results_id"] = Results.add_result(results, return_id=True) - 1 # -1 for 0-start indexed db IDs
+        try:
+            if current_app.config.get("DEV"):
+                session["results_id"] = "1006"
+            else:
+                result_row = {
+                    "demographics": demographics,
+                    "scores": session_payload["scores"],
+                    "answers": session_payload["answers"]
+                }
+                session["results_id"] = Results.add_result(result_row, return_id=True) - 1  # -1 for 0-start indexed db IDs
+        except Exception:
+            logger.exception("[/api/to_results] Failed to store result")
+            return {"status": "Server error. Please refresh and try again."}, 500
 
-        # Return success, ajax will redirect to results, set new path for link to instructions
         session["template"] = "instructions"
         return {"status": "success", "results_id": session["results_id"]}, 200
-    
+
     except Exception:
+        logger.exception("[/api/to_results] Unhandled error")
         return {"status": "Server error. Please refresh and try again."}, 500
-
-
-@v.route("/api/to_form", methods=["POST"])
-def to_form():
-    data = request.get_json()
-    answers = { int(q): int(answer) for q, answer in data["answers"].items() }
-    results = calculate_results(answers)
-    session["answers"] = answers
-    session["results"] = results
-    session["template"] = "form"
-    return {"status": "success"}, 200
-
-
-@v.route("/api/to_test", methods=["POST"])
-def to_test():
-    data = request.get_json()
-    if data["action"] == "to_test":
-        session["template"] = "test"
-    return {"status": "success"}, 200
-
-
-@v.route("/api/to_instructions", methods=["POST"])
-def to_instructions():
-    # Restart test button pressed
-    data = request.get_json()
-    if data["action"] == "to_instructions":
-        session["template"] = "instructions"
-    return {"status": "success"}, 200
 
 
 @v.route("/api/data", methods=["POST"])
 def data_api():
-    data = request.get_json()
-    if data["action"] == "apply_filters":
-        filter_data = data["data"]
-        is_valid = validate_filtersets(filter_data)
-        if is_valid != False:
-            return json.dumps({"status": f"Filterset validation failed: {is_valid}"}), 401 
+    """
+    Data API used by the frontend to:
+      - apply_filters
+      - get_all_results
+      - get_legacy_results
 
-        datasets = Results.get_filtered_datasets(filter_data)
-        if "answer_counts" in session:
-            datasets.insert(0, {
-                "name": "your_results",
-                "label": "Your Results",
-                "custom_dataset": False,
-                "result_id": session["results_id"],
-                "color": "salmon",
-                "count": 1,
-                "point_props": [1, 8],
-                "all_scores": [session["results"]],
-                "answer_counts": session["answer_counts"]
-            })
-        return json.dumps({"status": "success", "compass_datasets": datasets}), 200
+    Args:
+        JSON body:
+            action (str)
+            data (dict) optional depending on action
 
-    elif data["action"] == "get_all_results":
-        all_results = Results.get_all_dct()
-        return json.dumps({"status": "success", "all_results": all_results}), 200
+    Returns:
+        JSON string: {"status": "...", ...}
 
-    elif data["action"] == "get_legacy_results":
-        with open(os.path.join(current_app.config['REL_DIR'], "application/data/legacy-data/record.csv"), "r", encoding="utf-8") as f:
-            return json.dumps({"status": "success", "legacy_results": f.read()}), 200
-    else:
-        return json.dumps({"status": f"Error: Unknown action. Contact the developer if you think this is a mistake."}), 401 
+    Raises:
+        401: Validation failure / unknown action
+        500: Server error
+    """
+
+    try:
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+
+        try:
+            body = DataApiBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/data] ValidationError: %s", str(e))
+            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+
+        if body.action == "apply_filters":
+            if not isinstance(body.data, dict):
+                return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
+
+            try:
+                filt = FilterDataModel(**body.data)
+            except ValidationError as e:
+                logger.warning("[/api/data] FilterData ValidationError: %s", str(e))
+                return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
+
+            datasets = Results.get_filtered_datasets(filt.to_legacy_dict())
+
+            if "answer_counts" in session:
+                datasets.insert(0, {
+                    "name": "your_results",
+                    "label": "Your Results",
+                    "custom_dataset": False,
+                    "result_id": session.get("results_id"),
+                    "color": "salmon",
+                    "count": 1,
+                    "point_props": [1, 8],
+                    "all_scores": [session.get("results")],
+                    "answer_counts": session.get("answer_counts")
+                })
+
+            return json.dumps({"status": "success", "compass_datasets": datasets}), 200
+
+        if body.action == "get_all_results":
+            all_results = Results.get_all_dct()
+            return json.dumps({"status": "success", "all_results": all_results}), 200
+
+        if body.action == "get_legacy_results":
+            try:
+                legacy_path = os.path.join(current_app.config["REL_DIR"], "application/data/legacy-data/record.csv")
+                with open(legacy_path, "r", encoding="utf-8") as f:
+                    return json.dumps({"status": "success", "legacy_results": f.read()}), 200
+            except Exception:
+                logger.exception("[/api/data] Failed to read legacy results file")
+                return json.dumps({"status": "Server error. Please refresh and try again."}), 500
+
+        return json.dumps({"status": "Error: Unknown action. Contact the developer if you think this is a mistake."}), 401
+
+    except Exception:
+        logger.exception("[/api/data] Unhandled error")
+        return json.dumps({"status": "Server error. Please refresh and try again."}), 500
 
 
 @v.route("/api/get_filterset_count", methods=["POST"])
 def get_filterset_count():
-    data = request.get_json()
-    if data["action"] == "get_filterset_count":
-        filter_data = data["data"]
-        is_valid = validate_filtersets(filter_data)
-        if is_valid != False:
-            return json.dumps({"status": f"Filterset validation failed: {is_valid} Contact the developer if you think this is a mistake."}), 401 
+    """
+    Return counts for each filterset without returning datasets.
 
-        counts = Results.get_filtered_dataset_count(filter_data)
+    Args:
+        JSON body:
+            action (str): must be "get_filterset_count"
+            data (dict): filter data object
+
+    Returns:
+        JSON string: {"status": "success", "counts": {...}}
+
+    Raises:
+        401: Validation failure.
+        500: Server error.
+    """
+
+    try:
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict):
+            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+
+        try:
+            body = FilterCountBody(**payload)
+        except ValidationError as e:
+            logger.warning("[/api/get_filterset_count] ValidationError: %s", str(e))
+            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+
+        try:
+            filt = FilterDataModel(**body.data)
+        except ValidationError as e:
+            logger.warning("[/api/get_filterset_count] FilterData ValidationError: %s", str(e))
+            return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
+
+        counts = Results.get_filtered_dataset_count(filt.to_legacy_dict())
         return json.dumps({"status": "success", "counts": counts}), 200
+
+    except Exception:
+        logger.exception("[/api/get_filterset_count] Unhandled error")
+        return json.dumps({"status": "Server error. Please refresh and try again."}), 500
