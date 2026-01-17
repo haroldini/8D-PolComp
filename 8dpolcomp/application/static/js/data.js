@@ -111,7 +111,7 @@ function apply_filters() {
             }),
             url: "/api/data",
             success: async function (req) {
-                await sleep(Math.random() * 500 + 250);
+                await sleep(Math.random() * 250 + 500);
 
                 datasets = JSON.parse(req).compass_datasets;
 

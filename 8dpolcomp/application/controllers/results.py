@@ -1,14 +1,10 @@
 
 import logging
-from datetime import date, datetime, time
+from datetime import date, datetime
 
 import numpy as np
-from sklearn.preprocessing import MaxAbsScaler
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, cast, Integer, Float, or_
 from sqlalchemy.sql.expression import func
-from sqlalchemy_filtering.filter_util import filter_apply
-from sqlalchemy_filtering.operators import SQLDialect
-from sqlalchemy_filtering.validators import FilterRequest
 
 from application.models.results import Results
 from application import db
@@ -17,33 +13,31 @@ from application import db
 logger = logging.getLogger(__name__)
 
 
-def _coerce_to_datetime_bounds(min_val, max_val) -> tuple[datetime, datetime]:
+def _coerce_to_date_bounds(min_val, max_val) -> tuple[date, date]:
     """
-    Convert incoming min/max values (date/datetime) into datetime bounds suitable for DB filtering.
+    Convert incoming min/max values (date/datetime) into DATE bounds suitable for DB filtering.
     """
 
     if isinstance(min_val, datetime):
-        min_dt = min_val
+        min_d = min_val.date()
     elif isinstance(min_val, date):
-        min_dt = datetime.combine(min_val, time.min)
+        min_d = min_val
     else:
         raise TypeError("min-date must be a date or datetime")
 
     if isinstance(max_val, datetime):
-        max_dt = max_val
+        max_d = max_val.date()
     elif isinstance(max_val, date):
-        max_dt = datetime.combine(max_val, time.max)
+        max_d = max_val
     else:
         raise TypeError("max-date must be a date or datetime")
 
-    return min_dt, max_dt
+    return min_d, max_d
 
 
 class ResultsController:
     """
     Results CRUD + dataset filtering logic.
-
-    These methods assume an active Flask app context.
     """
 
     def get_all():
@@ -155,6 +149,53 @@ class ResultsController:
             raise
 
 
+    def _apply_filterset(query, filterset):
+        """
+        Apply filterset constraints directly in SQLAlchemy, matching JSON expression indexes.
+
+        Args:
+            query: SQLAlchemy query
+            filterset (dict): frontend filterset
+
+        Returns:
+            SQLAlchemy query
+        """
+
+        # Identities: JSONB array containment
+        identities = filterset.get("identities") or []
+        if len(identities) > 0:
+            if filterset.get("any-all") == "any":
+                identity_filters = [
+                    Results.demographics["identities"].comparator.contains([identity])
+                    for identity in identities
+                ]
+                query = query.filter(or_(*identity_filters))
+            else:
+                query = query.filter(
+                    Results.demographics["identities"].comparator.contains(identities)
+                )
+
+        # Age: cast to int for numeric comparisons + expression index usage
+        min_age = filterset.get("min-age")
+        max_age = filterset.get("max-age")
+
+        if min_age is not None or max_age is not None:
+            lo = int(min_age) if (min_age is not None and int(min_age) > 0) else 0
+            hi = int(max_age) if (max_age is not None and int(max_age) > 0) else 101
+
+            age_expr = cast(Results.demographics["age"].astext, Integer)
+            query = query.filter(and_(age_expr >= lo, age_expr <= hi))
+
+        # Scalar demographic fields: extraction for expression index usage
+        filter_keys = ["country", "religion", "ethnicity", "education", "party"]
+        for filter_key in filter_keys:
+            vals = filterset.get(filter_key) or []
+            if len(vals) > 0:
+                query = query.filter(Results.demographics[filter_key].astext.in_(vals))
+
+        return query
+
+
     # Filter a provided query object using the filterset given
     def get_filtered_dataset(query, filterset, limit=None):
         """
@@ -168,68 +209,27 @@ class ResultsController:
         Returns:
             list[Results]
         """
-        obj = {"filter": []}
 
-        # Filtration for identities using sqlalchemy
-        if len(filterset["identities"]) > 0:
-            if filterset["any-all"] == "any":
-                identity_filters = [
-                    Results.demographics["identities"].comparator.contains([identity])
-                    for identity in filterset["identities"]
-                ]
-                query_filt = query.filter(or_(*identity_filters))
-            else:
-                query_filt = query.filter(
-                    Results.demographics["identities"].comparator.contains(filterset["identities"])
-                )
-        else:
-            query_filt = query
-
-        # Filtration for age using sqlalchemy-filtering
-        if filterset["min-age"] is not None or filterset["max-age"] is not None:
-            min_age = 0
-            max_age = 101
-            if filterset["min-age"] is not None and filterset["min-age"] > 0:
-                min_age = filterset["min-age"]
-            if filterset["max-age"] is not None and filterset["max-age"] > 0:
-                max_age = filterset["max-age"]
-
-            obj["filter"].append({
-                "field": "demographics",
-                "node": "age",
-                "operator": ">=",
-                "value": min_age,
-            })
-
-            obj["filter"].append({
-                "field": "demographics",
-                "node": "age",
-                "operator": "<=",
-                "value": max_age,
-            })
-
-        # Filtration for individual selections using sqlalchemy-filtering
-        filter_keys = ["country", "religion", "ethnicity", "education", "party"]
-        for filter_key in filter_keys:
-            if len(filterset[filter_key]) > 0:
-                obj["filter"].append({
-                    "field": "demographics",
-                    "node": filter_key,
-                    "operator": "in",
-                    "value": filterset[filter_key],
-                })
-
-        res = filter_apply(
-            query=query_filt,
-            entity=Results,
-            obj=FilterRequest(obj),
-            dialect=SQLDialect.POSTGRESQL
-        )
+        query_filt = ResultsController._apply_filterset(query, filterset)
 
         if limit is not None:
-            res = res.limit(int(limit))
+            query_filt = query_filt.limit(int(limit))
 
-        return res.all()
+        return query_filt.all()
+
+
+    def get_filtered_dataset_query(query, filterset):
+        """
+        Apply one filterset to a SQLAlchemy query and return the query object.
+
+        Args:
+            query: SQLAlchemy query
+            filterset (dict): frontend filterset
+
+        Returns:
+            SQLAlchemy query
+        """
+        return ResultsController._apply_filterset(query, filterset)
 
 
     # Returns list of dataset dictionaries containing scores, average scores and answers.
@@ -253,41 +253,47 @@ class ResultsController:
         else:
             query = Results.query.order_by(func.random())
 
-        min_dt, max_dt = _coerce_to_datetime_bounds(filter_data["min-date"], filter_data["max-date"])
-        query = query.filter(and_(Results.date >= min_dt, Results.date <= max_dt))
+        min_d, max_d = _coerce_to_date_bounds(filter_data["min-date"], filter_data["max-date"])
+        query = query.filter(and_(Results.date >= min_d, Results.date <= max_d))
 
         limit = filter_data.get("limit")
         limit = int(limit) if limit is not None else None
 
         # Reuse same query for each filterset
         for i, filterset in enumerate(filter_data["filtersets"]):
-            filt_results = ResultsController.get_filtered_dataset(query, filterset, limit)
-            all_scores = [result.scores for result in filt_results]
-            all_answers = [result.answers for result in filt_results]
+            filt_query = ResultsController.get_filtered_dataset_query(query, filterset)
 
-            # Get count of each answer for each question
+            if limit is not None:
+                filt_query = filt_query.limit(limit)
+
+            # Only pull the JSON needed by the charts
+            rows = filt_query.with_entities(Results.scores, Results.answers).all()
+
+            all_scores = []
             raw_answer_counts = {
                 str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0}
                 for q_id in range(1, 101)
             }
             keys = {2: "Strongly Agree", 1: "Agree", 0: "Neutral", -1: "Disagree", -2: "Strongly Disagree"}
 
-            for answer in all_answers:
-                for q_id, q_ans in answer.items():
+            for scores, answers in rows:
+                all_scores.append(scores)
+                for q_id, q_ans in answers.items():
                     raw_answer_counts[str(q_id)][keys[q_ans]] += 1
 
-            # Get scaled answer counts
+            # Get scaled answer counts (per-question max -> 1)
             answer_counts = {}
-            scaler = MaxAbsScaler()
             for q_id, inner_dict in raw_answer_counts.items():
-                scaled_values = scaler.fit_transform([[value] for value in inner_dict.values()])
-                scaled_dict = {category: scaled_values[i][0] for i, category in enumerate(inner_dict.keys())}
-                answer_counts[q_id] = scaled_dict
+                denom = max(inner_dict.values()) or 1
+                answer_counts[q_id] = {k: (v / denom) for k, v in inner_dict.items()}
 
             # Get mean and median scores for each axis
             if len(all_scores) > 0:
-                mean_scores = {key: round(np.mean([scores[key] for scores in all_scores]), 2) for key in all_scores[0].keys()}
-                median_scores = {key: round(np.median([scores[key] for scores in all_scores]), 2) for key in all_scores[0].keys()}
+                axes = list(all_scores[0].keys())
+                mat = np.array([[scores.get(axis, 0) for axis in axes] for scores in all_scores], dtype=float)
+
+                mean_scores = {axis: round(float(np.mean(mat[:, j])), 2) for j, axis in enumerate(axes)}
+                median_scores = {axis: round(float(np.median(mat[:, j])), 2) for j, axis in enumerate(axes)}
             else:
                 mean_scores = {}
                 median_scores = {}
@@ -322,8 +328,30 @@ class ResultsController:
         Returns:
             dict[int,int]
         """
-        datasets = ResultsController.get_filtered_datasets(filter_data)
-        counts = {dataset["custom_id"]: dataset["count"] for dataset in datasets}
+
+        # Count does not need ORDER BY random(), and should avoid loading JSON blobs.
+        min_d, max_d = _coerce_to_date_bounds(filter_data["min-date"], filter_data["max-date"])
+        base_query = Results.query.filter(and_(Results.date >= min_d, Results.date <= max_d))
+
+        limit = filter_data.get("limit")
+        limit = int(limit) if limit is not None else None
+
+        counts = {}
+
+        for i, filterset in enumerate(filter_data["filtersets"]):
+            q = ResultsController.get_filtered_dataset_query(base_query, filterset)
+
+            # Remove ordering for count queries (planner + execution improvement)
+            q = q.order_by(None)
+
+            n = q.with_entities(func.count(Results.id)).scalar() or 0
+
+            # Keep existing behaviour: respect limit if provided
+            if limit is not None:
+                n = min(int(n), int(limit))
+
+            counts[i] = int(n)
+
         return counts
 
 
@@ -339,32 +367,36 @@ class ResultsController:
         Returns:
             dict[str, dict]
         """
+
+        axes = ["diplomacy", "economics", "government", "politics", "religion", "society", "state", "technology"]
+
         avg_identities = {}
+        min_d = date(2023, 1, 1)
+        max_d = date.today()
 
         for identity_key in identity_keys:
-            datasets = ResultsController.get_filtered_datasets(filter_data={
-                "order": "random",
-                "limit": 1000000,
-                "min-date": date(2023, 1, 1),
-                "max-date": date.today(),
-                "filtersets": [{
-                    "label": "All",
-                    "min-age": None,
-                    "max-age": None,
-                    "any-all": "any",
-                    "color": "#0db52e",
-                    "country": [],
-                    "religion": [],
-                    "ethnicity": [],
-                    "education": [],
-                    "party": [],
-                    "identities": [identity_key] if identity_key != "Average Result" else []
-                }]
-            })
+            avg_cols = [
+                func.avg(cast(Results.scores[axis].astext, Float)).label(axis)
+                for axis in axes
+            ]
 
-            # only use if adequate scores in data
-            num_identities = len(datasets[0]["all_scores"])
-            if num_identities > min_results:
-                avg_identities[identity_key] = datasets[0]["mean_scores"]
+            q = db.session.query(
+                func.count(Results.id).label("n"),
+                *avg_cols
+            ).filter(and_(Results.date >= min_d, Results.date <= max_d))
+
+            if identity_key != "Average Result":
+                q = q.filter(Results.demographics["identities"].comparator.contains([identity_key]))
+
+            row = q.first()
+            if not row:
+                continue
+
+            n = int(row.n or 0)
+            if n > min_results:
+                avg_identities[identity_key] = {
+                    axis: round(float(getattr(row, axis) or 0.0), 2)
+                    for axis in axes
+                }
 
         return avg_identities
