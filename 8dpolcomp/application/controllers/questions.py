@@ -1,11 +1,16 @@
+
 from application.models.questions import Questions
 
+
 class QuestionsController:
+
     def get_all(test=False):
         return Questions.query.all()[:5] if test else Questions.query.all()
     
+
     def get_num_questions():
         return len(Questions.query.all())
+
 
     # Returns [{question: text}, ...]
     def get_texts(test=False):
@@ -17,6 +22,7 @@ class QuestionsController:
         ]
         return texts[:5] if test else texts
     
+
     # Returns {question: {society: scores, ...}, ...} 
     def get_scores(test=False):
         scores = { getattr(question, "id"): {
@@ -26,6 +32,7 @@ class QuestionsController:
             } for question in Questions.query.all() }
         
         return {k: scores[k] for k in sorted(scores.keys())[:5]} if test else scores
+
 
     # Returns {axis: sum of scores, ...}
     def get_max_scores():

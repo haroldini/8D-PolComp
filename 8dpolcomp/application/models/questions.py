@@ -1,4 +1,6 @@
+
 from application import db
+
 
 class Questions(db.Model):
     id = db.Column(db.Integer, primary_key=True)

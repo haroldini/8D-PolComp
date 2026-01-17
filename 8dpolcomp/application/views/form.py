@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
-import json
+
 import os
+import json
+
+from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
 
 
 v = Blueprint('form', __name__)

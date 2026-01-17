@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template
+
 import json
+
+from flask import Blueprint, render_template
 
 from application.controllers.results import ResultsController as Results
 
@@ -26,6 +28,3 @@ def index():
         "recent_results_id": recent_results[0].id if recent_results else None
     }
     return render_template("pages/index.html", data=data)
-
-
-

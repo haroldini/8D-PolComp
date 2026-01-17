@@ -1,3 +1,4 @@
+
 from sqlalchemy.sql.expression import func
 from sqlalchemy import or_, and_
 from sqlalchemy_filtering.filter_util import filter_apply
@@ -11,10 +12,13 @@ import numpy as np
 from application.models.results import Results
 from application import db
 
+
 class ResultsController:
+
     def get_all():
         return Results.query.all()
     
+
     def get_all_dct():
         all_results = ResultsController.get_all()
         return [{
@@ -24,20 +28,26 @@ class ResultsController:
             "demographics": result.demographics,
             } for result in all_results ]
     
+
     def get_all_scores():
         return [result.scores for result in ResultsController.get_all()]
+
 
     def get_count():
         return Results.query.count()
     
+
     def get_recent_results(n=1):
         return Results.query.order_by(Results.id.desc()).limit(n).all()
     
+
     def get_random_results(n=1):
         return Results.query.order_by(func.random()).limit(n).all()
 
+
     def get_results_from_id(id):
         return Results.query.filter_by(id=id).first()
+
 
     def add_result(results, return_id):    
         new_result = Results(**results)
@@ -46,6 +56,7 @@ class ResultsController:
         db.session.commit()
         if return_id:
             return new_result.id
+
 
     # Filter a provided query object using the filterset given
     def get_filtered_dataset(query, filterset, limit=None):
@@ -174,7 +185,6 @@ class ResultsController:
     def get_filtered_dataset_count(filter_data):
         datasets = ResultsController.get_filtered_datasets(filter_data)
         counts = {dataset["custom_id"]: dataset["count"] for dataset in datasets}
-        print(counts)
         return counts
         
 

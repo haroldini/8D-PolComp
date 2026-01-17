@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
-import requests
-import json
+
 import os
+import json
+
+import requests
+from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
 
 from application.controllers.results import ResultsController as Results
 from application.controllers.questions import QuestionsController as Questions
@@ -156,7 +158,6 @@ def to_results():
         return {"status": "success", "results_id": session["results_id"]}, 200
     
     except Exception:
-        print("Unhandled error in /api/to_results")
         return {"status": "Server error. Please refresh and try again."}, 500
 
 

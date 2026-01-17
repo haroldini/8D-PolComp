@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for
+
 import json
+
+from flask import Blueprint, render_template, session, request, redirect, url_for
 
 from application.controllers.questions import QuestionsController as Questions
 

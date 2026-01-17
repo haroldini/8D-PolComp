@@ -3,6 +3,9 @@
 config
 resources
 8dpolcomp/application/data/demographics/axis_averages.json
+DEV.md
+db_backups/
+migrations/
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -187,6 +190,7 @@ cython_debug/
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+*.code-workspace
 
 # Local History for Visual Studio Code
 .history/

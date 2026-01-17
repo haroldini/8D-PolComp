@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, current_app, session, request, redirect, url_for
-import numpy as np
-import json
+
 import os
+import json
+import numpy as np
+
+from flask import Blueprint, render_template, current_app, session, request, redirect, url_for
 
 from application.controllers.results import ResultsController as Results
 

@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, session, current_app, send_from_directory
-from datetime import datetime
-import json
+
 import os
+import json
+from datetime import datetime
+
+from flask import Blueprint, render_template, request, session, current_app, send_from_directory
 
 from application.controllers.questions import QuestionsController as Questions
 from application.controllers.results import ResultsController as Results
