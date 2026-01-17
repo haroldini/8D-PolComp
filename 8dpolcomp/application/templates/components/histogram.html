@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
 
 <div class="component-border" oncontextmenu="return false;" style="cursor: default;">
@@ -9,14 +10,14 @@
                 <div class="hg-div2"></div>
                 <div class="hg-div5"></div>
                 <div class="hg-div3 row-text label-left hg-text" style="color: var(--black); font-weight: 600;" id="hist-label-l"></div>
-                <div class="hg-div4 row-text label-right hg-text" style="color: var(--black); font-weight: 600;" id="hist-label-r"></div>    
+                <div class="hg-div4 row-text label-right hg-text" style="color: var(--black); font-weight: 600;" id="hist-label-r"></div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="component">
-    <div class="component-border save-btns center-content">    
+    <div class="component-border save-btns center-content">
         <select id="select-histogram" style="margin-right: 1rem; text-align: center;" name="histogram-select" class="button save-button grey-button" onchange="update_histogram(event.target.value)">
             <option value="society" selected>Society</option>
             <option value="politics">Politics</option>
@@ -30,6 +31,5 @@
         <button class="button save-button grey-button" onclick="save_image(event.currentTarget, 'save_histogram')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
     </div>
 </div>
-    
+
 <script src="/static/js/histogram.js"></script>
-    

@@ -1,9 +1,12 @@
-<!DOCTYPE html>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Contact{% endblock %}
+{% block TITLE %} • Contact{% endblock %}
+
+{% block HEAD %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+{% endblock %}
+
 {% block CONTENT %}
 <div class="component-border component">
     <p class="text text-subtitle">Donate</p>
@@ -19,4 +22,3 @@
     </div>
 </div>
 {% endblock %}
-

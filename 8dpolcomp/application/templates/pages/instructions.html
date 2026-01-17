@@ -1,27 +1,8 @@
-<!DOCTYPE html>
-<script>
-    // Takes user to /test
-    function start_test() {
-        $.ajax({
-            type: "POST",
-            url: "/api/to_test",
-            contentType:'application/json',
-            data : JSON.stringify({
-                "action": "to_test"
-            }),
-            success: function () {
-                window.location = "/test";
-            },
-            error: function(req, err) {
-                console.log("error ", err)
-            }
-        })
-    }
-</script>
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Test{% endblock %}
+{% block TITLE %} • Test{% endblock %}
+
 {% block CONTENT %}
 <div class="component-border">
     <p class="text text-subtitle">Instructions</p>
@@ -38,4 +19,25 @@
 </div>
 {% endblock %}
 
-
+{% block SCRIPTS %}
+<script>
+    // Takes user to /test
+    function start_test() {
+        $.ajax({
+            type: "POST",
+            url: "/api/to_test",
+            contentType: "application/json",
+            data: JSON.stringify({ "action": "to_test" }),
+            success: function () {
+                window.location = "/test";
+            },
+            error: function (xhr) {
+                const msg =
+                    (xhr.responseJSON && xhr.responseJSON.status) ||
+                    ("Request failed (" + xhr.status + "). Please refresh and try again.");
+                alert(msg);
+            }
+        });
+    }
+</script>
+{% endblock %}

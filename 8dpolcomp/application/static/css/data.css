@@ -69,20 +69,43 @@
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
 }
 .color-box {
-    all: unset;
+    -webkit-appearance: none;
+    appearance: none;
+
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    outline: none;
-    min-height: 100%;
+
+    width: 2.5rem;
+    height: 1.25rem;
+
+    border: 0;
+    padding: 0;
+
     margin: 0;
     margin-left: 1rem;
-    padding: 0;
-    font-weight: 600;
-    color: var(--black);
+
+    border-radius: 1rem;
+    background: transparent;
+
+    overflow: hidden;
+
     transition: background-color 0.2s ease-in-out;
+}
+
+/* Chrome / Safari / Edge */
+.color-box::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 0.25rem;
+}
+
+.color-box::-webkit-color-swatch {
+    border: 0;
+    border-radius: 0.25rem;
+}
+
+/* Firefox */
+.color-box::-moz-color-swatch {
+    border: 0;
+    border-radius: 0.25rem;
 }
 .color-box-label:focus-within {
     outline: var(--blue) solid 2px;

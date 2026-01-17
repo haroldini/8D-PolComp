@@ -1,78 +1,104 @@
-// Assign test elements to variables
-let text = document.getElementById("question");
-let progress = document.getElementById("progress-bar");
-let label = document.getElementById("progress-label")
 
-// Render first question
-let questions = $('#texts').data("texts").sort( () => Math.random() - 0.5);
-let qn = 0;
-let answers = {};
-let id = questions[qn].id;
-progress.style.width = 100-(100*qn/questions.length)+"%";
-text.innerText = questions[qn].text;
+// DOM refs
+const text = document.getElementById("question");
+const progress = document.getElementById("progress-bar");
+const label = document.getElementById("progress-label");
 
-// Triggers when answer given
-function next_question(answer) {
+// Load questions from JSON <script> tag
+function loadQuestions() {
+    const el = document.getElementById("texts-data");
+    if (!el) return [];
 
-    // Store answer, display next question
-    answers[id] = answer;
-    if (qn+1 < questions.length) {
-        qn += 1;
-        id = questions[qn].id;
-        progress.style.width = 100-(100*qn/questions.length)+"%";
-        label.innerText = qn+1 + " / " + "100";
-        text.innerText = questions[qn].text;
-    
-    // Goto form page, pass answers to backend
-    } else if (qn+1 == questions.length) {
-        $(function () {
-            $.ajax({
-                type: "POST",
-                url: "/api/to_form",
-                contentType:'application/json',
-                data : JSON.stringify({
-                    "action": "to_form", 
-                    "answers": answers
-                }),
-                success: function (req) {
-                    window.location = "/form";
-                },
-                error: function(req, err) {
-                    console.log("error: ", err)
-                }
-            })
-        });
+    try {
+        const parsed = JSON.parse(el.textContent || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        console.error("Failed to parse questions JSON:", e);
+        return [];
     }
 }
 
-// Triggers when back button pressed
-function prev_question() {
+// Questions + state
+let questions = loadQuestions();
+if (!questions.length) {
+    if (text) text.innerText = "Failed to load questions. Please refresh and try again.";
+    throw new Error("No questions loaded");
+}
 
-    // Return to instructions if on first question
-    if (qn == 0) {
-        $(function () {
-            $.ajax({
-                type: "POST",
-                contentType:'application/json',
-                data : JSON.stringify({
-                    "action": "to_instructions"
-                }),
-                url: "/api/to_instructions",
-                success: function (req) {
-                    window.location = "/instructions";
-                },
-                error: function(req, err) {
-                    console.log("error: ", err)
-                }
-            })
-        });
+// Randomise order
+questions = questions.sort(() => Math.random() - 0.5);
 
-    // Return to previous question if not on first question
-    } else if (qn < questions.length) {
-        qn -= 1;
+let qn = 0;
+let answers = {};
+let id = questions[qn].id;
+const total = questions.length;
+
+// Render first question
+progress.style.width = 100 - (100 * qn / total) + "%";
+label.innerText = "1 / " + total;
+text.innerText = questions[qn].text;
+
+// Record answer and move forward
+function next_question(answer) {
+    answers[id] = answer;
+
+    // Next question
+    if (qn + 1 < total) {
+        qn += 1;
         id = questions[qn].id;
-        progress.style.width = 100-(100*qn/questions.length)+"%";
-        label.innerText = qn+1 + " / " + "100";
+
+        progress.style.width = 100 - (100 * qn / total) + "%";
+        label.innerText = (qn + 1) + " / " + total;
         text.innerText = questions[qn].text;
+        return;
     }
+
+    // Submit answers to backend
+    $.ajax({
+        type: "POST",
+        url: "/api/to_form",
+        contentType: "application/json",
+        data: JSON.stringify({
+            answers: answers
+        }),
+        success: function () {
+            window.location = "/form";
+        },
+        error: function (xhr) {
+            const msg =
+                (xhr.responseJSON && xhr.responseJSON.status) ||
+                ("Request failed (" + xhr.status + "). Please try again.");
+            alert(msg);
+        }
+    });
+}
+
+// Go back one question, or exit to instructions
+function prev_question() {
+    // Exit to instructions
+    if (qn === 0) {
+        $.ajax({
+            type: "POST",
+            url: "/api/to_instructions",
+            contentType: "application/json",
+            data: JSON.stringify({
+                action: "to_instructions"
+            }),
+            success: function () {
+                window.location = "/instructions";
+            },
+            error: function (req, err) {
+                console.log("error: ", err);
+            }
+        });
+        return;
+    }
+
+    // Previous question
+    qn -= 1;
+    id = questions[qn].id;
+
+    progress.style.width = 100 - (100 * qn / total) + "%";
+    label.innerText = (qn + 1) + " / " + total;
+    text.innerText = questions[qn].text;
 }

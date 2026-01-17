@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<script src="/static/js/data.js"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css')}}">
-<meta id="compass-data" data-compass='{{ data["compass_datasets"] }}'>
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Data{% endblock %}
+{% block TITLE %} • Data Explorer{% endblock %}
+
+{% block HEAD %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css')}}">
+<meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
+{% endblock %}
+
 {% block CONTENT %}
 
 <div class="component-border component">
@@ -83,7 +85,7 @@
 <div class="components-50-50">
     <div class="component-border">
         <div class="components-25-75">
-            <div class="component">              
+            <div class="component">
                 <div class="component-border fill" style="flex-direction: column;">
                     <p class="text text-subtitle fade-border header-underline">Question Explorer</p>
                     <p class="text">Select a question from the table to see how 8D-PolComp users meeting your filter criteria responded. The table also displays each question's weighting for each axis.</p>
@@ -129,7 +131,7 @@
             <div class="component component-border">
                 <div class="legacy-card-container" style="overflow: auto;">
                     <div class="legacy-card">
-                        <img id="legacy-img" class="legacy-img" style="min-width: 15rem;" src='static/images/legacy-data/2500 Submissions.png'>
+                        <img id="legacy-img" class="legacy-img" style="min-width: 15rem;" src='/static/images/legacy-data/2500 Submissions.png'>
                     </div>
                 </div>
                 <div style="display: flex; width: 100%; padding: 0.5rem;">
@@ -148,4 +150,8 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block SCRIPTS %}
+<script src="/static/js/data.js"></script>
 {% endblock %}

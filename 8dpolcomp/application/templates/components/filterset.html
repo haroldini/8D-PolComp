@@ -1,11 +1,21 @@
+
 <div class="input-box-container" style="margin-bottom: 1rem;">
-    <input id="label_{{i}}" class="age-box width-100 grey-button rounded bold" type="text" name="label" value="Filterset {{ i }}" onchange="set_filterset_label(event)">
+    <input
+        id="label_{{i}}"
+        class="age-box width-100 grey-button rounded bold"
+        style="width: 100%;"
+        type="text"
+        name="label"
+        value="Filterset {{ i }}"
+        onchange="set_filterset_label(event)"
+    >
 </div>
 
 <div class="input-box-container">
     <input type="number" name="min-age" class="age-box a-l" placeholder="Min Age" min="13" max="100">
     <input type="number" name="max-age" class="age-box a-r" placeholder="Max Age" min="13" max="100">
 </div>
+
 <div class="select-box">
     <select name="country" data-style="select-box" data-width="100%" class="selectpicker select-country" data-actions-box="true" data-size="10" title="Country" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for country in demo["country"] %}
@@ -13,6 +23,7 @@
         {% endfor %}
     </select>
 </div>
+
 <div class="select-box">
     <select name="religion" data-style="select-box" data-width="100%" class="selectpicker select-religion" data-actions-box="true" data-size="10" title="Religion" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for religion in demo["religion"] %}
@@ -20,6 +31,7 @@
         {% endfor %}
     </select>
 </div>
+
 <div class="select-box">
     <select name="ethnicity" data-style="select-box" data-width="100%" class="selectpicker select-ethnicity" data-actions-box="true" data-size="10" title="Ethnicity" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for ethnicity in demo["ethnicity"] %}
@@ -27,6 +39,7 @@
         {% endfor %}
     </select>
 </div>
+
 <div class="select-box">
     <select name="education" data-style="select-box" data-width="100%" class="selectpicker select-education" data-actions-box="true" data-size="10" title="Education" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for education in demo["education"] %}
@@ -34,6 +47,7 @@
         {% endfor %}
     </select>
 </div>
+
 <div class="select-box">
     <select name="party" data-style="select-box" data-width="100%" class="selectpicker select-party" data-actions-box="true" data-size="10" title="Party" data-live-search="true" multiple data-selected-text-format="count > 2">
         {% for country, parties in demo["party"].items() %}
@@ -45,6 +59,7 @@
         {% endfor %}
     </select>
 </div>
+
 <div class="input-box-container select-box" style="width: 100%; margin-bottom: 1rem;">
     <div style="width: 75%;" class="age-box a-l">
         <select name="identities" data-style="select-box a-l" data-width="100%" class="selectpicker select-identities" data-actions-box="true" data-size="10" title="Identities" data-live-search="true" multiple data-selected-text-format="count > 2">
@@ -60,11 +75,19 @@
 </div>
 
 <div class="input-box-container blue-button">
-    <label for="color_{{i}}" class="color-box-label grey-button" style="width: 100%;"><i class="fa-solid fa-palette"></i>Select Colour
-    <input tabindex=0 id="color_{{i}}" class="color-box grey-button" style="width: 25%;" type="color" value="{{color}}" onchange="set_filterset_color(event)"></label>
+    <label for="color_{{i}}" class="color-box-label grey-button" style="width: 100%;">
+        <i class="fa-solid fa-palette"></i>Select Colour
+        <input
+            tabindex="0"
+            id="color_{{i}}"
+            class="color-box"
+            type="color"
+            value="{{color}}"
+            onchange="set_filterset_color(event)"
+        >
+    </label>
 </div>
- 
+
 <button class="inline-link link text-link" id="{{i}}" onclick="get_updated_count(this)">
     <p class="text"><i class="fa-solid fa-arrows-rotate" id="count_spinner_{{i}}"></i><span id="count_{{i}}">0</span> Results Found</p>
 </button>
-    

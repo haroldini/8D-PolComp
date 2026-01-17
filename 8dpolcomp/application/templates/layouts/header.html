@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <a href="/" class="center-content flex header-link link">
     <span class="flex">
         <img src="/static/images/logo.svg" class="inline-logo flex">
@@ -6,14 +6,12 @@
     </span>
 </a>
 
-
 <div class="nav-bar center-content">
     {% with pages={
         "Home": {"url": url_for("index.index"), "redirects": [""]},
         "Test": {"url": url_for("test.test"), "redirects": ["instructions", "test", "form"]},
         "Results": {"url": url_for("results.results", results_id=session["results_id"]) if "results_id" in session else url_for("instructions.instructions"), "redirects": ["results"]},
-        "Data": {"url": url_for("data.data"), "redirects": ["data"]},
-        
+        "Data": {"url": url_for("data.data"), "redirects": ["data"]}
     } %}
     {% for name, page in pages.items() %}
         {% if request.path.split("/")[1] in page["redirects"] %}

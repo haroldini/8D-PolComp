@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<meta id="compass-data" data-compass='{{ data["compass_datasets"] }}'>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Explore Your Political Identity in 8 Dimensions{% endblock %}
+{% block TITLE %} • The 8 Dimensional Political Compass Test{% endblock %}
+
+{% block HEAD %}
+<meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+{% endblock %}
+
 {% block CONTENT %}
 <div class="components-50-50">
     <div class="component-border component">
@@ -73,7 +76,7 @@
                 </div>
                 <span class="show-more fade-border" id="upper-left-link"><button class="inline-link large-link link" onclick="show_more('upper-left')">Show more...</button></span>
             </div>
-            <div class="component-border component"> 
+            <div class="component-border component">
                 <div class="show-more-header">
                     <p class="text text-subtitle">Upper-Right</p>
                     <p class="text">The upper-right compass is the traditional 2-dimensional political compass you're probably familiar with. It measures your attitudes towards economic policy, as well as state authority and individual liberty.</p>
@@ -132,7 +135,7 @@
             <div class="component-border component">
                 <div class="show-more-header">
                     <p class="text text-subtitle">Lower-Right</p>
-                    <p class="text">The lower-right compass measures your attitudes towards science and technological advancement, and the role of religion in government.</p>       
+                    <p class="text">The lower-right compass measures your attitudes towards science and technological advancement, and the role of religion in government.</p>
                 </div>
                 <div class="quadrant-sample">
                     <div class="s-grid br-grid">
@@ -188,7 +191,8 @@
     </div>
 
 </div>
+{% endblock %}
 
+{% block SCRIPTS %}
 <script src="/static/js/index.js"></script>
-
 {% endblock %}

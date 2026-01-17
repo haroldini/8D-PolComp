@@ -1,12 +1,19 @@
-<!DOCTYPE html>
-<meta id="texts" data-texts="{{ texts }}">
-<script type="text/javascript" src="/static/js/test.js" defer></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/test.css')}}">
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Test{% endblock %}
+{% block TITLE %} • Test{% endblock %}
+
 {% block CONTENT %}
+
+<!-- Page CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/test.css')}}">
+
+<!-- Question payload (JSON) -->
+<script id="texts-data" type="application/json">{{ texts|safe }}</script>
+
+<!-- Page logic -->
+<script type="text/javascript" src="/static/js/test.js" defer></script>
+
 <div class="components-50-50">
     <div class="component-border">
         <div class="component-border component" style="border: none; background: none; padding-left: 0; padding-right: 0;">
@@ -20,13 +27,16 @@
         </div>
     </div>
 </div>
+
 <div class="component-border component flex">
     <button class="button blue-button" onclick="next_question(2)">Strongly Agree</button>
     <button class="button blue-button" onclick="next_question(1)">Agree</button>
     <button class="button fade-button" onclick="next_question(0)">Neutral / Not Sure</button>
     <button class="button green-button" onclick="next_question(-1)">Disagree</button>
     <button class="button green-button" onclick="next_question(-2)">Strongly Disagree</button>
-    <button class="button narrow-button grey-button" onclick="prev_question()"><i class="fa-solid fa-left-long"></i>Back</button>
+    <button class="button narrow-button grey-button" onclick="prev_question()">
+        <i class="fa-solid fa-left-long"></i>Back
+    </button>
 </div>
-{% endblock %}
 
+{% endblock %}

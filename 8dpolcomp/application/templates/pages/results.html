@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
-<meta id="compass-data" data-compass="{{ data['compass_datasets'] }}">
-<meta id="matches-data" data-matches="{{ data['closest_matches'] }}">
 
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Test{% endblock %}
+{% block TITLE %} • Test{% endblock %}
+
+{% block HEAD %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
+<meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
+<meta id="matches-data" data-matches='{{ data["closest_matches"]|safe }}'>
+{% endblock %}
+
 {% block CONTENT %}
 <div class="components-50-50">
     <div class="component-border" id="compass_save">
@@ -37,9 +40,9 @@
                             </select>
                             <button class="button grey-button" style="min-width: 2rem; width: 25%; border-radius:0;" onclick="swap_num_matches(this)" id="num_matches_swap_button">+</button>
                         </div>
-                    </div>  
-                    <div class="component-border fill space-between">    
-                        <div class="fill" style="min-height: 250px;" oncontextmenu="return false;" style="cursor: default;">
+                    </div>
+                    <div class="component-border fill space-between">
+                        <div class="fill" style="min-height: 250px; cursor: default;" oncontextmenu="return false;">
                             <canvas id="matches-chart"></canvas>
                         </div>
                     </div>
@@ -70,11 +73,12 @@
         <p class="text">Closest matches are calculated by finding the identities whose participants' average results most closely matched your results.</p>
     </div>
     <div class="component-border component">
-        <b><p class="text green">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>        
+        <b><p class="text green">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>
         <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
 </div>
+{% endblock %}
 
+{% block SCRIPTS %}
 <script src="/static/js/results.js"></script>
-
 {% endblock %}

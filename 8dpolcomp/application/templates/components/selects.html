@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
 
 <div id="demographics-container" style="display:none;">
@@ -43,6 +44,7 @@
         </select>
     </div>
 </div>
+
 <div id="identities-container" style="display:block;">
     <div class="select-box select-box-mini">
         <select name="party" data-style="select-box select-box-mini" data-width="100%" class="selectpicker select-party" data-actions-box="false" data-size="10" title="Party" data-live-search="true">
@@ -56,9 +58,9 @@
             {% endfor %}
         </select>
     </div>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
+
     <div class="select-box select-box-super-mini">
-        <select name="identities" data-style="select-box select-box-super-mini a-l" data-width="100%" class="selectpicker select-identities" data-size="10" title="Identities" data-live-search="false" multiple data-selected-text-format="count > 2">
+        <select name="identities" data-style="select-box select-box-super-mini" data-width="100%" class="selectpicker select-identities" data-size="10" title="Identities" data-live-search="false" multiple data-selected-text-format="count > 2">
             <option value="">Prefer not to say</option>
             {% for identities in demo["identities"] %}
             <option value="{{ identities }}">{{ identities }}</option>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
 
@@ -134,34 +135,32 @@
         // Submit results
         $(function () {
 
-            let form_age;
-            if ($('select[name=age]').val() == 0) {
-                form_age = -1;
-            } else {
-                form_age = Number($('select[name=age]').val());
+            const ageVal = $('select[name=age]').val();
+            let form_age = -1;
+            if (ageVal !== null && ageVal !== "" && ageVal !== "-1") {
+                form_age = Number(ageVal);
             }
 
             let demographics = {
                 "age": form_age,
-                "country": $('select[name=country]').val(),
-                "religion": $('select[name=religion]').val(),
-                "ethnicity": $('select[name=ethnicity]').val(),
-                "education": $('select[name=education]').val(),
-                "party": $('select[name=party]').val(),
-                "identities": $('select[name=identities]').val(),
+                "country": $('select[name=country]').val() || "",
+                "religion": $('select[name=religion]').val() || "",
+                "ethnicity": $('select[name=ethnicity]').val() || "",
+                "education": $('select[name=education]').val() || "",
+                "party": $('select[name=party]').val() || "",
+                "identities": $('select[name=identities]').val() || [],
             };
 
             $.ajax({
                 type: "POST",
                 url: "/api/to_results",
                 contentType:'application/json',
-                data : JSON.stringify({
-                    "action": "to_results", 
+                data: JSON.stringify({
                     "captcha": token,
-                    "demographics": demographics,
+                    "demographics": demographics
                 }),
                 success: function (req) {
-                    let results_id = req.results_id
+                    let results_id = req.results_id;
                     window.location = "/results/" + results_id;
                 },
                 error: function (xhr) {
@@ -173,15 +172,14 @@
                     resetCaptcha();
                     startFinalStepCaptchaGate();
                 }
-            })
-        })
+            });
+        });
     }
 </script>
 
-
 {% extends "layouts/base.html" %}
 
-{% block TITLE %} | Test{% endblock %}
+{% block TITLE %} • Test{% endblock %}
 {% block CONTENT %}
 <div class="component-border">
     <p class="text text-subtitle">Optional Questions</p>
@@ -197,7 +195,7 @@
                 <p class="text" style="font-weight: 600">Your responses to the test will be stored in 8D-PolComp's public database, alongside any of these optional questions you choose to answer.</p>
             </div>
             <div class="component-border">
-                
+
                 <!-- hCaptcha -->
                 <div
                     id="captcha"
@@ -218,7 +216,5 @@
         </div>
     </div>
 </div>
-
-<script src="/static/js/form.js"></script>
 
 {% endblock %}
