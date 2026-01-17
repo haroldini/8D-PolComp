@@ -151,13 +151,16 @@
                 "identities": $('select[name=identities]').val() || [],
             };
 
+            const how_found = $('select[name=how_found]').val() || "";
+
             $.ajax({
                 type: "POST",
                 url: "/api/to_results",
                 contentType:'application/json',
                 data: JSON.stringify({
                     "captcha": token,
-                    "demographics": demographics
+                    "demographics": demographics,
+                    "how_found": how_found
                 }),
                 success: function (req) {
                     let results_id = req.results_id;

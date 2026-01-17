@@ -46,6 +46,15 @@
 </div>
 
 <div id="identities-container" style="display:block;">
+    <div class="select-box select-box-super-mini">
+        <select name="how_found" data-style="select-box select-box-mini" data-width="100%" class="selectpicker select-how-found" data-actions-box="false" data-size="10" title="How did you find this app?" data-live-search="false">
+            <option value="">Prefer not to say</option>
+            {% for opt in demo.get("how_found", []) %}
+                <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
     <div class="select-box select-box-mini">
         <select name="party" data-style="select-box select-box-mini" data-width="100%" class="selectpicker select-party" data-actions-box="false" data-size="10" title="Party" data-live-search="true">
             <option value="">Prefer not to say</option>

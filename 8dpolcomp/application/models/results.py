@@ -11,3 +11,4 @@ class Results(db.Model):
     demographics = db.Column(JSONB, nullable=False)
     scores = db.Column(JSONB, nullable=False)
     answers = db.Column(JSONB, nullable=False)
+    how_found = db.Column(db.Text, nullable=True)

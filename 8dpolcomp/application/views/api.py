@@ -64,6 +64,7 @@ class ToResultsBody(BaseModel):
 
     captcha: str = Field(min_length=1)
     demographics: Dict[str, Any]
+    how_found: Optional[str] = None
 
 
 class FiltersetModel(BaseModel):
@@ -151,6 +152,36 @@ def _load_demo_valid():
     demo_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/demographics.json")
     with open(demo_path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _validate_how_found_against_file(how_found: Any) -> tuple[str | None, str | None]:
+    """
+    Validate how_found against the demographics.json file schema.
+
+    Returns:
+        (validated_value, error_message)
+    """
+
+    if how_found is None or how_found == "":
+        return None, None
+
+    if not isinstance(how_found, str):
+        return None, "how_found is invalid"
+
+    try:
+        demo_valid = _load_demo_valid()
+    except Exception:
+        logger.exception("[how_found] Failed to load demographics.json for validation")
+        return None, "Validation unavailable"
+
+    allowed = demo_valid.get("how_found", [])
+    if not isinstance(allowed, list):
+        return None, "Validation unavailable"
+
+    if how_found in allowed:
+        return how_found, None
+
+    return None, f"{how_found} is not a valid how_found"
 
 
 def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[Dict[str, Any] | None, str | None]:
@@ -450,6 +481,7 @@ def to_results():
         JSON body:
             captcha (str): hCaptcha token.
             demographics (dict): User demographics data.
+            how_found (str): Optional selection describing how the app was found.
 
     Returns:
         dict: {"status": "success", "results_id": <id>} on success
@@ -505,6 +537,12 @@ def to_results():
             logger.warning("[/api/to_results] Demographics validation failed: %s", dem_err)
             return {"status": f"Result Validation Failed: {dem_err}. Refresh and try again."}, 401
 
+        # Validate how_found against file
+        how_found, hf_err = _validate_how_found_against_file(body.how_found)
+        if hf_err:
+            logger.warning("[/api/to_results] how_found validation failed: %s", hf_err)
+            return {"status": f"Result Validation Failed: {hf_err}. Refresh and try again."}, 401
+
         # Count answers for each question to add user data to pie
         try:
             get_answer_counts()
@@ -520,7 +558,8 @@ def to_results():
                 result_row = {
                     "demographics": demographics,
                     "scores": session_payload["scores"],
-                    "answers": session_payload["answers"]
+                    "answers": session_payload["answers"],
+                    "how_found": how_found
                 }
                 session["results_id"] = Results.add_result(result_row, return_id=True) - 1  # -1 for 0-start indexed db IDs
         except Exception:

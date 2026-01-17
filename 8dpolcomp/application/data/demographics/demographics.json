@@ -756,5 +756,22 @@
         "Centralist",
         "Decentralist",
         "Technocrat"
+    ],
+    "how_found": [
+        "Google / Search Engine",
+        "ChatGPT / AI",
+        "Twitter / X",
+        "Instagram",
+        "Reddit",
+        "Discord",
+        "YouTube",
+        "TikTok",
+        "Other Social Media",
+        "Political Forum",
+        "GitHub",
+        "News / Blog",
+        "Friend / Referral",
+        "Ad / Sponsored Post",
+        "Other"
     ]
 }
