@@ -121,7 +121,7 @@ class FilterDataModel(BaseModel):
 class DataApiBody(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    action: Literal["apply_filters", "get_all_results", "get_legacy_results"]
+    action: Literal["apply_filters"]
     data: Optional[dict] = None
 
 
@@ -579,13 +579,11 @@ def data_api():
     """
     Data API used by the frontend to:
       - apply_filters
-      - get_all_results
-      - get_legacy_results
 
     Args:
         JSON body:
             action (str)
-            data (dict) optional depending on action
+            data (dict) required for apply_filters
 
     Returns:
         JSON string: {"status": "...", ...}
@@ -633,19 +631,6 @@ def data_api():
                 })
 
             return json.dumps({"status": "success", "compass_datasets": datasets}), 200
-
-        if body.action == "get_all_results":
-            all_results = Results.get_all_dct()
-            return json.dumps({"status": "success", "all_results": all_results}), 200
-
-        if body.action == "get_legacy_results":
-            try:
-                legacy_path = os.path.join(current_app.config["REL_DIR"], "application/data/legacy-data/record.csv")
-                with open(legacy_path, "r", encoding="utf-8") as f:
-                    return json.dumps({"status": "success", "legacy_results": f.read()}), 200
-            except Exception:
-                logger.exception("[/api/data] Failed to read legacy results file")
-                return json.dumps({"status": "Server error. Please refresh and try again."}), 500
 
         return json.dumps({"status": "Error: Unknown action. Contact the developer if you think this is a mistake."}), 401
 

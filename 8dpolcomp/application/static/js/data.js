@@ -1,6 +1,5 @@
 
 let num_filtersets = 1;
-let current_legacy_card = 0;
 
 // Self explanatory
 function add_filterset(event) {
@@ -46,7 +45,6 @@ function _coerceSelectList(val) {
 
 // Applies filtersets, retrieves relevant data and updates the charts.
 function apply_filters() {
-
     scroll_to("results-section");
 
     let filterset_divs = [];
@@ -68,7 +66,7 @@ function apply_filters() {
         data["min-date"] = document.querySelector("input[name='min-date']").value || "2023-01-01";
         data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
 
-        for (filterset_div of filterset_divs) {
+        for (const filterset_div of filterset_divs) {
             j += 1;
             let filterset = {};
 
@@ -91,7 +89,7 @@ function apply_filters() {
 
             filterset["color"] = document.getElementById(`color_${String(j)}`).value;
 
-            for (select_name of select_names) {
+            for (const select_name of select_names) {
                 let selects_data = $('#' + filterset_div.id).find('select[name=' + select_name + ']').val();
                 filterset[select_name] = _coerceSelectList(selects_data);
             }
@@ -132,7 +130,7 @@ function apply_filters() {
 
 // Updates counts shown below filtersets after query complete.
 function update_counts() {
-    for (dataset of datasets) {
+    for (const dataset of datasets) {
         if (dataset.custom_dataset === true) {
             let dataset_id = dataset.custom_id + 1;
             document.getElementById("count_" + dataset_id).innerText = dataset.count;
@@ -145,9 +143,9 @@ function set_filterset_color(event) {
     let target_id = event.target.id.split("_")[1] - 1;
     let target_label = datasets.filter(x => x.custom_id === target_id)[0].label;
 
-    for (quadrant in quadrants) {
+    for (const quadrant in quadrants) {
         let chart = quadrants[quadrant].chart;
-        for (chart_dataset of chart.data.datasets) {
+        for (const chart_dataset of chart.data.datasets) {
             if (chart_dataset.label.includes(target_label)) {
                 chart_dataset.pointBackgroundColor = add_transparency(event.target.value, 0.5);
             }
@@ -155,7 +153,7 @@ function set_filterset_color(event) {
         chart.update();
     }
 
-    for (dataset of datasets) {
+    for (const dataset of datasets) {
         if (dataset.custom_id === target_id) {
             dataset.color = event.target.value;
         }
@@ -171,9 +169,9 @@ function set_filterset_label(event) {
     let target_id = event.target.id.split("_")[1] - 1;
     let new_target_label = event.target.value;
 
-    for (quadrant in quadrants) {
+    for (const quadrant in quadrants) {
         let chart = quadrants[quadrant].chart;
-        for (chart_dataset of chart.data.datasets) {
+        for (const chart_dataset of chart.data.datasets) {
             if (chart_dataset.dataset_id === target_id) {
                 chart_dataset.label = new_target_label;
             }
@@ -181,7 +179,7 @@ function set_filterset_label(event) {
         chart.update();
     }
 
-    for (dataset of datasets) {
+    for (const dataset of datasets) {
         if (dataset.custom_id === target_id) {
             dataset.label = new_target_label;
         }
@@ -199,83 +197,6 @@ function select_table_row(event) {
     update_pie(question_id, prev_question_id);
 }
 
-// Function executed when export all data button pressed. Retrieves full results table as json
-function get_all_results(event) {
-    disable_button(event, "Downloading...");
-    $(function () {
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "action": "get_all_results",
-            }),
-            url: "/api/data",
-            success: async function (req) {
-                await sleep(Math.random() * 1500 + 500);
-                all_results = JSON.parse(req).all_results;
-                enable_button(event, "Export All Data");
-                var save_file = new Blob([JSON.stringify(all_results, undefined, 4)], {
-                    type: 'application/json'
-                });
-                saveAs(save_file, "8DPolComp-All-Data.json");
-            },
-            error: function (req, err) {
-                console.log("error: ", err);
-            }
-        });
-    });
-}
-
-// Sends legacy data to user
-function get_legacy_data(event) {
-    disable_button(event, "Downloading...");
-    $(function () {
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "action": "get_legacy_results",
-            }),
-            url: "/api/data",
-            success: async function (req) {
-                await sleep(Math.random() * 1500 + 500);
-                legacy_results = JSON.parse(req).legacy_results;
-
-                let link = document.getElementById('download-legacy-csv');
-                link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(legacy_results));
-                link.setAttribute('download', '8DPolComp-Legacy-Data.csv');
-                document.body.appendChild(link);
-                document.querySelector('#download-legacy-csv').click();
-                enable_button(event, "Export Legacy Data");
-            },
-            error: function (req, err) {
-                console.log("error: ", req);
-            }
-        });
-    });
-}
-
-// Change legacy card
-function change_legacy_card(direction) {
-    let legacy_filenames = [
-        "2500 Submissions",
-        "90 Republicans 90 Democrats",
-        "350 Capitalists 350 Communists",
-        "400 Voters 400 Non-Voters",
-        "450 Conservatives 450 Progressives",
-        "500 Non-Degree 500 Degree",
-        "850 Religious 850 Non-Religious",
-    ];
-
-    if (direction === "prev") {
-        current_legacy_card = (current_legacy_card === 0) ? (legacy_filenames.length - 1) : (current_legacy_card - 1);
-    } else if (direction === "next") {
-        current_legacy_card = (current_legacy_card === legacy_filenames.length - 1) ? 0 : (current_legacy_card + 1);
-    }
-
-    document.getElementById("legacy-img").src = `static/images/legacy-data/${legacy_filenames[current_legacy_card]}.png`;
-}
-
 function get_updated_count(ele) {
     let dataset_id = ele.id;
     let filtersets = [];
@@ -283,7 +204,6 @@ function get_updated_count(ele) {
     let filterset_div = document.getElementById("filterset" + dataset_id);
 
     $(function () {
-
         let spinner = document.getElementById("count_spinner_" + dataset_id);
         spinner.classList.add("spin-fa-icon");
         ele.classList.add("disabled-text");
@@ -313,7 +233,7 @@ function get_updated_count(ele) {
 
         filterset["color"] = document.getElementById(`color_${String(dataset_id)}`).value;
 
-        for (select_name of select_names) {
+        for (const select_name of select_names) {
             let selects_data = $('#' + filterset_div.id).find('select[name=' + select_name + ']').val();
             filterset[select_name] = _coerceSelectList(selects_data);
         }
@@ -346,7 +266,6 @@ function get_updated_count(ele) {
 }
 
 window.onload = function () {
-
     // Initialises jquery tablesorter
     $(function () {
         $("#questions-table").tablesorter();
@@ -357,11 +276,13 @@ window.onload = function () {
     document.getElementById("todays-date").value = date;
     document.getElementById("todays-date").max = date;
 
-    // Creaetes default histogram & pie chart
+    // Creates default histogram & pie chart
     histogram = create_histogram("society");
     question_id = 1;
     pie = create_pie(question_id);
     document.getElementById("qid_" + question_id).classList.add("row-selected");
-    document.getElementById("question_text").innerText = document.getElementById("qid_" + question_id).getElementsByTagName("td")[1].textContent;
+    document.getElementById("question_text").innerText =
+        document.getElementById("qid_" + question_id).getElementsByTagName("td")[1].textContent;
+
     document.getElementById("count_1").innerText = datasets.filter(x => x.custom_id === 0)[0].count;
 };

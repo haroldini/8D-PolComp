@@ -78,6 +78,10 @@
                 {% include "components/compass.html" %}
             </div>
         </div>
+    </div>
+</div>
+<div class="components-50-50">
+    <div class="component-border">
         {% include "components/histogram.html" %}
     </div>
 </div>
@@ -120,31 +124,6 @@
                     </table>
                 </div>
                 <span class="show-more fade-border" id="questions-link"><button class="inline-link large-link link" onclick="show_more('questions')">Show more...</button></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="components-50-50">
-    <div class="component-border">
-        <div class="components-75-25">
-            <div class="component component-border">
-                <div class="legacy-card-container" style="overflow: auto;">
-                    <div class="legacy-card">
-                        <img id="legacy-img" class="legacy-img" style="min-width: 15rem;" src='/static/images/legacy-data/2500 Submissions.png'>
-                    </div>
-                </div>
-                <div style="display: flex; width: 100%; padding: 0.5rem;">
-                    <button onclick="change_legacy_card('prev')" style="width: 50%;" class="arrow-btn a-l"><i style="width: 100%; height: 100%;" class="fa-solid fa-arrow-left"></i></button>
-                    <button onclick="change_legacy_card('next')" style="width: 50%;" class="arrow-btn a-r"><i style="width: 100%; height: 100%;" class="fa-solid fa-arrow-right"></i></button>
-                </div>
-            </div>
-            <div class="component component-border" style="justify-content: center;">
-                <p class="text text-subtitle fade-border header-underline">Data Downloads</p>
-                <a id="download-legacy-csv" style="display: none;"></a>
-                <button class="button green-button" onclick="get_all_results(event.currentTarget)"><i class="fa-solid fa-database"></i><span>Export All Data</span></button>
-                <button class="button grey-button" onclick="get_legacy_data(event.currentTarget)"><i class="fa-solid fa-database"></i><span>Export Legacy Data</span></button>
-                <p class="text">Before 8D-PolComp's full rewrite in March 2023, 3,369 submissions were recorded from 6,384 completed tests. Download this data from the link above.</p>
             </div>
         </div>
     </div>
