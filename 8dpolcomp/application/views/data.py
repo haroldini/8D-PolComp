@@ -2,9 +2,9 @@
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import date
 
-from flask import Blueprint, render_template, request, session, current_app, send_from_directory
+from flask import Blueprint, render_template, session, current_app
 
 from application.controllers.questions import QuestionsController as Questions
 from application.controllers.results import ResultsController as Results
@@ -34,11 +34,12 @@ def data():
     try:
         # Default data to display
         questions = Questions.get_all()
+
         datasets = Results.get_filtered_datasets(filter_data={
             "order": "random",
-            "limit": "1000",
-            "min-date": "2023-01-01",
-            "max-date": datetime.now().isoformat(),
+            "limit": 1000,
+            "min-date": date(2023, 1, 1),
+            "max-date": date.today(),
             "filtersets": [{
                 "label": "Filterset 1",
                 "min-age": None,
@@ -59,17 +60,21 @@ def data():
                 "name": "your_results",
                 "label": "Your Results",
                 "custom_dataset": False,
-                "result_id": session["results_id"],
+                "result_id": session.get("results_id"),
                 "color": "salmon",
                 "count": 1,
                 "point_props": [1, 8],
-                "all_scores": [session["results"]],
-                "answer_counts": session["answer_counts"]
+                "all_scores": [session.get("results")],
+                "answer_counts": session.get("answer_counts")
             })
+
+        columns = []
+        if questions:
+            columns = list(questions[0].__mapper__.column_attrs.keys())
 
         data = {
             "questions": questions,
-            "columns": questions[0].__mapper__.column_attrs.keys(),
+            "columns": columns,
             "compass_datasets": json.dumps(datasets),
             "completed_count": Results.get_count()
         }
@@ -77,7 +82,6 @@ def data():
         demo_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/demographics.json")
         with open(demo_path, "r", encoding="utf-8") as f:
             demo = json.load(f)
-            f.close()
 
         return render_template("pages/data.html", data=data, demo=demo)
 

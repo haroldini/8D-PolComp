@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Literal, Optional
 
 import requests
 from flask import Blueprint, session, request, current_app
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, conint, confloat, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
 from application.controllers.results import ResultsController as Results
 from application.controllers.questions import QuestionsController as Questions
@@ -28,7 +28,7 @@ Axis = Literal["diplomacy", "economics", "government", "politics", "religion", "
 class ToFormBody(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    answers: Dict[int, conint(ge=-2, le=2)]
+    answers: Dict[int, int]
 
     @field_validator("answers")
     @classmethod
@@ -36,6 +36,14 @@ class ToFormBody(BaseModel):
         for q_id in v.keys():
             if not 1 <= int(q_id) <= 100:
                 raise ValueError("Invalid question ID")
+        return v
+
+    @field_validator("answers")
+    @classmethod
+    def validate_answer_values(cls, v):
+        for ans in v.values():
+            if not -2 <= int(ans) <= 2:
+                raise ValueError("Invalid answer value")
         return v
 
 
@@ -54,7 +62,7 @@ class ToInstructionsBody(BaseModel):
 class ToResultsBody(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    captcha: str
+    captcha: str = Field(min_length=1)
     demographics: Dict[str, Any]
 
 
@@ -62,16 +70,16 @@ class FiltersetModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     label: str
-    min_age: Optional[conint(ge=0, le=101)] = Field(default=None, alias="min-age")
-    max_age: Optional[conint(ge=0, le=101)] = Field(default=None, alias="max-age")
+    min_age: Optional[int] = Field(default=None, alias="min-age", ge=0, le=101)
+    max_age: Optional[int] = Field(default=None, alias="max-age", ge=0, le=101)
     any_all: Literal["any", "all"] = Field(default="any", alias="any-all")
     color: str
-    country: List[str] = []
-    religion: List[str] = []
-    ethnicity: List[str] = []
-    education: List[str] = []
-    party: List[str] = []
-    identities: List[str] = []
+    country: List[str] = Field(default_factory=list)
+    religion: List[str] = Field(default_factory=list)
+    ethnicity: List[str] = Field(default_factory=list)
+    education: List[str] = Field(default_factory=list)
+    party: List[str] = Field(default_factory=list)
+    identities: List[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_age_range(self):
@@ -85,30 +93,28 @@ class FilterDataModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     order: Literal["random", "recent"]
-    limit: conint(gt=0, le=10000)
-    min_date: datetime = Field(alias="min-date")
-    max_date: datetime = Field(alias="max-date")
+    limit: int = Field(gt=0, le=10000)
+    min_date: date = Field(alias="min-date")
+    max_date: date = Field(alias="max-date")
     filtersets: List[FiltersetModel]
+
+    @field_validator("min_date", "max_date", mode="before")
+    @classmethod
+    def parse_dates(cls, v):
+        if isinstance(v, date) and not isinstance(v, datetime):
+            return v
+        if isinstance(v, datetime):
+            return v.date()
+        if isinstance(v, str):
+            s = v.split("T")[0]
+            return date.fromisoformat(s)
+        raise ValueError("Invalid date")
 
     @model_validator(mode="after")
     def validate_dates(self):
         if self.min_date > self.max_date:
             raise ValueError("min-date cannot exceed max-date")
         return self
-
-    def to_legacy_dict(self):
-        """
-        Convert to the dict format ResultsController expects:
-        keys like "min-date", "max-date", "min-age", "any-all", etc.
-
-        Returns:
-            dict
-        """
-
-        payload = self.model_dump(by_alias=True)
-        payload["min-date"] = self.min_date.date().isoformat()
-        payload["max-date"] = self.max_date.date().isoformat()
-        return payload
 
 
 class DataApiBody(BaseModel):
@@ -131,14 +137,14 @@ class FilterCountBody(BaseModel):
 class ScoresModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    diplomacy: confloat(ge=-1, le=1)
-    economics: confloat(ge=-1, le=1)
-    government: confloat(ge=-1, le=1)
-    politics: confloat(ge=-1, le=1)
-    religion: confloat(ge=-1, le=1)
-    society: confloat(ge=-1, le=1)
-    state: confloat(ge=-1, le=1)
-    technology: confloat(ge=-1, le=1)
+    diplomacy: float = Field(ge=-1, le=1)
+    economics: float = Field(ge=-1, le=1)
+    government: float = Field(ge=-1, le=1)
+    politics: float = Field(ge=-1, le=1)
+    religion: float = Field(ge=-1, le=1)
+    society: float = Field(ge=-1, le=1)
+    state: float = Field(ge=-1, le=1)
+    technology: float = Field(ge=-1, le=1)
 
 
 def _load_demo_valid():
@@ -270,25 +276,27 @@ def get_answer_counts():
         session["answer_counts"][str(q_id)][keys[q_ans]] += 1
 
 
-def calculate_results(answers):
+def calculate_results(answers: Dict[int, int], scoring: Dict[int, Dict[str, float]]) -> Dict[str, float]:
     """
     Convert answers -> axis score result dict.
 
     Args:
         answers (dict[int, int]): question_id -> answer value
+        scoring (dict[int, dict[str, float]]): question_id -> axis weights
 
     Returns:
         dict: axis -> score (rounded)
 
     Raises:
-        KeyError: If question scoring data missing.
+        KeyError: If required answers are missing.
     """
 
-    # From dict of {question: answer, ...}, calculate results as dict of {axis: score, ...}
-    scores = Questions.get_scores(test=False)
+    missing = set(scoring.keys()) - set(answers.keys())
+    if missing:
+        raise KeyError("Missing answers")
 
     r_scores = {}
-    for q_id, q_scores in scores.items():
+    for q_id, q_scores in scoring.items():
         r_scores[q_id] = {axis: q_score * answers[q_id] for axis, q_score in q_scores.items()}
 
     first = next(iter(r_scores.values()))
@@ -329,8 +337,23 @@ def to_form():
             logger.warning("[/api/to_form] ValidationError: %s", str(e))
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
+        try:
+            scoring = Questions.get_scores(test=False)
+        except Exception:
+            logger.exception("[/api/to_form] Failed to load question scoring data")
+            return {"status": "Server error. Please refresh and try again."}, 500
+
         answers = {int(q): int(a) for q, a in body.answers.items()}
-        results = calculate_results(answers)
+
+        if set(answers.keys()) != set(scoring.keys()):
+            logger.warning(
+                "[/api/to_form] Answer keys mismatch: required=%s provided=%s",
+                len(scoring.keys()),
+                len(answers.keys()),
+            )
+            return {"status": "Invalid request. Please refresh and try again."}, 400
+
+        results = calculate_results(answers, scoring)
 
         session["answers"] = answers
         session["results"] = results
@@ -452,7 +475,7 @@ def to_results():
 
         # Validate captcha
         try:
-            verify_response = requests.post(
+            resp = requests.post(
                 url=current_app.config["HCAPTCHA_VERIFY_URL"],
                 data={
                     "secret": current_app.config["HCAPTCHA_SECRET_KEY"],
@@ -460,8 +483,9 @@ def to_results():
                     "remoteip": request.remote_addr
                 },
                 timeout=3
-            ).json()
-        except requests.RequestException:
+            )
+            verify_response = resp.json()
+        except (requests.RequestException, ValueError):
             logger.warning("[/api/to_results] Captcha verification unavailable")
             return {"status": "Captcha verification unavailable. Please try again."}, 503
 
@@ -491,7 +515,7 @@ def to_results():
         # Add user's result to database
         try:
             if current_app.config.get("DEV"):
-                session["results_id"] = "1006"
+                session["results_id"] = 1006
             else:
                 result_row = {
                     "demographics": demographics,
@@ -553,7 +577,8 @@ def data_api():
                 logger.warning("[/api/data] FilterData ValidationError: %s", str(e))
                 return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
 
-            datasets = Results.get_filtered_datasets(filt.to_legacy_dict())
+            filter_data = filt.model_dump(by_alias=True)
+            datasets = Results.get_filtered_datasets(filter_data)
 
             if "answer_counts" in session:
                 datasets.insert(0, {
@@ -625,7 +650,8 @@ def get_filterset_count():
             logger.warning("[/api/get_filterset_count] FilterData ValidationError: %s", str(e))
             return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
 
-        counts = Results.get_filtered_dataset_count(filt.to_legacy_dict())
+        filter_data = filt.model_dump(by_alias=True)
+        counts = Results.get_filtered_dataset_count(filter_data)
         return json.dumps({"status": "success", "counts": counts}), 200
 
     except Exception:

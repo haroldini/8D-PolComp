@@ -1,10 +1,5 @@
 
-import logging
-
 from application.models.questions import Questions
-
-
-logger = logging.getLogger(__name__)
 
 
 class QuestionsController:
@@ -23,12 +18,8 @@ class QuestionsController:
             list[Questions]: Question rows.
         """
 
-        try:
-            res = Questions.query.all()
-            return res[:5] if test else res
-        except Exception:
-            logger.exception("[QuestionsController.get_all] Failed")
-            raise
+        res = Questions.query.all()
+        return res[:5] if test else res
 
 
     def get_num_questions():
@@ -39,11 +30,7 @@ class QuestionsController:
             int: number of questions.
         """
 
-        try:
-            return len(Questions.query.all())
-        except Exception:
-            logger.exception("[QuestionsController.get_num_questions] Failed")
-            raise
+        return Questions.query.count()
 
 
     def get_texts(test=False):
@@ -57,18 +44,9 @@ class QuestionsController:
             list[dict]: [{"id": <int>, "text": <str>}, ...]
         """
 
-        try:
-            qs = Questions.query.all()
-            texts = [
-                {
-                    "id": question.id,
-                    "text": question.text
-                } for question in qs
-            ]
-            return texts[:5] if test else texts
-        except Exception:
-            logger.exception("[QuestionsController.get_texts] Failed")
-            raise
+        qs = Questions.query.all()
+        texts = [{"id": q.id, "text": q.text} for q in qs]
+        return texts[:5] if test else texts
 
 
     def get_scores(test=False):
@@ -82,23 +60,17 @@ class QuestionsController:
             dict[int, dict[str, float]]: {question_id: {axis: weight, ...}, ...}
         """
 
-        try:
-            qs = Questions.query.all()
-            scores = {
-                getattr(question, "id"): {
-                    axis: getattr(question, axis) for axis in [
-                        "society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"
-                    ]
-                } for question in qs
-            }
+        axes = ["society", "politics", "economics", "state", "diplomacy", "government", "technology", "religion"]
 
-            if test:
-                return {k: scores[k] for k in sorted(scores.keys())[:5]}
-            return scores
+        qs = Questions.query.all()
+        scores = {
+            q.id: {axis: getattr(q, axis) for axis in axes}
+            for q in qs
+        }
 
-        except Exception:
-            logger.exception("[QuestionsController.get_scores] Failed")
-            raise
+        if test:
+            return {k: scores[k] for k in sorted(scores.keys())[:5]}
+        return scores
 
 
     def get_max_scores():
@@ -109,12 +81,14 @@ class QuestionsController:
             dict[str, float]: {axis: max_score, ...}
         """
 
-        try:
-            max_scores = {}
-            for q_id, q_scores in QuestionsController.get_scores().items():
-                max_scores[q_id] = {axis: abs(q_score) * 2 for axis, q_score in q_scores.items()}
-            axis_scores = {axis: sum([v[axis] for v in max_scores.values()]) for axis in max_scores[1].keys()}
-            return axis_scores
-        except Exception:
-            logger.exception("[QuestionsController.get_max_scores] Failed")
-            raise
+        scores = QuestionsController.get_scores()
+        if not scores:
+            return {}
+
+        max_scores = {}
+        for q_id, q_scores in scores.items():
+            max_scores[q_id] = {axis: abs(weight) * 2 for axis, weight in q_scores.items()}
+
+        first = next(iter(max_scores.values()))
+        axis_scores = {axis: sum(v[axis] for v in max_scores.values()) for axis in first.keys()}
+        return axis_scores

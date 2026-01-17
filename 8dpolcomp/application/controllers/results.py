@@ -1,6 +1,6 @@
 
 import logging
-from datetime import datetime
+from datetime import date, datetime, time
 
 import numpy as np
 from sklearn.preprocessing import MaxAbsScaler
@@ -15,6 +15,28 @@ from application import db
 
 
 logger = logging.getLogger(__name__)
+
+
+def _coerce_to_datetime_bounds(min_val, max_val) -> tuple[datetime, datetime]:
+    """
+    Convert incoming min/max values (date/datetime) into datetime bounds suitable for DB filtering.
+    """
+
+    if isinstance(min_val, datetime):
+        min_dt = min_val
+    elif isinstance(min_val, date):
+        min_dt = datetime.combine(min_val, time.min)
+    else:
+        raise TypeError("min-date must be a date or datetime")
+
+    if isinstance(max_val, datetime):
+        max_dt = max_val
+    elif isinstance(max_val, date):
+        max_dt = datetime.combine(max_val, time.max)
+    else:
+        raise TypeError("max-date must be a date or datetime")
+
+    return min_dt, max_dt
 
 
 class ResultsController:
@@ -43,7 +65,7 @@ class ResultsController:
         """
         all_results = ResultsController.get_all()
         return [{
-            "date": str(result.date),
+            "date": result.date.isoformat() if getattr(result, "date", None) else None,
             "results": result.scores,
             "answers": result.answers,
             "demographics": result.demographics,
@@ -141,7 +163,7 @@ class ResultsController:
         Args:
             query: SQLAlchemy query
             filterset (dict): frontend filterset
-            limit (int | str | None): max rows
+            limit (int | None): max rows
 
         Returns:
             list[Results]
@@ -197,21 +219,20 @@ class ResultsController:
                     "value": filterset[filter_key],
                 })
 
-        try:
-            res = filter_apply(query=query_filt, entity=Results, obj=FilterRequest(obj), dialect=SQLDialect.POSTGRESQL)
-        except Exception:
-            logger.exception("[ResultsController.get_filtered_dataset] filter_apply failed")
-            raise
+        res = filter_apply(
+            query=query_filt,
+            entity=Results,
+            obj=FilterRequest(obj),
+            dialect=SQLDialect.POSTGRESQL
+        )
 
-        try:
-            if limit is not None:
-                res = res.limit(int(limit))
-            return res.all()
-        except Exception:
-            logger.exception("[ResultsController.get_filtered_dataset] query execution failed")
-            raise
+        if limit is not None:
+            res = res.limit(int(limit))
+
+        return res.all()
 
 
+    # Returns list of dataset dictionaries containing scores, average scores and answers.
     def get_filtered_datasets(filter_data):
         """
         Build datasets for the frontend data explorer.
@@ -232,13 +253,19 @@ class ResultsController:
         else:
             query = Results.query.order_by(func.random())
 
-        query = query.filter(and_(Results.date >= filter_data["min-date"], Results.date <= filter_data["max-date"]))
+        min_dt, max_dt = _coerce_to_datetime_bounds(filter_data["min-date"], filter_data["max-date"])
+        query = query.filter(and_(Results.date >= min_dt, Results.date <= max_dt))
 
+        limit = filter_data.get("limit")
+        limit = int(limit) if limit is not None else None
+
+        # Reuse same query for each filterset
         for i, filterset in enumerate(filter_data["filtersets"]):
-            filt_results = ResultsController.get_filtered_dataset(query, filterset, filter_data["limit"])
+            filt_results = ResultsController.get_filtered_dataset(query, filterset, limit)
             all_scores = [result.scores for result in filt_results]
             all_answers = [result.answers for result in filt_results]
 
+            # Get count of each answer for each question
             raw_answer_counts = {
                 str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0}
                 for q_id in range(1, 101)
@@ -249,6 +276,7 @@ class ResultsController:
                 for q_id, q_ans in answer.items():
                     raw_answer_counts[str(q_id)][keys[q_ans]] += 1
 
+            # Get scaled answer counts
             answer_counts = {}
             scaler = MaxAbsScaler()
             for q_id, inner_dict in raw_answer_counts.items():
@@ -256,6 +284,7 @@ class ResultsController:
                 scaled_dict = {category: scaled_values[i][0] for i, category in enumerate(inner_dict.keys())}
                 answer_counts[q_id] = scaled_dict
 
+            # Get mean and median scores for each axis
             if len(all_scores) > 0:
                 mean_scores = {key: round(np.mean([scores[key] for scores in all_scores]), 2) for key in all_scores[0].keys()}
                 median_scores = {key: round(np.median([scores[key] for scores in all_scores]), 2) for key in all_scores[0].keys()}
@@ -281,6 +310,8 @@ class ResultsController:
         return datasets
 
 
+    # Returns count of results found for a given list of filtersets
+    # Receives same structure as get_filtered_datasets, with key containing filtersets
     def get_filtered_dataset_count(filter_data):
         """
         Return only counts for each filterset.
@@ -296,6 +327,7 @@ class ResultsController:
         return counts
 
 
+    # Returns a dictionary with identities as keys and average values for each axis
     def get_avg_identities(identity_keys, min_results=50):
         """
         Compute mean axis scores per identity.
@@ -312,9 +344,9 @@ class ResultsController:
         for identity_key in identity_keys:
             datasets = ResultsController.get_filtered_datasets(filter_data={
                 "order": "random",
-                "limit": "1000000",
-                "min-date": "2023-01-01",
-                "max-date": datetime.now().isoformat(),
+                "limit": 1000000,
+                "min-date": date(2023, 1, 1),
+                "max-date": date.today(),
                 "filtersets": [{
                     "label": "All",
                     "min-age": None,
@@ -330,6 +362,7 @@ class ResultsController:
                 }]
             })
 
+            # only use if adequate scores in data
             num_identities = len(datasets[0]["all_scores"])
             if num_identities > min_results:
                 avg_identities[identity_key] = datasets[0]["mean_scores"]
