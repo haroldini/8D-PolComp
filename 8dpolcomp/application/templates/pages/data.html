@@ -12,12 +12,58 @@
 
 {% block CONTENT %}
 
+<!-- Results explorer at top -->
+<div class="components-50-50">
+    <div class="component-border">
+        <div class="components-25-75" id="results-section">
+            <div class="component-border component" style="justify-content:center">
+                <p class="text text-subtitle fade-border header-underline">Results Explorer</p>
+                <p class="text">This compass shows the scores for test results that meet your filter criteria. Filterset averages are displayed as larger dots in matching colors.</p>
+                <p class="text">If you've completed the test, your results will appear in the chart as four pink dots.</p>
+                <p class="text">Use the histogram below to explore the score distribution for each filter set across a specific axis.</p>
+            </div>
+            <div class="component">
+                {% include "components/compass.html" %}
+            </div>
+        </div>
+
+        <div class="components-50-50">
+            <div class="component-border component" style="justify-content: center;">
+                <p class="text text-subtitle fade-border header-underline">Quick Presets</p>
+                <p class="text">Select a preset comparison and it will apply immediately.</p>
+            </div>
+
+            <div class="component-border component">
+                <div class="select-box select-box-super-mini" style="width: 100%;">
+                    <select
+                        id="preset-select"
+                        data-style="select-box select-box-super-mini"
+                        data-width="100%"
+                        class="selectpicker"
+                        data-actions-box="false"
+                        data-size="10"
+                        title="Select a preset..."
+                        data-live-search="false"
+                    >
+                        <option value="">Select a preset...</option>
+                    </select>
+                </div>
+
+                <p id="preset-desc" class="text" style="margin-top: 8px;"></p>
+                <p id="preset-status" class="text" style="font-weight: 600; color: salmon; margin-top: 0;"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Filters section (moved below explorer + presets) -->
 <div class="component-border component">
     <div class="components-50-50">
         <div class="component-border component" style="justify-content: center;">
-            <p class="text text-subtitle fade-border header-underline">Filtersets</p>
+            <p class="text text-subtitle fade-border header-underline">Custom Filters</p>
             <p class="text">Add up to four custom filtersets, then click 'Apply Filters' to query 8D-PolComp's database and compare different groups. Use the input boxes to adjust sampling order, size, and date range.</p>
         </div>
+
         <div class="component-border component">
             <div class="input-box-container" style="width: 100%;">
                 <input type="number" name="sample-size" class="age-box a-l grey-button" placeholder="Sampling" value="1000" min="1" max="10000">
@@ -26,16 +72,19 @@
                     <input type="radio" class="radio-selector a-r" name="sorting" id="recent" value="recent">
                 </div>
             </div>
+
             <div class="input-box-container" style="width: 100%;">
                 <input onclick="this.showPicker()" type="date" name="min-date" class="age-box a-l grey-button" value="2023-01-01" min="2023-01-01" max="2030-01-01">
                 <input id="todays-date" onclick="this.showPicker()" type="date" name="max-date" class="age-box a-r grey-button" min="2021-01-01">
             </div>
+
             <br>
             <button id="addfiltersetbtn" class="button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filterset</button>
             <button id="rmfiltersetbtn" disabled class="button disabled" onclick="remove_filterset(event)"><i class="fa-solid fa-minus"></i>Remove Filterset</button>
             <button id="applyfilters" class="button blue-button" onclick="apply_filters(event)"><i class="fa-solid fa-play"></i>Apply Filters</button>
         </div>
     </div>
+
     <div class="component-border component" style="overflow: hidden;">
         <div class="showmore-var filterset-grow" id="filters-div">
             <div class="filterset-container">
@@ -65,27 +114,14 @@
     </div>
 </div>
 
-<div class="components-50-50">
-    <div class="component-border">
-        <div class="components-25-75" id="results-section">
-            <div class="component-border component" style="justify-content:center">
-                <p class="text text-subtitle fade-border header-underline">Results Explorer</p>
-                <p class="text">This compass shows the scores for test results that meet your filter criteria. Filterset averages are displayed as larger dots in matching colors.</p>
-                <p class="text">If you've completed the test, your results will appear in the chart as four pink dots.</p>
-                <p class="text">Use the histogram below to explore the score distribution for each filter set across a specific axis.</p>
-            </div>
-            <div class="component">
-                {% include "components/compass.html" %}
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Histogram (now after Custom Filters) -->
 <div class="components-50-50">
     <div class="component-border">
         {% include "components/histogram.html" %}
     </div>
 </div>
 
+<!-- Question explorer -->
 <div class="components-50-50">
     <div class="component-border">
         <div class="components-25-75">
@@ -100,6 +136,7 @@
                 {% include "components/pie.html" %}
             </div>
         </div>
+
         <div class="components-50-50">
             <div class="component-border component table-container">
                 <p class="text text-subtitle">Questions Table</p>

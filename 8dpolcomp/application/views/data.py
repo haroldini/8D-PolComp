@@ -35,25 +35,7 @@ def data():
         # Default data to display
         questions = Questions.get_all()
 
-        datasets = Results.get_filtered_datasets(filter_data={
-            "order": "random",
-            "limit": 1000,
-            "min-date": date(2023, 1, 1),
-            "max-date": date.today(),
-            "filtersets": [{
-                "label": "Filterset 1",
-                "min-age": None,
-                "max-age": None,
-                "any-all": "any",
-                "color": "#0db52e",
-                "country": [],
-                "religion": [],
-                "ethnicity": [],
-                "education": [],
-                "party": [],
-                "identities": []
-            }]
-        })
+        datasets = []
 
         if "answer_counts" in session:
             datasets.insert(0, {

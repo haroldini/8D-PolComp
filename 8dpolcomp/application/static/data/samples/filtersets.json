@@ -1,0 +1,429 @@
+
+{
+    "presets": [
+        {
+            "key": "all_users",
+            "label": "All Users",
+            "description": "No demographic filters.",
+            "legend": [
+                {
+                    "label": "All Users",
+                    "color": "#00ACC1"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "All Users",
+                        "color": "#00ACC1",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "us_dem_vs_rep",
+            "label": "USA: Democrats vs Republicans",
+            "description": "Compare US party affiliation.",
+            "legend": [
+                {
+                    "label": "US Democrats",
+                    "color": "#1E88E5"
+                },
+                {
+                    "label": "US Republicans",
+                    "color": "#E53935"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "US Democrats",
+                        "color": "#1E88E5",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["United States-Democratic Party"],
+                        "identities": []
+                    },
+                    {
+                        "label": "US Republicans",
+                        "color": "#E53935",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["United States-Republican Party"],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "uk_lab_vs_con",
+            "label": "UK: Labour vs Conservative",
+            "description": "Compare UK party affiliation.",
+            "legend": [
+                {
+                    "label": "UK Labour",
+                    "color": "#E4003B"
+                },
+                {
+                    "label": "UK Conservative",
+                    "color": "#0087DC"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "UK Labour",
+                        "color": "#E4003B",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["United Kingdom-Labour Party"],
+                        "identities": []
+                    },
+                    {
+                        "label": "UK Conservative",
+                        "color": "#0087DC",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["United Kingdom-Conservative Party"],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "religious_vs_nonreligious",
+            "label": "Religious vs Non-Religious",
+            "description": "Compare non-religious users to religious users.",
+            "legend": [
+                {
+                    "label": "Non-Religious",
+                    "color": "#29B6F6"
+                },
+                {
+                    "label": "Religious",
+                    "color": "#FB8C00"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "Non-Religious",
+                        "color": "#29B6F6",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": ["Atheist", "Agnostic"],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": []
+                    },
+                    {
+                        "label": "Religious",
+                        "color": "#FB8C00",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": ["Christianity", "Islam", "Hinduism", "Buddhism", "Shinto", "Taoism", "Sikhism", "Judaism", "Other"],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "young_vs_old",
+            "label": "Young vs Old",
+            "description": "Compare ages 13–25 to ages 50+.",
+            "legend": [
+                {
+                    "label": "13–25",
+                    "color": "#00BFA5"
+                },
+                {
+                    "label": "50+",
+                    "color": "#9C27B0"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "13–25",
+                        "color": "#00BFA5",
+                        "min-age": 13,
+                        "max-age": 25,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": []
+                    },
+                    {
+                        "label": "50+",
+                        "color": "#9C27B0",
+                        "min-age": 50,
+                        "max-age": 101,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "degree_vs_nondegree",
+            "label": "Degree vs No Degree",
+            "description": "Compare degree holders to non-degree holders.",
+            "legend": [
+                {
+                    "label": "Degree",
+                    "color": "#E53935"
+                },
+                {
+                    "label": "No Degree",
+                    "color": "#1E88E5"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "Degree",
+                        "color": "#E53935",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": ["Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctoral Degree"],
+                        "party": [],
+                        "identities": []
+                    },
+                    {
+                        "label": "No Degree",
+                        "color": "#1E88E5",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": ["None", "High School"],
+                        "party": [],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "voters_vs_nonvoters",
+            "label": "Voters vs Non-Voters",
+            "description": "Compare users who vote to users who do not or cannot vote.",
+            "legend": [
+                {
+                    "label": "Voters",
+                    "color": "#43A047"
+                },
+                {
+                    "label": "Non-Voters",
+                    "color": "#F9A825"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "Voters",
+                        "color": "#43A047",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["__VOTERS__"],
+                        "identities": []
+                    },
+                    {
+                        "label": "Non-Voters",
+                        "color": "#F9A825",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": ["Other-I do not vote", "Other-I cannot vote"],
+                        "identities": []
+                    }
+                ]
+            }
+        },
+        {
+            "key": "left_vs_right",
+            "label": "Left-Wing vs Right-Wing",
+            "description": "Compare self-identified left-wing users to right-wing users.",
+            "legend": [
+                {
+                    "label": "Left-Wing",
+                    "color": "#D81B60"
+                },
+                {
+                    "label": "Right-Wing",
+                    "color": "#1E88E5"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "Left-Wing",
+                        "color": "#D81B60",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": ["Left-Wing"]
+                    },
+                    {
+                        "label": "Right-Wing",
+                        "color": "#1E88E5",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": ["Right-Wing"]
+                    }
+                ]
+            }
+        },
+        {
+            "key": "capitalist_vs_socialist",
+            "label": "Capitalist vs Socialist",
+            "description": "Compare capitalist identities to socialist identities.",
+            "legend": [
+                {
+                    "label": "Capitalist",
+                    "color": "#FF7043"
+                },
+                {
+                    "label": "Socialist",
+                    "color": "#26A69A"
+                }
+            ],
+            "filter_data": {
+                "order": "random",
+                "limit": 1000,
+                "min-date": "2023-01-01",
+                "max-date": "today",
+                "filtersets": [
+                    {
+                        "label": "Capitalist",
+                        "color": "#FF7043",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": ["Capitalist"]
+                    },
+                    {
+                        "label": "Socialist",
+                        "color": "#26A69A",
+                        "min-age": null,
+                        "max-age": null,
+                        "any-all": "any",
+                        "country": [],
+                        "religion": [],
+                        "ethnicity": [],
+                        "education": [],
+                        "party": [],
+                        "identities": ["Social Democrat", "Democratic Socialist", "Communist", "Marxist", "Leninist", "Maoist"]
+                    }
+                ]
+            }
+        }
+    ]
+}
