@@ -3,13 +3,51 @@
 <html>
     <head>
         <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FQ16MYVJQJ"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-FQ16MYVJQJ');
+
+            (function () {
+                const KEY = "8dpc_cookie_consent_v1";
+                let choice = null;
+
+                try {
+                    // "accept" | "reject" | null
+                    choice = localStorage.getItem(KEY);
+                } catch (e) {
+                    choice = null;
+                }
+
+                // Default: deny non-essential storage until user chooses
+                gtag("consent", "default", {
+                    ad_storage: "denied",
+                    analytics_storage: "denied",
+                    ad_user_data: "denied",
+                    ad_personalization: "denied",
+                    wait_for_update: 500
+                });
+
+                // If previously accepted, grant immediately
+                const hasConsent = (choice === "accept");
+                if (hasConsent) {
+                    gtag("consent", "update", {
+                        ad_storage: "granted",
+                        analytics_storage: "granted",
+                        ad_user_data: "granted",
+                        ad_personalization: "granted"
+                    });
+                }
+
+                gtag("js", new Date());
+
+                // Only send pageview automatically if accepted
+                gtag("config", "G-FQ16MYVJQJ", {
+                    send_page_view: hasConsent
+                });
+            })();
         </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FQ16MYVJQJ"></script>
+
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,6 +65,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/cookie-consent.css') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +94,43 @@
         {% include "layouts/footer.html" %}
         </div>
 
+        <!-- Cookie banner -->
+        <div id="cookie-banner" class="cookie-banner" hidden role="dialog" aria-live="polite" aria-label="Cookie notice">
+            <div class="component-border cookie-banner-inner">
+                <p class="text text-subtitle">Cookies</p>
+
+                <p class="text">
+                    8D-PolComp uses essential cookies for core functionality (including session state).
+                    We may also use analytics and ads.
+                </p>
+
+                <p class="text">
+                    Please review the
+                    <span class="inline-link"><a class="link" href="/privacy">Privacy Policy</a></span>
+                    and
+                    <span class="inline-link"><a class="link" href="/terms">Terms</a></span>
+                    before using the site.
+                </p>
+
+                <p class="text" style="font-weight: 600;">
+                    Accepting enables analytics/ads cookies. Rejecting disables non-essential cookies.
+                </p>
+
+                <div class="cookie-btn-row">
+                    <button type="button" id="cookie-accept" class="button blue-button">
+                        <i class="fa-solid fa-check"></i>I Agree
+                    </button>
+
+                    <button type="button" id="cookie-reject" class="button grey-button">
+                        <i class="fa-solid fa-xmark"></i>Reject Non-Essential
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
         <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/cookie-consent.js') }}"></script>
 
         {% block SCRIPTS %}{% endblock %}
     </body>
