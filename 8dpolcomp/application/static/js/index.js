@@ -2,6 +2,16 @@
 // Loaded from static/data/samples/scores.json
 let key_vals = {};
 
+// Tracks the current selected sample key
+let current_key = "recent1000";
+
+// 1000 Recent state
+let recent1000_loaded = false;
+let recent1000_loading = false;
+let recent1000_mean = null;
+let recent1000_count = 0;
+let recent1000_scores = [];
+
 // Axis values fallback
 function _zeroAxes() {
     return {
@@ -16,30 +26,39 @@ function _zeroAxes() {
     };
 }
 
-function set_recent_vals() {
-    try {
-        let raw = $('#compass-data').data("compass");
-        if (typeof raw === "string") {
-            raw = JSON.parse(raw);
-        }
-        if (Array.isArray(raw) && raw.length > 0 && raw[0].all_scores && raw[0].all_scores.length > 0) {
-            key_vals["recent"] = raw[0].all_scores[0];
-            return;
-        }
-    } catch (e) {
-        // ignore
+function _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function _meanFromScores(scores) {
+    const out = _zeroAxes();
+    const axes = Object.keys(out);
+    if (!Array.isArray(scores) || scores.length === 0) {
+        return out;
     }
-    key_vals["recent"] = _zeroAxes();
+
+    for (const s of scores) {
+        if (!s) {
+            continue;
+        }
+        for (const ax of axes) {
+            const v = Number(s[ax]);
+            if (!Number.isNaN(v)) {
+                out[ax] += v;
+            }
+        }
+    }
+
+    for (const ax of axes) {
+        out[ax] = out[ax] / scores.length;
+    }
+    return out;
 }
 
 async function load_sample_scores() {
-    // Always ensure recent exists
-    key_vals["recent"] = _zeroAxes();
-
     try {
         const resp = await fetch("/static/data/samples/scores.json", { cache: "no-store" });
         if (!resp.ok) {
-            set_recent_vals();
             return;
         }
 
@@ -51,84 +70,312 @@ async function load_sample_scores() {
         // ignore
     }
 
-    set_recent_vals();
+    if (!key_vals || typeof key_vals !== "object") {
+        key_vals = {};
+    }
+
+    // Ensure recent1000 exists (average will replace after /api/data loads)
+    key_vals["recent1000"] = _zeroAxes();
 }
 
 load_sample_scores();
 
 
-// Additional compass quadrants for 'The Axes' section.
+// Additional compass quadrants for "The Axes" section.
 const quadrants_sample = {
     "upper_left_sample": {
         "x": "society",
         "y": "politics",
         "colors": ["#93daf8", "#afafaf", "#afafaf", "#c9e5bd"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "upper_right_sample": {
         "x": "economics",
         "y": "state",
         "colors": ["#afafaf", "#93daf8", "#c9e5bd", "#afafaf"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "lower_left_sample": {
         "x": "diplomacy",
         "y": "government",
         "colors": ["#afafaf", "#c9e5bd", "#93daf8", "#afafaf"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "lower_right_sample": {
         "x": "technology",
         "y": "religion",
         "colors": ["#c9e5bd", "#afafaf", "#afafaf", "#93daf8"],
         "chart": null,
-        "data": null,
+        "data": null
     }
 };
 
+function _findChartDatasetByLabel(chart, label) {
+    if (!chart || !chart.data || !Array.isArray(chart.data.datasets)) {
+        return null;
+    }
+    for (const ds of chart.data.datasets) {
+        if (ds && ds.label === label) {
+            return ds;
+        }
+    }
+    return null;
+}
 
-// Updates 'The Axes' quadrants when new sample compass enabled
-function update_index_chart(event, key) {
+function _updateMarkerForQuadrants(quadrantsObj, axes) {
+    if (!axes || typeof axes !== "object") {
+        return;
+    }
+
+    for (const quadrant in quadrantsObj) {
+        const chart = quadrantsObj[quadrant].chart;
+        if (!chart) {
+            continue;
+        }
+
+        const marker = _findChartDatasetByLabel(chart, "Marker");
+        if (!marker || !Array.isArray(marker.data) || marker.data.length === 0) {
+            continue;
+        }
+
+        marker.data[0] = {
+            x: axes[quadrantsObj[quadrant].x],
+            y: axes[quadrantsObj[quadrant].y]
+        };
+
+        if (typeof calc_point_props === "function" && typeof add_transparency === "function") {
+            const props = calc_point_props({ count: 501 }, 501);
+            const radius = props[1];
+
+            marker.pointRadius = radius;
+            marker.pointBackgroundColor = add_transparency("#262626", 1);
+            marker.pointBorderWidth = radius / 2;
+            marker.pointBorderColor = add_transparency("#262626", 1);
+        }
+
+        chart.update();
+    }
+}
+
+function _setRecentCloudVisible(visible) {
+    for (const quadrant in quadrants) {
+        const chart = quadrants[quadrant].chart;
+        if (!chart) {
+            continue;
+        }
+
+        const cloud = _findChartDatasetByLabel(chart, "1000 Recent");
+        if (!cloud) {
+            continue;
+        }
+
+        if (!visible) {
+            cloud.data = [];
+            chart.update();
+            continue;
+        }
+
+        const xk = quadrants[quadrant].x;
+        const yk = quadrants[quadrant].y;
+
+        const vals = [];
+        for (const s of recent1000_scores) {
+            if (!s) {
+                continue;
+            }
+            vals.push({
+                x: s[xk],
+                y: s[yk]
+            });
+        }
+
+        cloud.data = vals;
+
+        if (typeof calc_point_props === "function") {
+            const props = calc_point_props({ count: recent1000_count }, recent1000_count);
+            const transparency = props[0];
+            const radius = props[1];
+
+            cloud.pointRadius = radius / 2;
+            cloud.pointBackgroundColor = add_transparency("#0d56b5", transparency);
+            cloud.pointBorderWidth = radius / 4;
+            cloud.pointBorderColor = add_transparency("#262626", transparency);
+        }
+
+        chart.update();
+    }
+}
+
+function _buildRecent1000Payload() {
+    return {
+        order: "recent",
+        limit: 1000,
+        "min-date": "2023-01-01",
+        "max-date": new Date().toISOString().substring(0, 10),
+        filtersets: [
+            {
+                label: "1000 Recent",
+                "min-age": null,
+                "max-age": null,
+                "any-all": "any",
+                color: "#0d56b5",
+                "group-ids": [],
+                country: [],
+                religion: [],
+                ethnicity: [],
+                education: [],
+                party: [],
+                identities: []
+            }
+        ]
+    };
+}
+
+function load_recent1000() {
+    if (recent1000_loaded || recent1000_loading) {
+        return;
+    }
+
+    recent1000_loading = true;
+
+    const start = Date.now();
+    if (typeof show_spinner === "function") {
+        show_spinner();
+    }
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            action: "apply_filters",
+            data: _buildRecent1000Payload()
+        }),
+        url: "/api/data",
+        success: async function (req) {
+            try {
+                let parsed = req;
+                if (typeof parsed === "string") {
+                    parsed = JSON.parse(parsed);
+                }
+
+                let cds = parsed && parsed.compass_datasets ? parsed.compass_datasets : [];
+                if (typeof cds === "string") {
+                    cds = JSON.parse(cds);
+                }
+                if (!Array.isArray(cds)) {
+                    cds = [];
+                }
+
+                cds = cds.filter(d => !(d && d.name === "your_results"));
+
+                const ds = cds.find(d => d && Array.isArray(d.all_scores));
+                if (!ds) {
+                    throw new Error("No dataset returned.");
+                }
+
+                recent1000_scores = Array.isArray(ds.all_scores) ? ds.all_scores : [];
+                recent1000_count = Number(ds.count || recent1000_scores.length || 0);
+
+                const mean = (ds.mean_scores && typeof ds.mean_scores === "object")
+                    ? ds.mean_scores
+                    : _meanFromScores(recent1000_scores);
+
+                recent1000_mean = mean;
+
+                if (!key_vals || typeof key_vals !== "object") {
+                    key_vals = {};
+                }
+                key_vals["recent1000"] = recent1000_mean;
+
+                recent1000_loaded = true;
+                recent1000_loading = false;
+
+                if (current_key === "recent1000") {
+                    _setRecentCloudVisible(true);
+                    _updateMarkerForQuadrants(quadrants, recent1000_mean);
+                    _updateMarkerForQuadrants(quadrants_sample, recent1000_mean);
+                } else {
+                    _setRecentCloudVisible(false);
+                }
+            } catch (e) {
+                recent1000_loaded = false;
+                recent1000_loading = false;
+                _setRecentCloudVisible(false);
+            }
+
+            const minDuration = 500 + Math.random() * 250;
+            const elapsed = Date.now() - start;
+            const wait = Math.max(0, minDuration - elapsed);
+            await _sleep(wait);
+
+            if (typeof hide_spinner === "function") {
+                hide_spinner();
+            }
+        },
+        error: async function () {
+            recent1000_loaded = false;
+            recent1000_loading = false;
+            _setRecentCloudVisible(false);
+
+            const minDuration = 500 + Math.random() * 250;
+            const elapsed = Date.now() - start;
+            const wait = Math.max(0, minDuration - elapsed);
+            await _sleep(wait);
+
+            if (typeof hide_spinner === "function") {
+                hide_spinner();
+            }
+        }
+    });
+}
+
+function _select_icon(event) {
     const icons = document.getElementsByClassName("icon-button");
     for (const icon of icons) {
         icon.classList.remove("icon-selected");
     }
-    event.target.classList.add("icon-selected");
+
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add("icon-selected");
+    }
+}
+
+// Updates "Sample Compasses" and "The Axes" quadrants when new sample enabled
+function update_index_chart(event, key) {
+    _select_icon(event);
+
+    current_key = key;
+
+    if (key === "recent1000") {
+        if (!recent1000_loaded) {
+            load_recent1000();
+            return;
+        }
+
+        _setRecentCloudVisible(true);
+
+        if (recent1000_mean) {
+            _updateMarkerForQuadrants(quadrants, recent1000_mean);
+            _updateMarkerForQuadrants(quadrants_sample, recent1000_mean);
+        }
+        return;
+    }
+
+    _setRecentCloudVisible(false);
 
     if (!key_vals[key] || typeof key_vals[key] !== "object") {
         return;
     }
 
-    for (const quadrant in quadrants) {
-        let chart = quadrants[quadrant].chart;
-        if (!chart || !chart.data || !chart.data.datasets || !chart.data.datasets[0]) {
-            continue;
-        }
-        chart.data.datasets[0].data[0] = {
-            x: key_vals[key][quadrants[quadrant].x],
-            y: key_vals[key][quadrants[quadrant].y]
-        };
-        chart.update();
-    }
-
-    for (const quadrant in quadrants_sample) {
-        let chart = quadrants_sample[quadrant].chart;
-        if (!chart || !chart.data || !chart.data.datasets || !chart.data.datasets[0]) {
-            continue;
-        }
-        chart.data.datasets[0].data[0] = {
-            x: key_vals[key][quadrants_sample[quadrant].x],
-            y: key_vals[key][quadrants_sample[quadrant].y]
-        };
-        chart.update();
-    }
+    _updateMarkerForQuadrants(quadrants, key_vals[key]);
+    _updateMarkerForQuadrants(quadrants_sample, key_vals[key]);
 }
 
 
-// Creates quadrants for 'The Axes'
+// Creates quadrants for "The Axes"
 function create_axis_clones() {
     if (typeof create_quadrant !== "function") {
         return;
@@ -139,3 +386,9 @@ function create_axis_clones() {
 }
 
 create_axis_clones();
+
+window.onload = function () {
+    current_key = "recent1000";
+    _setRecentCloudVisible(false);
+    load_recent1000();
+};

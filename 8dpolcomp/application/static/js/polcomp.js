@@ -1,5 +1,5 @@
 
-let datasets = $('#compass-data').data("compass");
+let datasets = $("#compass-data").data("compass");
 
 if (typeof datasets === "string") {
     try {
@@ -19,36 +19,36 @@ const quadrants = {
         "y": "politics",
         "colors": ["#93daf8", "#afafaf", "#afafaf", "#c9e5bd"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "upper_right": {
         "x": "economics",
         "y": "state",
         "colors": ["#afafaf", "#93daf8", "#c9e5bd", "#afafaf"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "lower_left": {
         "x": "diplomacy",
         "y": "government",
         "colors": ["#afafaf", "#c9e5bd", "#93daf8", "#afafaf"],
         "chart": null,
-        "data": null,
+        "data": null
     },
     "lower_right": {
         "x": "technology",
         "y": "religion",
         "colors": ["#c9e5bd", "#afafaf", "#afafaf", "#93daf8"],
         "chart": null,
-        "data": null,
+        "data": null
     }
 };
 
 // Colours four corners of each quadrant
 const quadrants_plugin = {
-    id: 'quadrants',
+    id: "quadrants",
     beforeDraw(chart, args, options) {
-        const {ctx, chartArea: {left, top, right, bottom}, scales: {x, y}} = chart;
+        const { ctx, chartArea: { left, top, right, bottom }, scales: { x, y } } = chart;
         const midX = x.getPixelForValue(0);
         const midY = y.getPixelForValue(0);
         ctx.save();
@@ -64,9 +64,9 @@ const quadrants_plugin = {
     }
 };
 
-function create_polcomp(quadrants) {
-    for (const quadrant in quadrants) {
-        create_quadrant(quadrant, quadrants);
+function create_polcomp(quadrants_obj) {
+    for (const quadrant in quadrants_obj) {
+        create_quadrant(quadrant, quadrants_obj);
     }
 }
 
@@ -94,53 +94,72 @@ function calc_point_props(dataset, count) {
     }
 }
 
+function _dataset_count(ds) {
+    if (!ds) {
+        return 0;
+    }
+    if (typeof ds.count === "number") {
+        return ds.count;
+    }
+    if (Array.isArray(ds.all_scores)) {
+        return ds.all_scores.length;
+    }
+    return 0;
+}
+
 // Create list of datasets to display on chart
-function get_pc_data(quadrant, quadrants) {
+function get_pc_data(quadrant, quadrants_obj) {
     let pc_data = {
         datasets: []
     };
 
-    // Add user results on top
-    for (dataset of datasets) {
-        if (dataset.name === "your_results") {
-            let data_values = [];
-            let [transparency, radius] = calc_point_props(dataset, dataset.count);
-            for (score_set of dataset.all_scores) {
-                data_values.push({
-                    x: score_set[quadrants[quadrant].x],
-                    y: score_set[quadrants[quadrant].y]
-                });
-            }
-            pc_data.datasets.push({
-                pointRadius: radius / 2,
-                pointBackgroundColor: add_transparency(dataset.color, transparency),
-                pointStyle: 'circle',
-                pointBorderWidth: radius / 4,
-                pointBorderColor: add_transparency("#262626", transparency),
-                data: data_values,
-                label: dataset.label,
-                dataset_id: null,
-                borderWidth: { bottom: 0, top: 1, left: 1, right: 1 }
+    const user_datasets = datasets.filter(d => d && d.name === "your_results");
+    const other_datasets = datasets.filter(d => d && d.name !== "your_results");
+
+    const sorted_other = [...other_datasets].sort((a, b) => _dataset_count(a) - _dataset_count(b));
+    const sorted_all = [...datasets].sort((a, b) => _dataset_count(a) - _dataset_count(b));
+
+    for (const dataset of user_datasets) {
+        let data_values = [];
+        const count = _dataset_count(dataset);
+        let [transparency, radius] = calc_point_props(dataset, count);
+
+        for (const score_set of dataset.all_scores) {
+            data_values.push({
+                x: score_set[quadrants_obj[quadrant].x],
+                y: score_set[quadrants_obj[quadrant].y]
             });
         }
+
+        pc_data.datasets.push({
+            pointRadius: radius / 2,
+            pointBackgroundColor: add_transparency(dataset.color, transparency),
+            pointStyle: "circle",
+            pointBorderWidth: radius / 4,
+            pointBorderColor: add_transparency("#262626", transparency),
+            data: data_values,
+            label: dataset.label,
+            dataset_id: null,
+            borderWidth: { bottom: 0, top: 1, left: 1, right: 1 }
+        });
     }
 
-    // Then add averages
-    for (dataset of datasets) {
-        let [transparency, radius] = calc_point_props(dataset, dataset.count);
+    for (const dataset of sorted_other) {
+        const count = _dataset_count(dataset);
+        let [transparency, radius] = calc_point_props(dataset, count);
 
-        if (dataset["count"] > 1 && "mean_scores" in dataset) {
+        if (count > 1 && "mean_scores" in dataset && dataset.mean_scores) {
             const mean_vals = [{
-                x: dataset.mean_scores[quadrants[quadrant].x],
-                y: dataset.mean_scores[quadrants[quadrant].y]
+                x: dataset.mean_scores[quadrants_obj[quadrant].x],
+                y: dataset.mean_scores[quadrants_obj[quadrant].y]
             }];
 
             pc_data.datasets.push({
                 pointRadius: radius,
-                pointBackgroundColor: add_transparency(dataset.color, transparency),
-                pointStyle: 'circle',
+                pointBackgroundColor: add_transparency(dataset.color, 1),
+                pointStyle: "circle",
                 pointBorderWidth: radius / 2,
-                pointBorderColor: add_transparency("#262626", transparency),
+                pointBorderColor: add_transparency("#262626", 1),
                 data: mean_vals,
                 label: dataset.label + " Average",
                 tooltipEnabled: false,
@@ -151,21 +170,22 @@ function get_pc_data(quadrant, quadrants) {
     }
 
     // All scores displayed under
-    for (dataset of datasets) {
+    for (const dataset of sorted_all) {
         let data_values = [];
-        let [transparency, radius] = calc_point_props(dataset, dataset.count);
+        const count = _dataset_count(dataset);
+        let [transparency, radius] = calc_point_props(dataset, count);
 
-        for (score_set of dataset.all_scores) {
+        for (const score_set of dataset.all_scores) {
             data_values.push({
-                x: score_set[quadrants[quadrant].x],
-                y: score_set[quadrants[quadrant].y]
+                x: score_set[quadrants_obj[quadrant].x],
+                y: score_set[quadrants_obj[quadrant].y]
             });
         }
 
         pc_data.datasets.push({
             pointRadius: radius / 2,
             pointBackgroundColor: add_transparency(dataset.color, transparency),
-            pointStyle: 'circle',
+            pointStyle: "circle",
             pointBorderWidth: radius / 4,
             pointBorderColor: add_transparency("#262626", transparency),
             data: data_values,
@@ -179,29 +199,28 @@ function get_pc_data(quadrant, quadrants) {
 }
 
 // Each quadrant an individual chartjs object
-function create_quadrant(quadrant, quadrants) {
-
-    let pc_data = get_pc_data(quadrant, quadrants);
+function create_quadrant(quadrant, quadrants_obj) {
+    let pc_data = get_pc_data(quadrant, quadrants_obj);
     let pc_options = {
         aspectRatio: 1,
         responsive: true,
         maintainAspectRatio: true,
         layout: {
             padding: 0,
-            autoPadding: false,
+            autoPadding: false
         },
         scales: {
             x: {
                 display: false,
                 grid: {
                     drawTicks: false,
-                    display: false,
+                    display: false
                 },
                 ticks: {
                     display: false
                 },
                 min: -1,
-                max: 1,
+                max: 1
             },
             y: {
                 display: true,
@@ -213,7 +232,7 @@ function create_quadrant(quadrant, quadrants) {
                     display: false
                 },
                 min: -1,
-                max: 1,
+                max: 1
             }
         },
         plugins: {
@@ -228,26 +247,26 @@ function create_quadrant(quadrant, quadrants) {
     };
 
     pc_options.plugins.quadrants = {
-        topLeft: quadrants[quadrant].colors[0],
-        topRight: quadrants[quadrant].colors[1],
-        bottomLeft: quadrants[quadrant].colors[2],
-        bottomRight: quadrants[quadrant].colors[3],
+        topLeft: quadrants_obj[quadrant].colors[0],
+        topRight: quadrants_obj[quadrant].colors[1],
+        bottomLeft: quadrants_obj[quadrant].colors[2],
+        bottomRight: quadrants_obj[quadrant].colors[3]
     };
 
-    quadrants[quadrant].chart = new Chart(quadrant, {
+    quadrants_obj[quadrant].chart = new Chart(quadrant, {
         type: "scatter",
         data: pc_data,
         options: pc_options,
         plugins: [quadrants_plugin]
     });
 
-    quadrants[quadrant].data = pc_data;
-    quadrants[quadrant].options = pc_options;
+    quadrants_obj[quadrant].data = pc_data;
+    quadrants_obj[quadrant].options = pc_options;
 }
 
 // Updates each quadrant when filtersets applied
 function update_chart_data() {
-    for (quadrant in quadrants) {
+    for (const quadrant in quadrants) {
         const pc_data = get_pc_data(quadrant, quadrants);
         let chart = quadrants[quadrant].chart;
         chart.data = pc_data;
@@ -256,34 +275,33 @@ function update_chart_data() {
 }
 
 // Converts datasets to csv string
-function get_csv(datasets) {
+function get_csv(datasets_obj) {
     let lst = [];
     let i = 0;
-    for (dataset in datasets) {
-        for (row in datasets[dataset]["all_scores"]) {
-            lst.push(datasets[dataset]["all_scores"][row]);
+    for (const dataset in datasets_obj) {
+        for (const row in datasets_obj[dataset]["all_scores"]) {
+            lst.push(datasets_obj[dataset]["all_scores"][row]);
             lst[i].dataset = Number(dataset) + Number(1);
             i++;
         }
     }
     let topLine = Object.keys(lst[0]).join(",");
-    let lines = lst.reduce((acc, val) => acc.concat(Object.values(val).join(`,`)), []);
-    let csv = topLine.concat(`\n${lines.join(`\n`)}`);
+    let lines = lst.reduce((acc, val) => acc.concat(Object.values(val).join(",")), []);
+    let csv = topLine.concat("\n" + lines.join("\n"));
     return csv;
 }
 
 // Saves data from chart to device
 async function export_csv(tar) {
-
     let csv = get_csv(datasets);
     disable_button(tar);
     await sleep(Math.random() * 1500 + 500);
 
-    let link = document.getElementById('download-csv');
-    link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
-    link.setAttribute('download', '8DPolComp-Data.csv');
+    let link = document.getElementById("download-csv");
+    link.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(csv));
+    link.setAttribute("download", "8DPolComp-Data.csv");
     document.body.appendChild(link);
-    document.querySelector('#download-csv').click();
+    document.querySelector("#download-csv").click();
     enable_button(tar, "Export CSV");
 }
 

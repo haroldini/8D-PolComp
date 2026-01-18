@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block CONTENT %}
+
 <div class="components-50-50">
     <div class="component-border component">
         <p class="text">8D-PolComp is a political test and data collection app that places users on 8 unique ideological axes, from economics to social values. </p>
@@ -21,30 +22,63 @@
         <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-chart-simple"></i>Data</a>
     </div>
 </div>
+
 <div class="components-50-50">
     <div class="component-border">
         <p class="text text-subtitle">Sample Compasses</p>
-        <div class="component component-border">
-            <p>8D-PolComp visualises your political alignment across eight ideological axes, shown across four separate charts. Each axis represents a distinct poltical spectrum, covering your alignment on economics, governance, diplomacy, and more.</p>
-            <p>Click the button below to view the most recent user submission and explore the chart in detail.</p>
-            <a class="button center-content flex grey-button" href="{{ url_for('results.results', results_id=data['recent_results_id']-1) }}"><i class="fa-solid fa-chart-simple"></i>Most Recent Submission</a>
-        </div>
+        <p>8D-PolComp visualises your political alignment across eight ideological axes, shown across four separate charts. Each axis represents a distinct poltical spectrum, covering your alignment on economics, governance, diplomacy, and more.</p>
         <div class="components-80-20">
             <div class="component">
-                {% include "components/compass.html" %}
+                {% with is_results_page=True %}
+                    {% include "components/compass.html" %}
+                {% endwith %}
             </div>
             <div class="component-border component icon-container">
+                <button
+                    type="button"
+                    onmouseover="update_index_chart(event, 'recent1000')"
+                    class="icon-button icon-selected"
+                    style="
+                        background-image: none;
+                        background-color: #e3e3e3;
+                        color: #262626;
+                        padding: 0;
+                        position: relative;
+                        overflow: hidden;
+                    "
+                >
+                    <span
+                        style="
+                            pointer-events: none;
+                            position: absolute;
+                            inset: 0;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: 600;
+                            font-size: 14px;
+                            line-height: 1.05;
+                            text-align: center;
+                            padding: 0 4px;
+                            box-sizing: border-box;
+                        "
+                    >
+                        <span>1000</span>
+                        <span>Results</span>
+                    </span>
+                </button>
                 <button onmouseover="update_index_chart(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
                 <button onmouseover="update_index_chart(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
                 <button onmouseover="update_index_chart(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>
                 <button onmouseover="update_index_chart(event, 'rand')" class="icon-button" style="background-image: url('/static/images/samples/icons/rand.png');"></button>
                 <button onmouseover="update_index_chart(event, 'reagan')" class="icon-button" style="background-image: url('/static/images/samples/icons/reagan.png');"></button>
                 <button onmouseover="update_index_chart(event, 'stalin')" class="icon-button" style="background-image: url('/static/images/samples/icons/stalin.png');"></button>
-                <button onmouseover="update_index_chart(event, 'recent')" class="icon-button icon-selected" style="background-image: url('/static/images/samples/icons/recent.png');"></button>
             </div>
         </div>
     </div>
 </div>
+
 <div class="components-50-50">
     <div class="component-border">
         <p class="text text-subtitle">The Axes</p>
