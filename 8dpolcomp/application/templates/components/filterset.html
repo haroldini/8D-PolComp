@@ -63,7 +63,7 @@
         {% for country, parties in demo["party"].items() %}
             <optgroup label="{{ country }}">
                 {% for party in parties %}
-                    <option data-tokens="{{ country }}" value="{{ country }}-{{ party }}">{{ party }}</option>
+                    <option data-tokens="{{ country }}" value="{{ party.value }}">{{ party.label }}</option>
                 {% endfor %}
             </optgroup>
         {% endfor %}

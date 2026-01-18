@@ -1,93 +1,11 @@
+
 {
     "age": [
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "29",
-        "30",
-        "31",
-        "32",
-        "33",
-        "34",
-        "35",
-        "36",
-        "37",
-        "38",
-        "39",
-        "40",
-        "41",
-        "42",
-        "43",
-        "44",
-        "45",
-        "46",
-        "47",
-        "48",
-        "49",
-        "50",
-        "51",
-        "52",
-        "53",
-        "54",
-        "55",
-        "56",
-        "57",
-        "58",
-        "59",
-        "60",
-        "61",
-        "62",
-        "63",
-        "64",
-        "65",
-        "66",
-        "67",
-        "68",
-        "69",
-        "70",
-        "71",
-        "72",
-        "73",
-        "74",
-        "75",
-        "76",
-        "77",
-        "78",
-        "79",
-        "80",
-        "81",
-        "82",
-        "83",
-        "84",
-        "85",
-        "86",
-        "87",
-        "88",
-        "89",
-        "90",
-        "91",
-        "92",
-        "93",
-        "94",
-        "95",
-        "96",
-        "97",
-        "98",
-        "99",
-        "100"
+        "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30",
+        "31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50",
+        "51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70",
+        "71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90",
+        "91","92","93","94","95","96","97","98","99","100"
     ],
     "country": [
         "Other",
@@ -325,452 +243,621 @@
     ],
     "party": {
         "Other": [
-            "I cannot vote",
-            "I do not vote",
-            "My party is not here",
-            "My country is not here"
+        { "label": "I cannot vote", "value": "Other-I cannot vote" },
+        { "label": "I do not vote", "value": "Other-I do not vote" },
+        { "label": "My party is not here", "value": "Other-My party is not here" },
+        { "label": "My country is not here", "value": "Other-My country is not here" }
         ],
+
         "United States": [
-            "Democratic Party",
-            "Republican Party",
-            "Libertarian Party",
-            "Green Party"
+        { "label": "Democratic Party", "value": "United States-Democratic Party" },
+        { "label": "Republican Party", "value": "United States-Republican Party" },
+        { "label": "Libertarian Party", "value": "United States-Libertarian Party" },
+        { "label": "Green Party", "value": "United States-Green Party" }
         ],
+
         "United Kingdom": [
-            "Conservative Party",
-            "Labour Party",
-            "Liberal Democrats",
-            "Scottish National Party",
-            "Green Party",
-            "Reform UK",
-            "UKIP",
-            "Democratic Unionist Party",
-            "Sinn Féin",
-            "Plaid Cymru"
+        { "label": "Conservative Party", "value": "United Kingdom-Conservative Party" },
+        { "label": "Labour Party", "value": "United Kingdom-Labour Party" },
+        { "label": "Liberal Democrats", "value": "United Kingdom-Liberal Democrats" },
+        { "label": "Scottish National Party", "value": "United Kingdom-Scottish National Party" },
+        { "label": "Green Party", "value": "United Kingdom-Green Party" },
+        { "label": "Reform UK", "value": "United Kingdom-Reform UK" },
+        { "label": "UKIP", "value": "United Kingdom-UKIP" },
+        { "label": "Democratic Unionist Party", "value": "United Kingdom-Democratic Unionist Party" },
+        { "label": "Sinn Féin", "value": "United Kingdom-Sinn Féin" },
+        { "label": "Plaid Cymru", "value": "United Kingdom-Plaid Cymru" }
         ],
+
         "Australia": [
-            "Labor Party",
-            "Liberal Party",
-            "National Party",
-            "The Greens",
-            "One Nation",
-            "United Australia"
+        { "label": "Labor Party", "value": "Australia-Labor Party" },
+        { "label": "Liberal Party", "value": "Australia-Liberal Party" },
+        { "label": "National Party", "value": "Australia-National Party" },
+        { "label": "The Greens", "value": "Australia-The Greens" },
+        { "label": "One Nation", "value": "Australia-One Nation" },
+        { "label": "United Australia", "value": "Australia-United Australia" }
         ],
+
         "New Zealand": [
-            "Labour Party",
-            "National Party",
-            "Green Party",
-            "ACT",
-            "Te Pāti Māori",
-            "NZ First",
-            "New Conservative",
-            "Opportunities",
-            "Advance NZ"
+        { "label": "Labour Party", "value": "New Zealand-Labour Party" },
+        { "label": "National Party", "value": "New Zealand-National Party" },
+        { "label": "Green Party", "value": "New Zealand-Green Party" },
+        { "label": "ACT", "value": "New Zealand-ACT" },
+        { "label": "Te Pāti Māori", "value": "New Zealand-Te Pāti Māori" },
+        { "label": "NZ First", "value": "New Zealand-NZ First" },
+        { "label": "New Conservative", "value": "New Zealand-New Conservative" },
+        { "label": "Opportunities", "value": "New Zealand-Opportunities" },
+        { "label": "Advance NZ", "value": "New Zealand-Advance NZ" }
         ],
+
         "Canada": [
-            "Bloc Quebecois",
-            "Conservative Party",
-            "Green Party",
-            "Liberal Party",
-            "NDP"
+        { "label": "Bloc Quebecois", "value": "Canada-Bloc Quebecois" },
+        { "label": "Conservative Party", "value": "Canada-Conservative Party" },
+        { "label": "Green Party", "value": "Canada-Green Party" },
+        { "label": "Liberal Party", "value": "Canada-Liberal Party" },
+        { "label": "NDP", "value": "Canada-NDP" },
+        { "label": "People's Party of Canada", "value": "Canada-People's Party of Canada" }
         ],
+
         "Ireland": [
-            "Fianna Fail",
-            "Sinn Fein",
-            "Fine Gael",
-            "Green",
-            "Labour",
-            "Social Democrats",
-            "PBP"
+        { "label": "Fianna Fail", "value": "Ireland-Fianna Fail" },
+        { "label": "Sinn Fein", "value": "Ireland-Sinn Fein" },
+        { "label": "Fine Gael", "value": "Ireland-Fine Gael" },
+        { "label": "Green", "value": "Ireland-Green" },
+        { "label": "Labour", "value": "Ireland-Labour" },
+        { "label": "Social Democrats", "value": "Ireland-Social Democrats" },
+        { "label": "PBP", "value": "Ireland-PBP" },
+        { "label": "Aontú", "value": "Ireland-Aontú" }
         ],
+
         "Mexico": [
-            "Institutional Revolutionary Party",
-            "National Regeneration Movement",
-            "National Action Party",
-            "Party of the Democratic Revolution",
-            "Labor Party",
-            "Ecologist Green Party",
-            "Citizens' Movement"
+        { "label": "Institutional Revolutionary Party", "value": "Mexico-Institutional Revolutionary Party" },
+        { "label": "National Regeneration Movement", "value": "Mexico-National Regeneration Movement" },
+        { "label": "National Action Party", "value": "Mexico-National Action Party" },
+        { "label": "Party of the Democratic Revolution", "value": "Mexico-Party of the Democratic Revolution" },
+        { "label": "Labor Party", "value": "Mexico-Labor Party" },
+        { "label": "Ecologist Green Party", "value": "Mexico-Ecologist Green Party" },
+        { "label": "Citizens' Movement", "value": "Mexico-Citizens' Movement" }
         ],
+
         "Colombia": [
-            "Liberal Party",
-            "Social Party of National Unity",
-            "Humane Colombia",
-            "Green Alliance",
-            "Radical Change",
-            "Democratic Center",
-            "Conservative Party",
-            "Alternative Democratic Pole",
-            "Patriotic Union"
+        { "label": "Liberal Party", "value": "Colombia-Liberal Party" },
+        { "label": "Social Party of National Unity", "value": "Colombia-Social Party of National Unity" },
+        { "label": "Humane Colombia", "value": "Colombia-Humane Colombia" },
+        { "label": "Green Alliance", "value": "Colombia-Green Alliance" },
+        { "label": "Radical Change", "value": "Colombia-Radical Change" },
+        { "label": "Democratic Center", "value": "Colombia-Democratic Center" },
+        { "label": "Conservative Party", "value": "Colombia-Conservative Party" },
+        { "label": "Alternative Democratic Pole", "value": "Colombia-Alternative Democratic Pole" },
+        { "label": "Patriotic Union", "value": "Colombia-Patriotic Union" }
         ],
+
         "Ecuador": [
-            "Citizen Revolution Movement",
-            "Pachakutik Plurinational Unity Movement",
-            "Democratic Left Party",
-            "CREO Movement",
-            "Social Christian Party",
-            "Democracy Yes Movement",
-            "RETO Movement"
+        { "label": "Citizen Revolution Movement", "value": "Ecuador-Citizen Revolution Movement" },
+        { "label": "Pachakutik Plurinational Unity Movement", "value": "Ecuador-Pachakutik Plurinational Unity Movement" },
+        { "label": "Democratic Left Party", "value": "Ecuador-Democratic Left Party" },
+        { "label": "CREO Movement", "value": "Ecuador-CREO Movement" },
+        { "label": "Social Christian Party", "value": "Ecuador-Social Christian Party" },
+        { "label": "Democracy Yes Movement", "value": "Ecuador-Democracy Yes Movement" },
+        { "label": "RETO Movement", "value": "Ecuador-RETO Movement" },
+        { "label": "ADN (National Democratic Action)", "value": "Ecuador-ADN (National Democratic Action)" }
         ],
+
         "Peru": [
-            "Popular Action",
-            "Alliance for Progress",
-            "Popular Force",
-            "Free Peru",
-            "Go on Country",
-            "Popular Renewal",
-            "We are Peru"
+        { "label": "Popular Action", "value": "Peru-Popular Action" },
+        { "label": "Alliance for Progress", "value": "Peru-Alliance for Progress" },
+        { "label": "Popular Force", "value": "Peru-Popular Force" },
+        { "label": "Free Peru", "value": "Peru-Free Peru" },
+        { "label": "Go on Country", "value": "Peru-Go on Country" },
+        { "label": "Popular Renewal", "value": "Peru-Popular Renewal" },
+        { "label": "We are Peru", "value": "Peru-We are Peru" }
         ],
+
         "Chile": [
-            "Democratic Socialism",
-            "Socialist Party",
-            "Christian Democratic Party",
-            "Let's go Chile",
-            "Independent Democratic Union",
-            "National Renewal",
-            "Approve Dignity",
-            "Party of the People"
+        { "label": "Democratic Socialism", "value": "Chile-Democratic Socialism" },
+        { "label": "Socialist Party", "value": "Chile-Socialist Party" },
+        { "label": "Christian Democratic Party", "value": "Chile-Christian Democratic Party" },
+        { "label": "Let's go Chile", "value": "Chile-Let's go Chile" },
+        { "label": "Independent Democratic Union", "value": "Chile-Independent Democratic Union" },
+        { "label": "National Renewal", "value": "Chile-National Renewal" },
+        { "label": "Approve Dignity", "value": "Chile-Approve Dignity" },
+        { "label": "Party of the People", "value": "Chile-Party of the People" },
+        { "label": "Republican Party (Chile)", "value": "Chile-Republican Party (Chile)" }
         ],
+
         "Brazil": [
-            "Liberal Parties",
-            "Workers' Parties",
-            "Brazil Union",
-            "Progressives",
-            "Brazilian Democratic Movement",
-            "Republicans",
-            "Social Democratic Party",
-            "Democratic Labour Party",
-            "Brazilian Social Democracy Party",
-            "Brazilian Socialist Party",
-            "We Can"
+        { "label": "Liberal Parties", "value": "Brazil-Liberal Parties" },
+        { "label": "Workers' Parties", "value": "Brazil-Workers' Parties" },
+        { "label": "Brazil Union", "value": "Brazil-Brazil Union" },
+        { "label": "Progressives", "value": "Brazil-Progressives" },
+        { "label": "Brazilian Democratic Movement", "value": "Brazil-Brazilian Democratic Movement" },
+        { "label": "Republicans", "value": "Brazil-Republicans" },
+        { "label": "Social Democratic Party", "value": "Brazil-Social Democratic Party" },
+        { "label": "Democratic Labour Party", "value": "Brazil-Democratic Labour Party" },
+        { "label": "Brazilian Social Democracy Party", "value": "Brazil-Brazilian Social Democracy Party" },
+        { "label": "Brazilian Socialist Party", "value": "Brazil-Brazilian Socialist Party" },
+        { "label": "We Can", "value": "Brazil-We Can" }
         ],
+
         "Argentina": [
-            "Everyone's Front",
-            "Together for Change",
-            "Federal Consensus",
-            "Workers' Left Front - Unity",
-            "NOS Front",
-            "Unite for Liberty and Dignity"
+        { "label": "Everyone's Front", "value": "Argentina-Everyone's Front" },
+        { "label": "Together for Change", "value": "Argentina-Together for Change" },
+        { "label": "Federal Consensus", "value": "Argentina-Federal Consensus" },
+        { "label": "Workers' Left Front - Unity", "value": "Argentina-Workers' Left Front - Unity" },
+        { "label": "NOS Front", "value": "Argentina-NOS Front" },
+        { "label": "Unite for Liberty and Dignity", "value": "Argentina-Unite for Liberty and Dignity" },
+        { "label": "La Libertad Avanza", "value": "Argentina-La Libertad Avanza" }
         ],
+
         "Spain": [
-            "Spanish Socialist Workers' Party",
-            "People's Party",
-            "Vox",
-            "United We Can",
-            "Citizens",
-            "More Country-Equo",
-            "Republican Left of Catalonia",
-            "Together For Catalonia",
-            "Basque Nationalist Party"
+        { "label": "Spanish Socialist Workers' Party", "value": "Spain-Spanish Socialist Workers' Party" },
+        { "label": "People's Party", "value": "Spain-People's Party" },
+        { "label": "Vox", "value": "Spain-Vox" },
+        { "label": "United We Can", "value": "Spain-United We Can" },
+        { "label": "Citizens", "value": "Spain-Citizens" },
+        { "label": "More Country-Equo", "value": "Spain-More Country-Equo" },
+        { "label": "Republican Left of Catalonia", "value": "Spain-Republican Left of Catalonia" },
+        { "label": "Together For Catalonia", "value": "Spain-Together For Catalonia" },
+        { "label": "Basque Nationalist Party", "value": "Spain-Basque Nationalist Party" },
+        { "label": "Sumar", "value": "Spain-Sumar" }
         ],
+
         "Portugal": [
-            "Socialist Party",
-            "Social Democratic Party",
-            "ENOUGH",
-            "Liberal Initiative",
-            "Portuguese Communist Party",
-            "Left Bloc"
+        { "label": "Socialist Party", "value": "Portugal-Socialist Party" },
+        { "label": "Social Democratic Party", "value": "Portugal-Social Democratic Party" },
+        { "label": "ENOUGH", "value": "Portugal-ENOUGH" },
+        { "label": "Liberal Initiative", "value": "Portugal-Liberal Initiative" },
+        { "label": "Portuguese Communist Party", "value": "Portugal-Portuguese Communist Party" },
+        { "label": "Left Bloc", "value": "Portugal-Left Bloc" },
+        { "label": "LIVRE", "value": "Portugal-LIVRE" }
         ],
+
         "Italy": [
-            "Brothers of Italy",
-            "Lega",
-            "Democratic Party",
-            "Five Star Movement",
-            "Forza Italia",
-            "Action",
-            "Italia Viva",
-            "Green Europe",
-            "Italian Left"
+        { "label": "Brothers of Italy", "value": "Italy-Brothers of Italy" },
+        { "label": "Lega", "value": "Italy-Lega" },
+        { "label": "Democratic Party", "value": "Italy-Democratic Party" },
+        { "label": "Five Star Movement", "value": "Italy-Five Star Movement" },
+        { "label": "Forza Italia", "value": "Italy-Forza Italia" },
+        { "label": "Action", "value": "Italy-Action" },
+        { "label": "Italia Viva", "value": "Italy-Italia Viva" },
+        { "label": "Green Europe", "value": "Italy-Green Europe" },
+        { "label": "Italian Left", "value": "Italy-Italian Left" }
         ],
+
         "France": [
-            "La République En Marche!",
-            "The Republicans",
-            "Socialist Party",
-            "National Rally",
-            "Democratic Movement",
-            "French Communist Party",
-            "La France Insoumise"
+        { "label": "Renaissance (En Marche)", "value": "France-La République En Marche!" },
+        { "label": "The Republicans", "value": "France-The Republicans" },
+        { "label": "Socialist Party", "value": "France-Socialist Party" },
+        { "label": "National Rally", "value": "France-National Rally" },
+        { "label": "Democratic Movement", "value": "France-Democratic Movement" },
+        { "label": "French Communist Party", "value": "France-French Communist Party" },
+        { "label": "La France Insoumise", "value": "France-La France Insoumise" }
         ],
+
         "Germany": [
-            "Christian Democratic Union",
-            "Christian Social Union",
-            "Social Democratic Party",
-            "Alternative For Germany",
-            "Free Democratic Party",
-            "The Left",
-            "Green"
+        { "label": "Christian Democratic Union", "value": "Germany-Christian Democratic Union" },
+        { "label": "Christian Social Union", "value": "Germany-Christian Social Union" },
+        { "label": "Social Democratic Party", "value": "Germany-Social Democratic Party" },
+        { "label": "Alternative For Germany", "value": "Germany-Alternative For Germany" },
+        { "label": "Free Democratic Party", "value": "Germany-Free Democratic Party" },
+        { "label": "The Left", "value": "Germany-The Left" },
+        { "label": "Green", "value": "Germany-Green" },
+        { "label": "BSW (Bündnis Sahra Wagenknecht)", "value": "Germany-BSW (Bündnis Sahra Wagenknecht)" }
         ],
+
         "Belgium": [
-            "Christian Democratic and Flemish",
-            "Groen",
-            "New Flemish Alliance",
-            "Open Flemish Liberals and Democrats",
-            "Forward",
-            "Vlaams Belang",
-            "Ecolo",
-            "Democratic, Federalist, Independent",
-            "Humanist Democratic Centre",
-            "Socialist Party",
-            "Reformist Party",
-            "Christian Social Party",
-            "Party for Freedom and Progress",
-            "ProDG",
-            "Vivant"
+        { "label": "Christian Democratic and Flemish", "value": "Belgium-Christian Democratic and Flemish" },
+        { "label": "Groen", "value": "Belgium-Groen" },
+        { "label": "New Flemish Alliance", "value": "Belgium-New Flemish Alliance" },
+        { "label": "Open Flemish Liberals and Democrats", "value": "Belgium-Open Flemish Liberals and Democrats" },
+        { "label": "Forward", "value": "Belgium-Forward" },
+        { "label": "Vlaams Belang", "value": "Belgium-Vlaams Belang" },
+        { "label": "Ecolo", "value": "Belgium-Ecolo" },
+        { "label": "Democratic, Federalist, Independent", "value": "Belgium-Democratic, Federalist, Independent" },
+        { "label": "Humanist Democratic Centre", "value": "Belgium-Humanist Democratic Centre" },
+        { "label": "Socialist Party", "value": "Belgium-Socialist Party" },
+        { "label": "Reformist Party", "value": "Belgium-Reformist Party" },
+        { "label": "Christian Social Party", "value": "Belgium-Christian Social Party" },
+        { "label": "Party for Freedom and Progress", "value": "Belgium-Party for Freedom and Progress" },
+        { "label": "ProDG", "value": "Belgium-ProDG" },
+        { "label": "Vivant", "value": "Belgium-Vivant" }
         ],
+
         "Netherlands": [
-            "VVD",
-            "Democrats 66",
-            "Christian Democratic Appeal",
-            "Party For Freedom",
-            "Labour Party",
-            "GreenLeft",
-            "Socialist Party",
-            "Right Answer",
-            "Party for the Animals"
+        { "label": "VVD", "value": "Netherlands-VVD" },
+        { "label": "Democrats 66", "value": "Netherlands-Democrats 66" },
+        { "label": "Christian Democratic Appeal", "value": "Netherlands-Christian Democratic Appeal" },
+        { "label": "Party For Freedom", "value": "Netherlands-Party For Freedom" },
+        { "label": "Labour Party", "value": "Netherlands-Labour Party" },
+        { "label": "GreenLeft", "value": "Netherlands-GreenLeft" },
+        { "label": "Socialist Party", "value": "Netherlands-Socialist Party" },
+        { "label": "Right Answer (JA21)", "value": "Netherlands-Right Answer" },
+        { "label": "Party for the Animals", "value": "Netherlands-Party for the Animals" },
+        { "label": "BBB (Farmer–Citizen Movement)", "value": "Netherlands-BBB (Farmer–Citizen Movement)" },
+        { "label": "NSC (New Social Contract)", "value": "Netherlands-NSC (New Social Contract)" },
+        { "label": "Forum for Democracy (FvD)", "value": "Netherlands-Forum for Democracy (FvD)" },
+        { "label": "JA21", "value": "Netherlands-JA21" }
         ],
+
         "Norway": [
-            "Labour Party",
-            "Conservative Party",
-            "Centre Party",
-            "Progress Party",
-            "Socialist Left Party",
-            "Red Party",
-            "Liberal Party",
-            "Green Party",
-            "Christian Democratic Party"
+        { "label": "Labour Party", "value": "Norway-Labour Party" },
+        { "label": "Conservative Party", "value": "Norway-Conservative Party" },
+        { "label": "Centre Party", "value": "Norway-Centre Party" },
+        { "label": "Progress Party", "value": "Norway-Progress Party" },
+        { "label": "Socialist Left Party", "value": "Norway-Socialist Left Party" },
+        { "label": "Red Party", "value": "Norway-Red Party" },
+        { "label": "Liberal Party", "value": "Norway-Liberal Party" },
+        { "label": "Green Party", "value": "Norway-Green Party" },
+        { "label": "Christian Democratic Party", "value": "Norway-Christian Democratic Party" }
         ],
+
         "Sweden": [
-            "Social Democratic Party",
-            "Sweden Democrats",
-            "Moderate Party",
-            "Left Party",
-            "Centre Party",
-            "Christian Democrats",
-            "Green Party",
-            "Liberals"
+        { "label": "Social Democratic Party", "value": "Sweden-Social Democratic Party" },
+        { "label": "Sweden Democrats", "value": "Sweden-Sweden Democrats" },
+        { "label": "Moderate Party", "value": "Sweden-Moderate Party" },
+        { "label": "Left Party", "value": "Sweden-Left Party" },
+        { "label": "Centre Party", "value": "Sweden-Centre Party" },
+        { "label": "Christian Democrats", "value": "Sweden-Christian Democrats" },
+        { "label": "Green Party", "value": "Sweden-Green Party" },
+        { "label": "Liberals", "value": "Sweden-Liberals" }
         ],
+
         "Finland": [
-            "National Coalition Party",
-            "Finns Party",
-            "Social Democratic Party",
-            "Centre Party",
-            "Green League",
-            "Left Alliance",
-            "Swedish People's Party",
-            "Christian Democrats"
+        { "label": "National Coalition Party", "value": "Finland-National Coalition Party" },
+        { "label": "Finns Party", "value": "Finland-Finns Party" },
+        { "label": "Social Democratic Party", "value": "Finland-Social Democratic Party" },
+        { "label": "Centre Party", "value": "Finland-Centre Party" },
+        { "label": "Green League", "value": "Finland-Green League" },
+        { "label": "Left Alliance", "value": "Finland-Left Alliance" },
+        { "label": "Swedish People's Party", "value": "Finland-Swedish People's Party" },
+        { "label": "Christian Democrats", "value": "Finland-Christian Democrats" }
         ],
+
         "Denmark": [
-            "Social Democrats",
-            "Venstre",
-            "Moderates",
-            "Green Left",
-            "The Denmark Democrats",
-            "Liberal Alliance",
-            "Conservative People's Party"
+        { "label": "Social Democrats", "value": "Denmark-Social Democrats" },
+        { "label": "Venstre", "value": "Denmark-Venstre" },
+        { "label": "Moderates", "value": "Denmark-Moderates" },
+        { "label": "Green Left", "value": "Denmark-Green Left" },
+        { "label": "The Denmark Democrats", "value": "Denmark-The Denmark Democrats" },
+        { "label": "Liberal Alliance", "value": "Denmark-Liberal Alliance" },
+        { "label": "Conservative People's Party", "value": "Denmark-Conservative People's Party" },
+        { "label": "Danish People's Party (DF)", "value": "Denmark-Danish People's Party (DF)" },
+        { "label": "Social Liberal Party (Radikale Venstre)", "value": "Denmark-Social Liberal Party (Radikale Venstre)" },
+        { "label": "Socialist People's Party (SF)", "value": "Denmark-Socialist People's Party (SF)" },
+        { "label": "Red–Green Alliance (Enhedslisten)", "value": "Denmark-Red–Green Alliance (Enhedslisten)" }
         ],
+
         "Switzerland": [
-            "Swiss People's Party",
-            "Social Democratic Party",
-            "The Liberals",
-            "The Centre",
-            "Green Party",
-            "Green Liberal Party",
-            "Evangelical People's Party",
-            "Federal Democratic Union",
-            "Ticino League"
+        { "label": "Swiss People's Party", "value": "Switzerland-Swiss People's Party" },
+        { "label": "Social Democratic Party", "value": "Switzerland-Social Democratic Party" },
+        { "label": "The Liberals", "value": "Switzerland-The Liberals" },
+        { "label": "The Centre", "value": "Switzerland-The Centre" },
+        { "label": "Green Party", "value": "Switzerland-Green Party" },
+        { "label": "Green Liberal Party", "value": "Switzerland-Green Liberal Party" },
+        { "label": "Evangelical People's Party", "value": "Switzerland-Evangelical People's Party" },
+        { "label": "Federal Democratic Union", "value": "Switzerland-Federal Democratic Union" },
+        { "label": "Ticino League", "value": "Switzerland-Ticino League" }
         ],
+
         "Poland": [
-            "Law and Justice",
-            "Civic Platform",
-            "New Left",
-            "Sovereign Poland",
-            "Polish People's Party",
-            "Republican Party",
-            "Poland 2050",
-            "Modern",
-            "National Movement",
-            "The Greens"
+        { "label": "Law and Justice", "value": "Poland-Law and Justice" },
+        { "label": "Civic Platform", "value": "Poland-Civic Platform" },
+        { "label": "New Left", "value": "Poland-New Left" },
+        { "label": "Sovereign Poland", "value": "Poland-Sovereign Poland" },
+        { "label": "Polish People's Party", "value": "Poland-Polish People's Party" },
+        { "label": "Republican Party", "value": "Poland-Republican Party" },
+        { "label": "Poland 2050", "value": "Poland-Poland 2050" },
+        { "label": "Modern", "value": "Poland-Modern" },
+        { "label": "National Movement", "value": "Poland-National Movement" },
+        { "label": "The Greens", "value": "Poland-The Greens" },
+        { "label": "Confederation (Konfederacja)", "value": "Poland-Confederation (Konfederacja)" }
         ],
+
         "Czechia": [
-            "ANO",
-            "Civic Democratic Party",
-            "Mayors and Independents",
-            "Christian and Democratic Union",
-            "Freedom and Democracy",
-            "Top 09",
-            "Czech Pirate Party",
-            "Czech Social Democratic Party"
+        { "label": "ANO", "value": "Czechia-ANO" },
+        { "label": "Civic Democratic Party", "value": "Czechia-Civic Democratic Party" },
+        { "label": "Mayors and Independents", "value": "Czechia-Mayors and Independents" },
+        { "label": "Christian and Democratic Union", "value": "Czechia-Christian and Democratic Union" },
+        { "label": "Freedom and Democracy", "value": "Czechia-Freedom and Democracy" },
+        { "label": "Top 09", "value": "Czechia-Top 09" },
+        { "label": "Czech Pirate Party", "value": "Czechia-Czech Pirate Party" },
+        { "label": "Czech Social Democratic Party", "value": "Czechia-Czech Social Democratic Party" },
+
+        { "label": "Motorists for Themselves (Motoristé sobě)", "value": "Czechia-Motorists for Themselves (Motoristé sobě)" },
+        { "label": "Communist Party of Bohemia and Moravia (KSČM)", "value": "Czechia-Communist Party of Bohemia and Moravia (KSČM)" },
+        { "label": "Enough! (Stačilo!)", "value": "Czechia-Enough! (Stačilo!)" },
+        { "label": "Oath (Přísaha)", "value": "Czechia-Oath (Přísaha)" },
+        { "label": "Green Party (Zelení)", "value": "Czechia-Green Party (Zelení)" }
         ],
+
         "Hungary": [
-            "Fidesz",
-            "Hungarian Civic Alliance",
-            "Christian Democratic People's Party",
-            "Democratic Coalition",
-            "Momentum Movement",
-            "Hungarian Socialist Party",
-            "Jobbik - Conservatives"
+        { "label": "Fidesz", "value": "Hungary-Fidesz" },
+        { "label": "Hungarian Civic Alliance", "value": "Hungary-Hungarian Civic Alliance" },
+        { "label": "Christian Democratic People's Party", "value": "Hungary-Christian Democratic People's Party" },
+        { "label": "Democratic Coalition", "value": "Hungary-Democratic Coalition" },
+        { "label": "Momentum Movement", "value": "Hungary-Momentum Movement" },
+        { "label": "Hungarian Socialist Party", "value": "Hungary-Hungarian Socialist Party" },
+        { "label": "Jobbik - Conservatives", "value": "Hungary-Jobbik - Conservatives" },
+        { "label": "TISZA Party", "value": "Hungary-TISZA Party" },
+        { "label": "Our Homeland Movement (Mi Hazánk)", "value": "Hungary-Our Homeland Movement (Mi Hazánk)" }
         ],
+
         "Austria": [
-            "Austrian People's Party",
-            "The Greens",
-            "Social Democratic Party of Austria",
-            "Freedom Party of Austria",
-            "NEOS"
+        { "label": "Austrian People's Party", "value": "Austria-Austrian People's Party" },
+        { "label": "The Greens", "value": "Austria-The Greens" },
+        { "label": "Social Democratic Party of Austria", "value": "Austria-Social Democratic Party of Austria" },
+        { "label": "Freedom Party of Austria", "value": "Austria-Freedom Party of Austria" },
+        { "label": "NEOS", "value": "Austria-NEOS" }
         ],
+
         "Slovakia": [
-            "Ordinary People and Independent Personalities",
-            "Direction - Slovak Social Democracy",
-            "We Are Family",
-            "People's Party Our Slovakia",
-            "Freedom and Solidarity",
-            "For the People",
-            "Voice - Social Democracy",
-            "Progressive Slovakia"
+        { "label": "Ordinary People and Independent Personalities", "value": "Slovakia-Ordinary People and Independent Personalities" },
+        { "label": "Direction - Slovak Social Democracy", "value": "Slovakia-Direction - Slovak Social Democracy" },
+        { "label": "We Are Family", "value": "Slovakia-We Are Family" },
+        { "label": "People's Party Our Slovakia", "value": "Slovakia-People's Party Our Slovakia" },
+        { "label": "Freedom and Solidarity", "value": "Slovakia-Freedom and Solidarity" },
+        { "label": "For the People", "value": "Slovakia-For the People" },
+        { "label": "Voice - Social Democracy", "value": "Slovakia-Voice - Social Democracy" },
+        { "label": "Progressive Slovakia", "value": "Slovakia-Progressive Slovakia" }
         ],
+
         "Greece": [
-            "New Democracy",
-            "Coalition of the Radical Left",
-            "PASOK-KINAL",
-            "Communist Party of Greece",
-            "Greek Solution",
-            "European Realistic Disobedience Front25"
+        { "label": "New Democracy", "value": "Greece-New Democracy" },
+        { "label": "Coalition of the Radical Left", "value": "Greece-Coalition of the Radical Left" },
+        { "label": "PASOK-KINAL", "value": "Greece-PASOK-KINAL" },
+        { "label": "Communist Party of Greece", "value": "Greece-Communist Party of Greece" },
+        { "label": "Greek Solution", "value": "Greece-Greek Solution" },
+        { "label": "European Realistic Disobedience Front25", "value": "Greece-European Realistic Disobedience Front25" }
         ],
+
         "Turkey": [
-            "Justice and Development Party",
-            "Republican People's Party",
-            "People's Democratic Party",
-            "Nationalist Movement Party",
-            "Good Party"
+        { "label": "Justice and Development Party", "value": "Turkey-Justice and Development Party" },
+        { "label": "Republican People's Party", "value": "Turkey-Republican People's Party" },
+        { "label": "People's Democratic Party", "value": "Turkey-People's Democratic Party" },
+        { "label": "Nationalist Movement Party", "value": "Turkey-Nationalist Movement Party" },
+        { "label": "Good Party", "value": "Turkey-Good Party" },
+        { "label": "DEM Party", "value": "Turkey-DEM Party" }
         ],
+
         "Lithuania": [
-            "Homeland Union",
-            "Lithuanian Farmers and Greens Union",
-            "Liberal Movement",
-            "Social Democratic Party",
-            "Freedom Party",
-            "Labour Party",
-            "Lithuanian Regions Party",
-            "Electoral Action of Poles",
-            "Lithuanian Green Party",
-            "Freedom and Justice"
+        { "label": "Homeland Union", "value": "Lithuania-Homeland Union" },
+        { "label": "Lithuanian Farmers and Greens Union", "value": "Lithuania-Lithuanian Farmers and Greens Union" },
+        { "label": "Liberal Movement", "value": "Lithuania-Liberal Movement" },
+        { "label": "Social Democratic Party", "value": "Lithuania-Social Democratic Party" },
+        { "label": "Freedom Party", "value": "Lithuania-Freedom Party" },
+        { "label": "Labour Party", "value": "Lithuania-Labour Party" },
+        { "label": "Lithuanian Regions Party", "value": "Lithuania-Lithuanian Regions Party" },
+        { "label": "Electoral Action of Poles", "value": "Lithuania-Electoral Action of Poles" },
+        { "label": "Lithuanian Green Party", "value": "Lithuania-Lithuanian Green Party" },
+        { "label": "Freedom and Justice", "value": "Lithuania-Freedom and Justice" }
         ],
+
         "Latvia": [
-            "New Unity",
-            "Union of Greens and Farmers",
-            "United List",
-            "National Alliance",
-            "For Stability!",
-            "The Progressives",
-            "Latvia First",
-            "Harmony",
-            "Development/For!",
-            "Latvian Russian Union"
+        { "label": "New Unity", "value": "Latvia-New Unity" },
+        { "label": "Union of Greens and Farmers", "value": "Latvia-Union of Greens and Farmers" },
+        { "label": "United List", "value": "Latvia-United List" },
+        { "label": "National Alliance", "value": "Latvia-National Alliance" },
+        { "label": "For Stability!", "value": "Latvia-For Stability!" },
+        { "label": "The Progressives", "value": "Latvia-The Progressives" },
+        { "label": "Latvia First", "value": "Latvia-Latvia First" },
+        { "label": "Harmony", "value": "Latvia-Harmony" },
+        { "label": "Development/For!", "value": "Latvia-Development/For!" },
+        { "label": "Latvian Russian Union", "value": "Latvia-Latvian Russian Union" }
         ],
+
         "Estonia": [
-            "Estonian Reform Party",
-            "Conservative People's Party",
-            "Estonian Centre Party",
-            "Estonia 200",
-            "Social Democratic Party",
-            "Fatherland"
+        { "label": "Estonian Reform Party", "value": "Estonia-Estonian Reform Party" },
+        { "label": "Conservative People's Party", "value": "Estonia-Conservative People's Party" },
+        { "label": "Estonian Centre Party", "value": "Estonia-Estonian Centre Party" },
+        { "label": "Estonia 200", "value": "Estonia-Estonia 200" },
+        { "label": "Social Democratic Party", "value": "Estonia-Social Democratic Party" },
+        { "label": "Fatherland", "value": "Estonia-Fatherland" }
         ],
+
         "India": [
-            "Bharatiya Janata Party",
-            "Indian National Congress",
-            "Aam Aadmi Party",
-            "Communist Party of India",
-            "National People's Party",
-            "Bahujan Samaj Party"
+        { "label": "Bharatiya Janata Party", "value": "India-Bharatiya Janata Party" },
+        { "label": "Indian National Congress", "value": "India-Indian National Congress" },
+        { "label": "Aam Aadmi Party", "value": "India-Aam Aadmi Party" },
+        { "label": "Communist Party of India", "value": "India-Communist Party of India" },
+        { "label": "National People's Party", "value": "India-National People's Party" },
+        { "label": "Bahujan Samaj Party", "value": "India-Bahujan Samaj Party" }
         ],
+
         "Israel": [
-            "Likud",
-            "Yesh Atid",
-            "National Unity",
-            "Shas",
-            "Religious Zionism",
-            "United Torah Judaism",
-            "Otzma Yehudit",
-            "Yisrael Beiteinu",
-            "United Arab List",
-            "Hadash-Ta'al",
-            "Labor Party",
-            "Noam"
+        { "label": "Likud", "value": "Israel-Likud" },
+        { "label": "Yesh Atid", "value": "Israel-Yesh Atid" },
+        { "label": "National Unity", "value": "Israel-National Unity" },
+        { "label": "Shas", "value": "Israel-Shas" },
+        { "label": "Religious Zionism", "value": "Israel-Religious Zionism" },
+        { "label": "United Torah Judaism", "value": "Israel-United Torah Judaism" },
+        { "label": "Otzma Yehudit", "value": "Israel-Otzma Yehudit" },
+        { "label": "Yisrael Beiteinu", "value": "Israel-Yisrael Beiteinu" },
+        { "label": "United Arab List", "value": "Israel-United Arab List" },
+        { "label": "Hadash-Ta'al", "value": "Israel-Hadash-Ta'al" },
+        { "label": "Labor Party", "value": "Israel-Labor Party" },
+        { "label": "Noam", "value": "Israel-Noam" },
+        { "label": "The Democrats", "value": "Israel-The Democrats" }
         ],
+
         "Japan": [
-            "Liberal Democratic Party",
-            "Consitutional Democratic Party",
-            "Japan Innovation Party",
-            "Komeito",
-            "Democratic Party for the People",
-            "Japanese Communist Party",
-            "Reiwa Shinsengumi",
-            "Social Democratic Party"
+        { "label": "Liberal Democratic Party", "value": "Japan-Liberal Democratic Party" },
+        { "label": "Constitutional Democratic Party", "value": "Japan-Consitutional Democratic Party" },
+        { "label": "Japan Innovation Party", "value": "Japan-Japan Innovation Party" },
+        { "label": "Komeito", "value": "Japan-Komeito" },
+        { "label": "Democratic Party for the People", "value": "Japan-Democratic Party for the People" },
+        { "label": "Japanese Communist Party", "value": "Japan-Japanese Communist Party" },
+        { "label": "Reiwa Shinsengumi", "value": "Japan-Reiwa Shinsengumi" },
+        { "label": "Social Democratic Party", "value": "Japan-Social Democratic Party" }
         ],
+
         "South Korea": [
-            "Democratic Party",
-            "People Power Party",
-            "Justice Party",
-            "Basic Income Party",
-            "Progressive Party",
-            "Transition Korea"
+        { "label": "Democratic Party", "value": "South Korea-Democratic Party" },
+        { "label": "People Power Party", "value": "South Korea-People Power Party" },
+        { "label": "Justice Party", "value": "South Korea-Justice Party" },
+        { "label": "Basic Income Party", "value": "South Korea-Basic Income Party" },
+        { "label": "Progressive Party", "value": "South Korea-Progressive Party" },
+        { "label": "Transition Korea", "value": "South Korea-Transition Korea" },
+        { "label": "Rebuilding Korea Party", "value": "South Korea-Rebuilding Korea Party" },
+        { "label": "New Reform Party", "value": "South Korea-New Reform Party" }
         ],
+
         "South Africa": [
-            "African National Congress",
-            "Democratic Alliance",
-            "Economic Freedom Fighters",
-            "Inkatha Freedom Party",
-            "Freedom Front Plus",
-            "African Christian Democratic Party"
+        { "label": "African National Congress", "value": "South Africa-African National Congress" },
+        { "label": "Democratic Alliance", "value": "South Africa-Democratic Alliance" },
+        { "label": "Economic Freedom Fighters", "value": "South Africa-Economic Freedom Fighters" },
+        { "label": "Inkatha Freedom Party", "value": "South Africa-Inkatha Freedom Party" },
+        { "label": "Freedom Front Plus", "value": "South Africa-Freedom Front Plus" },
+        { "label": "African Christian Democratic Party", "value": "South Africa-African Christian Democratic Party" },
+        { "label": "MK Party", "value": "South Africa-MK Party" }
+        ],
+
+        "Indonesia": [
+        { "label": "PDI-P", "value": "Indonesia-PDI-P" },
+        { "label": "Gerindra", "value": "Indonesia-Gerindra" },
+        { "label": "Golkar", "value": "Indonesia-Golkar" },
+        { "label": "NasDem", "value": "Indonesia-NasDem" },
+        { "label": "Demokrat", "value": "Indonesia-Demokrat" },
+        { "label": "PKB", "value": "Indonesia-PKB" },
+        { "label": "PKS", "value": "Indonesia-PKS" },
+        { "label": "PAN", "value": "Indonesia-PAN" }
+        ],
+
+        "Pakistan": [
+        { "label": "PTI", "value": "Pakistan-PTI" },
+        { "label": "PML-N", "value": "Pakistan-PML-N" },
+        { "label": "PPP", "value": "Pakistan-PPP" },
+        { "label": "JUI-F", "value": "Pakistan-JUI-F" },
+        { "label": "MQM-P", "value": "Pakistan-MQM-P" }
+        ],
+
+        "Bangladesh": [
+        { "label": "Bangladesh Nationalist Party (BNP)", "value": "Bangladesh-Bangladesh Nationalist Party (BNP)" },
+        { "label": "Awami League", "value": "Bangladesh-Awami League" },
+        { "label": "Jatiya Party", "value": "Bangladesh-Jatiya Party" }
+        ],
+
+        "Malaysia": [
+        { "label": "UMNO", "value": "Malaysia-UMNO" },
+        { "label": "PAS", "value": "Malaysia-PAS" },
+        { "label": "DAP", "value": "Malaysia-DAP" },
+        { "label": "PKR", "value": "Malaysia-PKR" },
+        { "label": "Bersatu", "value": "Malaysia-Bersatu" },
+        { "label": "Amanah", "value": "Malaysia-Amanah" }
+        ],
+
+        "Singapore": [
+        { "label": "People's Action Party (PAP)", "value": "Singapore-People's Action Party (PAP)" },
+        { "label": "Workers' Party (WP)", "value": "Singapore-Workers' Party (WP)" },
+        { "label": "Progress Singapore Party (PSP)", "value": "Singapore-Progress Singapore Party (PSP)" },
+        { "label": "Singapore Democratic Party (SDP)", "value": "Singapore-Singapore Democratic Party (SDP)" }
+        ],
+
+        "Romania": [
+        { "label": "PSD", "value": "Romania-PSD" },
+        { "label": "PNL", "value": "Romania-PNL" },
+        { "label": "USR", "value": "Romania-USR" },
+        { "label": "AUR", "value": "Romania-AUR" },
+        { "label": "UDMR", "value": "Romania-UDMR" }
+        ],
+
+        "Russia": [
+        { "label": "United Russia", "value": "Russia-United Russia" },
+        { "label": "Communist Party (CPRF)", "value": "Russia-Communist Party (CPRF)" },
+        { "label": "LDPR", "value": "Russia-LDPR" },
+        { "label": "A Just Russia", "value": "Russia-A Just Russia" },
+        { "label": "New People", "value": "Russia-New People" }
+        ],
+
+        "Nigeria": [
+        { "label": "APC", "value": "Nigeria-APC" },
+        { "label": "PDP", "value": "Nigeria-PDP" },
+        { "label": "Labour Party", "value": "Nigeria-Labour Party" },
+        { "label": "NNPP", "value": "Nigeria-NNPP" }
+        ],
+
+        "Ukraine": [
+        { "label": "Servant of the People", "value": "Ukraine-Servant of the People" },
+        { "label": "European Solidarity", "value": "Ukraine-European Solidarity" },
+        { "label": "Batkivshchyna", "value": "Ukraine-Batkivshchyna" },
+        { "label": "Holos", "value": "Ukraine-Holos" }
         ]
     },
     "identities": [
         "Centrist",
         "Moderate",
-        "Right-Wing",
+        "Radical",
+
         "Left-Wing",
+        "Right-Wing",
+
         "Liberal",
+        "Classical Liberal",
         "Neoliberal",
-        "Conservative",
-        "Neoconservative",
         "Progressive",
+
+        "Conservative",
+        "Paleoconservative",
+        "Neoconservative",
         "Traditionalist",
+
         "Libertarian",
-        "Populist",
-        "Nationalist",
+        "Libertarian Socialist",
+        "Anarchist",
+
         "Social Democrat",
         "Democratic Socialist",
-        "Communist",
+        "Market Socialist",
+        "Liberal Socialist",
+        "Syndicalist",
+        "Mutualist",
+        "Georgist",
+
         "Capitalist",
-        "Anarchist",
-        "Antifascist",
-        "Fascist",
-        "Monarchist",
-        "Environmentalist",
-        "Feminist",
-        "Internationalist",
-        "Radical",
+        "Communist",
         "Marxist",
         "Leninist",
         "Maoist",
+
+        "Populist",
+        "Technocrat",
         "Corporatist",
+
         "Centralist",
         "Decentralist",
-        "Technocrat"
+
+        "Patriot",
+        "Nationalist",
+        "Ethnonationalist",
+        "Internationalist",
+        "Isolationist",
+
+        "Monarchist",
+
+        "Antifascist",
+        "Fascist",
+        "Accelerationist",
+
+        "Environmentalist",
+        "Feminist"
     ],
     "how_found": [
         "Google / Search Engine",
         "ChatGPT / AI",
         "Twitter / X",
         "Instagram",
+        "Facebook",
         "Reddit",
         "Discord",
         "YouTube",
         "TikTok",
+        "Bluesky",
+        "Twitch",
         "Other Social Media",
         "Political Forum",
         "GitHub",
         "News / Blog",
         "Friend / Referral",
+        "School / University",
         "Ad / Sponsored Post",
         "Other"
     ]

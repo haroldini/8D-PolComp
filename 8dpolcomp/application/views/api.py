@@ -151,6 +151,51 @@ def _load_demo_valid():
         return json.load(f)
 
 
+def _flatten_party_values(demo_party: Any) -> set[str]:
+    """
+    Return all acceptable party values.
+
+    Supports BOTH formats:
+
+      Legacy:
+        "party": { "United States": ["Democratic Party", ...] }
+        -> acceptable value stored in DB is "United States-Democratic Party"
+
+      New:
+        "party": { "United States": [{"label": "...", "value": "United States-Democratic Party"}] }
+        -> acceptable value stored in DB is exactly the entry's "value"
+
+    """
+    acceptable: set[str] = set()
+
+    if not isinstance(demo_party, dict):
+        return acceptable
+
+    for country_key, party_list in demo_party.items():
+        if not isinstance(party_list, list):
+            continue
+
+        for p in party_list:
+            # Legacy string party name -> build legacy storage format
+            if isinstance(p, str):
+                acceptable.add(f"{country_key}-{p}")
+                continue
+
+            # New object format -> use value directly
+            if isinstance(p, dict):
+                v = p.get("value")
+                if isinstance(v, str) and v.strip():
+                    acceptable.add(v.strip())
+                    continue
+
+                # If "value" is missing, fall back to label in legacy scheme
+                lbl = p.get("label")
+                if isinstance(lbl, str) and lbl.strip():
+                    acceptable.add(f"{country_key}-{lbl.strip()}")
+
+    return acceptable
+
+
 def _validate_how_found_against_file(how_found: Any) -> tuple[str | None, str | None]:
     if how_found is None or how_found == "":
         return None, None
@@ -194,6 +239,11 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
         if dem_key == "age":
             if dem_val == -1:
                 continue
+
+            # Frontend includes "Over 100" option as 101
+            if int(dem_val) == 101:
+                continue
+
             try:
                 allowed = [int(age_val) for age_val in demo_valid[dem_key]]
                 if int(dem_val) in allowed:
@@ -203,11 +253,7 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
             return None, f"{dem_val} is not a valid {dem_key}"
 
         elif dem_key == "party":
-            acceptable_vals = []
-            for country, party_list in demo_valid["party"].items():
-                for party in party_list:
-                    acceptable_vals.append(country + "-" + party)
-
+            acceptable_vals = _flatten_party_values(demo_valid.get("party"))
             if dem_val in acceptable_vals:
                 continue
             return None, f"{dem_val} is not a valid {dem_key}"
