@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css')}}">
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
+<meta id="group-data" data-group="{{ data.get('group_id','') }}">
 {% endblock %}
 
 {% block CONTENT %}

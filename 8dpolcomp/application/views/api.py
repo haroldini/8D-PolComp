@@ -4,6 +4,7 @@ import logging
 import os
 from datetime import date, datetime
 from typing import Any, Dict, List, Literal, Optional
+from uuid import UUID
 
 import requests
 from flask import Blueprint, session, request, current_app
@@ -17,9 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 v = Blueprint("api", __name__)
-
-
-# --------- Pydantic Schemas ---------
 
 
 Axis = Literal["diplomacy", "economics", "government", "politics", "religion", "society", "state", "technology"]
@@ -49,13 +47,11 @@ class ToFormBody(BaseModel):
 
 class ToTestBody(BaseModel):
     model_config = ConfigDict(extra="forbid")
-
     action: Literal["to_test"]
 
 
 class ToInstructionsBody(BaseModel):
     model_config = ConfigDict(extra="forbid")
-
     action: Literal["to_instructions"]
 
 
@@ -75,6 +71,10 @@ class FiltersetModel(BaseModel):
     max_age: Optional[int] = Field(default=None, alias="max-age", ge=0, le=101)
     any_all: Literal["any", "all"] = Field(default="any", alias="any-all")
     color: str
+
+    # Group tests
+    group_ids: List[UUID] = Field(default_factory=list, alias="group-ids")
+
     country: List[str] = Field(default_factory=list)
     religion: List[str] = Field(default_factory=list)
     ethnicity: List[str] = Field(default_factory=list)
@@ -132,9 +132,6 @@ class FilterCountBody(BaseModel):
     data: dict
 
 
-# --------- Internal validators ---------
-
-
 class ScoresModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -155,13 +152,6 @@ def _load_demo_valid():
 
 
 def _validate_how_found_against_file(how_found: Any) -> tuple[str | None, str | None]:
-    """
-    Validate how_found against the demographics.json file schema.
-
-    Returns:
-        (validated_value, error_message)
-    """
-
     if how_found is None or how_found == "":
         return None, None
 
@@ -185,13 +175,6 @@ def _validate_how_found_against_file(how_found: Any) -> tuple[str | None, str | 
 
 
 def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[Dict[str, Any] | None, str | None]:
-    """
-    Validate demographics against the demographics.json file schema.
-
-    Returns:
-        (validated_demographics, error_message)
-    """
-
     try:
         demo_valid = _load_demo_valid()
     except Exception:
@@ -203,14 +186,11 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
 
     for dem_key, dem_val in demographics.items():
 
-        # Unknown demographic key = invalid
-        # Empty demographic value = valid
         if dem_key not in demo_valid.keys():
             return None, f"{dem_key} is not a valid demographic"
         if dem_key != "identities" and dem_val == "":
             continue
 
-        # For age key, cast to list of acceptable vals to integer
         if dem_key == "age":
             if dem_val == -1:
                 continue
@@ -222,7 +202,6 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
                 return None, f"{dem_val} is not a valid {dem_key}"
             return None, f"{dem_val} is not a valid {dem_key}"
 
-        # For party key - acceptable vals are contained within countries
         elif dem_key == "party":
             acceptable_vals = []
             for country, party_list in demo_valid["party"].items():
@@ -233,7 +212,6 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
                 continue
             return None, f"{dem_val} is not a valid {dem_key}"
 
-        # For identity key, just check for valid values across each identity in list
         elif dem_key == "identities":
             if dem_val == []:
                 continue
@@ -248,7 +226,6 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
                 cleaned.append(identity)
             demographics["identities"] = cleaned
 
-        # For other keys - just check for valid values inside demo_valid for key.
         elif dem_val not in demo_valid[dem_key]:
             return None, f"{dem_val} is not a valid {dem_key}"
 
@@ -256,13 +233,6 @@ def _validate_demographics_against_file(demographics: Dict[str, Any]) -> tuple[D
 
 
 def _validate_session_answers_and_scores() -> tuple[Dict[str, Any] | None, str | None]:
-    """
-    Validate session["answers"] and session["results"] before DB insertion.
-
-    Returns:
-        (validated_payload, error_message)
-    """
-
     if "answers" not in session or "results" not in session:
         return None, "Session expired. Please refresh and try again."
 
@@ -285,19 +255,6 @@ def _validate_session_answers_and_scores() -> tuple[Dict[str, Any] | None, str |
 
 
 def get_answer_counts():
-    """
-    Compute per-question answer counts for the current session answers.
-
-    Args:
-        None
-
-    Returns:
-        None
-
-    Raises:
-        KeyError: If session["answers"] is missing.
-    """
-
     session["answer_counts"] = {
         str(q_id): {"Strongly Agree": 0, "Agree": 0, "Neutral": 0, "Disagree": 0, "Strongly Disagree": 0}
         for q_id in session["answers"].keys()
@@ -308,20 +265,6 @@ def get_answer_counts():
 
 
 def calculate_results(answers: Dict[int, int], scoring: Dict[int, Dict[str, float]]) -> Dict[str, float]:
-    """
-    Convert answers -> axis score result dict.
-
-    Args:
-        answers (dict[int, int]): question_id -> answer value
-        scoring (dict[int, dict[str, float]]): question_id -> axis weights
-
-    Returns:
-        dict: axis -> score (rounded)
-
-    Raises:
-        KeyError: If required answers are missing.
-    """
-
     missing = set(scoring.keys()) - set(answers.keys())
     if missing:
         raise KeyError("Missing answers")
@@ -337,26 +280,8 @@ def calculate_results(answers: Dict[int, int], scoring: Dict[int, Dict[str, floa
     return {axis: round(val / max_scores[axis], 2) for axis, val in r_sums.items()}
 
 
-# --------- Routes ---------
-
-
 @v.route("/api/to_form", methods=["POST"])
 def to_form():
-    """
-    Accept answers payload, calculate axis results, and move user to demographics form.
-
-    Args:
-        JSON body:
-            answers (dict[int,int]): question_id -> answer
-
-    Returns:
-        dict: {"status": "success"}
-
-    Raises:
-        400: Invalid request body.
-        500: Unexpected server error.
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -399,21 +324,6 @@ def to_form():
 
 @v.route("/api/to_test", methods=["POST"])
 def to_test():
-    """
-    Move user state into the test page.
-
-    Args:
-        JSON body:
-            action (str): must be "to_test"
-
-    Returns:
-        dict: {"status": "success"}
-
-    Raises:
-        400: Invalid request.
-        500: Unexpected server error.
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -435,21 +345,6 @@ def to_test():
 
 @v.route("/api/to_instructions", methods=["POST"])
 def to_instructions():
-    """
-    Reset user flow back to instructions page.
-
-    Args:
-        JSON body:
-            action (str): must be "to_instructions"
-
-    Returns:
-        dict: {"status": "success"}
-
-    Raises:
-        400: Invalid request.
-        500: Unexpected server error.
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -471,29 +366,6 @@ def to_instructions():
 
 @v.route("/api/to_results", methods=["POST"])
 def to_results():
-    """
-    Finalise a test submission and persist results.
-
-    Validates captcha, validates session results/answers, validates demographics payload,
-    and (in non-dev) inserts into DB.
-
-    Args:
-        JSON body:
-            captcha (str): hCaptcha token.
-            demographics (dict): User demographics data.
-            how_found (str): Optional selection describing how the app was found.
-
-    Returns:
-        dict: {"status": "success", "results_id": <id>} on success
-        dict: {"status": "<message>"} on error
-
-    Raises:
-        400: Invalid request / missing required fields.
-        401: Captcha failure / validation failure.
-        503: Captcha verification unavailable.
-        500: Unexpected server error.
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -550,12 +422,22 @@ def to_results():
             logger.exception("[/api/to_results] Failed to compute answer counts")
             return {"status": "Server error. Please refresh and try again."}, 500
 
+        # Parse optional group_id from session
+        group_uuid = None
+        raw_gid = session.get("group_id")
+        if raw_gid:
+            try:
+                group_uuid = UUID(str(raw_gid))
+            except Exception:
+                group_uuid = None
+
         # Add user's result to database
         try:
             if current_app.config.get("DEV"):
                 session["results_id"] = 1006
             else:
                 result_row = {
+                    "group_id": group_uuid,
                     "demographics": demographics,
                     "scores": session_payload["scores"],
                     "answers": session_payload["answers"],
@@ -576,23 +458,6 @@ def to_results():
 
 @v.route("/api/data", methods=["POST"])
 def data_api():
-    """
-    Data API used by the frontend to:
-      - apply_filters
-
-    Args:
-        JSON body:
-            action (str)
-            data (dict) required for apply_filters
-
-    Returns:
-        JSON string: {"status": "...", ...}
-
-    Raises:
-        401: Validation failure / unknown action
-        500: Server error
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -641,22 +506,6 @@ def data_api():
 
 @v.route("/api/get_filterset_count", methods=["POST"])
 def get_filterset_count():
-    """
-    Return counts for each filterset without returning datasets.
-
-    Args:
-        JSON body:
-            action (str): must be "get_filterset_count"
-            data (dict): filter data object
-
-    Returns:
-        JSON string: {"status": "success", "counts": {...}}
-
-    Raises:
-        401: Validation failure.
-        500: Server error.
-    """
-
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):

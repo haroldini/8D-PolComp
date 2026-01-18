@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
 <meta id="matches-data" data-matches='{{ data["closest_matches"]|safe }}'>
+<meta id="group-data" data-group='{{ data.get("group_id","") }}'>
 {% endblock %}
 
 {% block CONTENT %}
@@ -59,11 +60,18 @@
         </div>
     </div>
 </div>
+
 <div class="components-50-50">
     <div class="component-border component" >
         <p class="text text-subtitle blue">Share Results</p>
         <button class="button blue-button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')"><i class="fa-solid fa-clipboard"></i><span>Copy Link</span></button>
         <button class="button blue-button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
+
+        {% if data.get("group_id") %}
+            <button class="button green-button" onclick="copy_group_link()"><i class="fa-solid fa-people-group"></i><span>Copy Group Link</span></button>
+            <a class="button center-content flex green-button" href="/data?g={{ data['group_id'] }}"><i class="fa-solid fa-chart-simple"></i>View Group</a>
+        {% endif %}
+
         <div id="statusmsg" class="fill">
             <p>Loading...</p>
         </div>
@@ -81,4 +89,23 @@
 
 {% block SCRIPTS %}
 <script src="/static/js/results.js"></script>
+<script>
+    async function copy_group_link() {
+        const meta = document.getElementById("group-data");
+        const gid = meta ? (meta.getAttribute("data-group") || "").trim() : "";
+        if (!gid) return;
+
+        const link = window.location.origin + "/data?g=" + encodeURIComponent(gid);
+
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(link);
+                return;
+            }
+        } catch (e) {
+            // ignore fallback
+        }
+        window.prompt("Copy group link:", link);
+    }
+</script>
 {% endblock %}

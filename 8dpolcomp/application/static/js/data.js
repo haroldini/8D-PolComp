@@ -14,6 +14,33 @@ function _escapeHtml(s) {
         .replaceAll("'", "&#039;");
 }
 
+function _isUUID(s) {
+    const v = String(s || "").trim();
+    return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(v);
+}
+
+function _getUrlGroupId() {
+    try {
+        const u = new URL(window.location.href);
+        const g = (u.searchParams.get("g") || "").trim();
+        if (g && _isUUID(g)) return g;
+    } catch (e) {
+        // ignore
+    }
+    return "";
+}
+
+function _getMetaGroupId() {
+    const meta = document.getElementById("group-data");
+    if (!meta) return "";
+    const g = (meta.getAttribute("data-group") || "").trim();
+    return (g && _isUUID(g)) ? g : "";
+}
+
+function _getActiveGroupId() {
+    return _getUrlGroupId() || _getMetaGroupId() || "";
+}
+
 function showPresetStatus(msg) {
     const el = document.getElementById("preset-status");
     if (!el) return;
@@ -61,52 +88,6 @@ function showPresetDesc(presetOrMsg) {
     el.innerHTML = desc + keyHtml;
 }
 
-async function load_presets() {
-    try {
-        const resp = await fetch("/static/data/samples/filtersets.json", { cache: "no-store" });
-        if (!resp.ok) return;
-
-        const data = await resp.json();
-        if (!data || typeof data !== "object") return;
-
-        preset_data = data;
-        render_preset_dropdown();
-    } catch (e) {
-        // ignore
-    }
-}
-
-function render_preset_dropdown() {
-    const sel = document.getElementById("preset-select");
-    if (!sel) return;
-
-    const presets = preset_data && Array.isArray(preset_data.presets) ? preset_data.presets : [];
-    if (presets.length === 0) return;
-
-    const defaultKey = "all_users";
-
-    sel.innerHTML = "";
-    for (const preset of presets) {
-        const opt = document.createElement("option");
-        opt.value = preset.key;
-        opt.textContent = preset.label || preset.key;
-        sel.appendChild(opt);
-    }
-
-    const hasDefault = presets.some(p => p.key === defaultKey);
-    sel.value = hasDefault ? defaultKey : presets[0].key;
-    sel.disabled = false;
-
-    const active = presets.find(p => p.key === sel.value);
-    showPresetStatus("");
-    showPresetDesc(active || "");
-
-    if (!_initialPresetApplied) {
-        _initialPresetApplied = true;
-        apply_preset(sel.value);
-    }
-}
-
 function _todayISO() {
     return new Date().toISOString().substring(0, 10);
 }
@@ -133,6 +114,114 @@ function _expand_party_tokens(partyArr) {
     ]);
 
     return _get_all_party_values().filter(v => v && !exclude.has(v));
+}
+
+function _emptyFilterset(label, color, groupIdOrEmpty) {
+    return {
+        label: label,
+        "min-age": null,
+        "max-age": null,
+        "any-all": "any",
+        color: color,
+        "group-ids": groupIdOrEmpty ? [groupIdOrEmpty] : [],
+        country: [],
+        religion: [],
+        ethnicity: [],
+        education: [],
+        party: [],
+        identities: []
+    };
+}
+
+function _injectGroupPreset() {
+    const gid = _getActiveGroupId();
+    if (!gid) return null;
+
+    if (!preset_data || typeof preset_data !== "object") preset_data = {};
+    if (!Array.isArray(preset_data.presets)) preset_data.presets = [];
+
+    const key = "group_" + gid;
+
+    // already injected
+    if (preset_data.presets.some(p => p && p.key === key)) return key;
+
+    const preset = {
+        key: key,
+        label: "Group",
+        description: "Compare this group vs all users.",
+        filter_data: {
+            order: "random",
+            limit: 1000,
+            "min-date": "2023-01-01",
+            "max-date": "today",
+            filtersets: [
+                _emptyFilterset("Group", "#0db52e", gid),
+                _emptyFilterset("All Users", "#0d56b5", "")
+            ]
+        }
+    };
+
+    preset_data.presets.unshift(preset);
+    return key;
+}
+
+async function load_presets() {
+    try {
+        const resp = await fetch("/static/data/samples/filtersets.json", { cache: "no-store" });
+        if (!resp.ok) return;
+
+        const data = await resp.json();
+        if (!data || typeof data !== "object") return;
+
+        preset_data = data;
+
+        // Inject group preset if URL/meta has group id
+        _injectGroupPreset();
+
+        render_preset_dropdown();
+    } catch (e) {
+        // ignore
+    }
+}
+
+function render_preset_dropdown() {
+    const sel = document.getElementById("preset-select");
+    if (!sel) return;
+
+    const presets = preset_data && Array.isArray(preset_data.presets) ? preset_data.presets : [];
+    if (presets.length === 0) return;
+
+    const defaultKey = "all_users";
+    const injectedGroupKey = _injectGroupPreset();
+
+    sel.innerHTML = "";
+    for (const preset of presets) {
+        const opt = document.createElement("option");
+        opt.value = preset.key;
+        opt.textContent = preset.label || preset.key;
+        sel.appendChild(opt);
+    }
+
+    // If group preset exists, default to it, otherwise use all_users or first
+    const hasGroup = injectedGroupKey && presets.some(p => p.key === injectedGroupKey);
+    const hasDefault = presets.some(p => p.key === defaultKey);
+
+    if (hasGroup) {
+        sel.value = injectedGroupKey;
+    } else {
+        sel.value = hasDefault ? defaultKey : presets[0].key;
+    }
+
+    sel.disabled = false;
+
+    const active = presets.find(p => p.key === sel.value);
+    showPresetStatus("");
+    showPresetDesc(active || "");
+
+    if (!_initialPresetApplied) {
+        _initialPresetApplied = true;
+        apply_preset(sel.value);
+    }
 }
 
 function _set_num_filtersets(n) {
@@ -180,6 +269,13 @@ function _set_num_filtersets(n) {
 function _apply_filterset_to_div(filterset_div, filterset_obj, idx) {
     if (!filterset_div || !filterset_obj) return;
 
+    const labelEl = filterset_div.querySelector("input[name='label']");
+    if (labelEl) labelEl.value = filterset_obj.label || ("Filterset " + idx);
+
+    const groupEl = filterset_div.querySelector("input[name='group-id']");
+    const gids = Array.isArray(filterset_obj["group-ids"]) ? filterset_obj["group-ids"] : [];
+    if (groupEl) groupEl.value = gids[0] || "";
+
     const minAgeEl = filterset_div.querySelector("input[name='min-age']");
     const maxAgeEl = filterset_div.querySelector("input[name='max-age']");
     if (minAgeEl) minAgeEl.value = (filterset_obj["min-age"] === null || filterset_obj["min-age"] === undefined) ? "" : String(filterset_obj["min-age"]);
@@ -188,9 +284,6 @@ function _apply_filterset_to_div(filterset_div, filterset_obj, idx) {
     const mode = filterset_obj["any-all"] || "any";
     const radio = filterset_div.querySelector("input[name='any-all" + String(idx) + "'][value='" + mode + "']");
     if (radio) radio.checked = true;
-
-    const labelEl = filterset_div.querySelector("input[name='label']");
-    if (labelEl) labelEl.value = filterset_obj.label || ("Filterset " + idx);
 
     const colorEl = document.getElementById("color_" + String(idx));
     if (colorEl && filterset_obj.color) colorEl.value = filterset_obj.color;
@@ -245,6 +338,7 @@ function apply_preset(preset_key) {
 
     const filtersets = filtersets_raw.map(fs => {
         const c = JSON.parse(JSON.stringify(fs));
+        if (!Array.isArray(c["group-ids"])) c["group-ids"] = [];
         if (Array.isArray(c.party)) c.party = _expand_party_tokens(c.party);
         return c;
     });
@@ -299,6 +393,15 @@ function _coerceSelectList(val) {
     return [val];
 }
 
+function _readGroupIds(filterset_div) {
+    const el = filterset_div.querySelector("input[name='group-id']");
+    if (!el) return [];
+    const v = String(el.value || "").trim();
+    if (!v) return [];
+    if (!_isUUID(v)) return null; // invalid
+    return [v];
+}
+
 function _build_filter_payload() {
     let filterset_divs = [];
     for (let i = 1; i < num_filtersets + 1; i++) {
@@ -319,6 +422,17 @@ function _build_filter_payload() {
     for (const filterset_div of filterset_divs) {
         j += 1;
         let filterset = {};
+
+        const groupIds = _readGroupIds(filterset_div);
+        if (groupIds === null) {
+            if (typeof show_polcomp_error === "function") {
+                show_polcomp_error("Invalid Group ID (must be a UUID).");
+            } else {
+                alert("Invalid Group ID (must be a UUID).");
+            }
+            return null;
+        }
+        filterset["group-ids"] = groupIds;
 
         const minAgeRaw = filterset_div.querySelector("input[name='min-age']").value;
         const maxAgeRaw = filterset_div.querySelector("input[name='max-age']").value;
@@ -350,6 +464,8 @@ function _build_filter_payload() {
 }
 
 function _run_apply_filters(data) {
+    if (!data) return;
+
     if (_applyXHR && _applyXHR.readyState !== 4) {
         _applyXHR.abort();
     }
@@ -484,6 +600,15 @@ function get_updated_count(ele) {
         data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
 
         let filterset = {};
+
+        const groupIds = _readGroupIds(filterset_div);
+        if (groupIds === null) {
+            show_polcomp_error("Invalid Group ID (must be a UUID).");
+            ele.classList.remove("disabled-text");
+            spinner.classList.remove("spin-fa-icon");
+            return;
+        }
+        filterset["group-ids"] = groupIds;
 
         const minAgeRaw = filterset_div.querySelector("input[name='min-age']").value;
         const maxAgeRaw = filterset_div.querySelector("input[name='max-age']").value;

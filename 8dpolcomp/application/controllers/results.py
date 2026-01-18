@@ -60,6 +60,7 @@ class ResultsController:
         all_results = ResultsController.get_all()
         return [{
             "date": result.date.isoformat() if getattr(result, "date", None) else None,
+            "group_id": str(result.group_id) if getattr(result, "group_id", None) else None,
             "results": result.scores,
             "answers": result.answers,
             "demographics": result.demographics,
@@ -160,6 +161,11 @@ class ResultsController:
         Returns:
             SQLAlchemy query
         """
+
+        # Group tests: group_id IN (...)
+        group_ids = filterset.get("group-ids") or []
+        if len(group_ids) > 0:
+            query = query.filter(Results.group_id.in_(group_ids))
 
         # Identities: JSONB array containment
         identities = filterset.get("identities") or []
@@ -316,8 +322,6 @@ class ResultsController:
         return datasets
 
 
-    # Returns count of results found for a given list of filtersets
-    # Receives same structure as get_filtered_datasets, with key containing filtersets
     def get_filtered_dataset_count(filter_data):
         """
         Return only counts for each filterset.
@@ -329,7 +333,6 @@ class ResultsController:
             dict[int,int]
         """
 
-        # Count does not need ORDER BY random(), and should avoid loading JSON blobs.
         min_d, max_d = _coerce_to_date_bounds(filter_data["min-date"], filter_data["max-date"])
         base_query = Results.query.filter(and_(Results.date >= min_d, Results.date <= max_d))
 
@@ -341,12 +344,10 @@ class ResultsController:
         for i, filterset in enumerate(filter_data["filtersets"]):
             q = ResultsController.get_filtered_dataset_query(base_query, filterset)
 
-            # Remove ordering for count queries (planner + execution improvement)
             q = q.order_by(None)
 
             n = q.with_entities(func.count(Results.id)).scalar() or 0
 
-            # Keep existing behaviour: respect limit if provided
             if limit is not None:
                 n = min(int(n), int(limit))
 
@@ -355,7 +356,6 @@ class ResultsController:
         return counts
 
 
-    # Returns a dictionary with identities as keys and average values for each axis
     def get_avg_identities(identity_keys, min_results=50):
         """
         Compute mean axis scores per identity.

@@ -2,9 +2,9 @@
 import json
 import logging
 import os
-from datetime import date
+from uuid import UUID
 
-from flask import Blueprint, render_template, session, current_app
+from flask import Blueprint, render_template, session, current_app, request
 
 from application.controllers.questions import QuestionsController as Questions
 from application.controllers.results import ResultsController as Results
@@ -16,23 +16,34 @@ logger = logging.getLogger(__name__)
 v = Blueprint("data", __name__)
 
 
+def _try_parse_uuid(s: str) -> str | None:
+    try:
+        return str(UUID(str(s)))
+    except Exception:
+        return None
+
+
 @v.route("/data", methods=["GET"])
 def data():
     """
     Render the data exploration page.
 
-    Args:
-        None
-
-    Returns:
-        Response: HTML data page template.
-
-    Raises:
-        500: Logs unexpected failures and serves minimal/empty state.
+    Optional:
+      /data?g=<uuid> -> store session["group_id"] and expose to frontend
+      /data?g=clear  -> clear session["group_id"]
     """
 
     try:
-        # Default data to display
+        g = request.args.get("g")
+        if g is not None:
+            g = str(g).strip()
+            if g == "" or g.lower() in ("clear", "none", "null", "0"):
+                session.pop("group_id", None)
+            else:
+                parsed = _try_parse_uuid(g)
+                if parsed:
+                    session["group_id"] = parsed
+
         questions = Questions.get_all()
 
         datasets = []
@@ -58,7 +69,8 @@ def data():
             "questions": questions,
             "columns": columns,
             "compass_datasets": json.dumps(datasets),
-            "completed_count": Results.get_count()
+            "completed_count": Results.get_count(),
+            "group_id": session.get("group_id")
         }
 
         demo_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/demographics.json")
@@ -73,6 +85,7 @@ def data():
             "questions": [],
             "columns": [],
             "compass_datasets": json.dumps([]),
-            "completed_count": 0
+            "completed_count": 0,
+            "group_id": session.get("group_id")
         }
         return render_template("pages/data.html", data=data, demo={})

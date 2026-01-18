@@ -17,24 +17,6 @@ v = Blueprint("results", __name__)
 
 
 def euclidean_distances(results, avgs, power=1.3):
-    """
-    Calculate a powered Euclidean distance between two dictionaries of axes.
-
-    power is a parameter to adjust the distance calculation.
-    power > 1 will increase the distance between two points, power < 1 will decrease the distance. 1 is linear.
-
-    Args:
-        results (dict): Axis -> score for a single result.
-        avgs (dict): Identity -> Axis -> avg score.
-        power (float): Exponent applied to axis differences.
-
-    Returns:
-        list[tuple[str, float]]: Sorted list of (identity, similarity_score).
-
-    Raises:
-        ValueError: If inputs are not dicts.
-    """
-
     if not isinstance(results, dict) or not isinstance(avgs, dict):
         raise ValueError("Invalid distance inputs")
 
@@ -47,19 +29,6 @@ def euclidean_distances(results, avgs, power=1.3):
 
 
 def get_closest_matches(results):
-    """
-    Determine the closest matches overall & for each axis.
-
-    Args:
-        results (dict): Axis -> score.
-
-    Returns:
-        dict: {"overall": [...], "<axis>": [...]} where values are sorted similarity lists.
-
-    Raises:
-        Exception: If averages file can't be read or parsed.
-    """
-
     try:
         avg_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/axis_averages.json")
         with open(avg_path, "r", encoding="utf-8") as f:
@@ -68,11 +37,9 @@ def get_closest_matches(results):
         logger.exception("[get_closest_matches] Failed to load axis_averages.json")
         return {"overall": []}
 
-    # Get closest matches overall
     axes = results.keys()
     distances_by_axis = {"overall": euclidean_distances(results, avgs, power=1)}
 
-    # Get closest matches for each axis
     for axis in axes:
         single_axis_result = {axis: results[axis]}
         distances_by_axis[axis] = euclidean_distances(single_axis_result, avgs, power=1.5)
@@ -81,23 +48,6 @@ def get_closest_matches(results):
 
 
 def serve_results_by_id(results_id, result_name, color):
-    """
-    Render results page for a given result ID.
-
-    Args:
-        results_id (int): 0-indexed results id as used by frontend.
-        result_name (str): Label to show in UI.
-        color (str): Dataset color.
-
-    Returns:
-        Response: HTML template for results page.
-
-    Raises:
-        302: Redirects to instructions if result not found.
-        500: Internal errors are logged and redirected.
-    """
-
-    # Get custom id results. if doesn't exist, return instructions
     try:
         id_results = Results.get_results_from_id(results_id + 1)
     except Exception:
@@ -109,9 +59,10 @@ def serve_results_by_id(results_id, result_name, color):
         session["template"] = "instructions"
         return redirect(url_for(f"{session['template']}.{session['template']}"))
 
-    # Process custom results
     try:
         scores = id_results.scores
+        group_id = str(id_results.group_id) if getattr(id_results, "group_id", None) else None
+
         data = {
             "compass_datasets": json.dumps([{
                 "name": f"test_no_{result_name.replace(' ', '_')}",
@@ -124,7 +75,8 @@ def serve_results_by_id(results_id, result_name, color):
                 "all_scores": [scores],
             }]),
             "results_id": results_id,
-            "closest_matches": json.dumps(get_closest_matches(scores))
+            "closest_matches": json.dumps(get_closest_matches(scores)),
+            "group_id": group_id
         }
     except Exception:
         logger.exception("[serve_results_by_id] Failed to build result response: results_id=%s", results_id)
@@ -136,20 +88,6 @@ def serve_results_by_id(results_id, result_name, color):
 
 @v.route("/results/<int:results_id>", methods=["GET"])
 def results(results_id=None):
-    """
-    Serve a results page by ID.
-
-    Args:
-        results_id (int): 0-indexed result id from URL.
-
-    Returns:
-        Response: Rendered results page.
-
-    Raises:
-        302: Redirect on missing results.
-    """
-
-    # Serve specific result if given
     if results_id is not None:
         return serve_results_by_id(results_id, f"Test #{results_id}", "salmon")
 
