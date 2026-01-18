@@ -19,50 +19,61 @@
         </div>
     </div>
 
-    <div class="components-50-50">
+    <div class="components-50-50" id="group-ui" style="display:none; margin-top: 12px;">
         <div class="component-border">
             <p class="text text-subtitle fade-border header-underline">Group Test (optional)</p>
-            <p class="text">
-                Create a group and share the link. Anyone using the link will be added to the same group so you can compare results later.
-            </p>
 
-            <div class="components-50-50">
-                <div class="component-border">
-                    <button class="button grey-button center-content flex" onclick="create_group()">
-                        <i class="fa-solid fa-people-group"></i>Create Group
-                    </button>
-                </div>
+            <div>
 
-                <div class="component-border">
-                    <input
-                        id="group-id-input"
-                        class="button grey-button"
-                        style="width:100%; text-align:center;"
-                        type="text"
-                        placeholder="Paste Group ID (UUID)"
-                    >
-                    <button class="button grey-button center-content flex" style="margin-top:8px;" onclick="join_group()">
-                        <i class="fa-solid fa-right-to-bracket"></i>Join Group
-                    </button>
-                </div>
-            </div>
+                <div id="group-setup" style="display:none;">
+                    <p class="text" style="margin-bottom: 10px;">
+                        Create a group and share the link. Anyone using the link will be added to the same group so you can compare results later.
+                    </p>
 
-            <div id="group-active" class="component-border component" style="display:none; margin-top: 12px;">
-                <p class="text green" style="margin-bottom:6px;">
-                    <b>Current group:</b> <span id="group-id-label"></span>
-                </p>
-                <div class="wrapper">
-                    <div class="wrapped">
-                        <button class="button blue-button center-content flex" onclick="copy_group_link()">
-                            <i class="fa-solid fa-clipboard"></i>Copy Group Link
-                        </button>
-                    </div>
-                    <div class="wrapped">
-                        <button class="button grey-button center-content flex" onclick="leave_group()">
-                            <i class="fa-solid fa-xmark"></i>Leave Group
-                        </button>
+                    <div class="components-50-50">
+                        <div class="component-border">
+                            <button class="button grey-button center-content flex" onclick="create_group()">
+                                <i class="fa-solid fa-people-group"></i><span>Create Group</span>
+                            </button>
+                        </div>
+
+                        <div class="component-border">
+                            <input
+                                id="group-id-input"
+                                class="button grey-button"
+                                style="width:100%; text-align:center;"
+                                type="text"
+                                placeholder="Paste Group ID (UUID)"
+                                oninput="clear_group_error()"
+                            >
+                            <button class="button grey-button center-content flex" style="margin-top:8px;" onclick="join_group()">
+                                <i class="fa-solid fa-right-to-bracket"></i><span>Join Group</span>
+                            </button>
+
+                            <p id="group-join-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight: 600;"></p>
+                        </div>
                     </div>
                 </div>
+
+                <!-- In group -->
+                <div id="group-active" class="component-border component" style="display:none;">
+                    <p class="text green" style="margin-bottom:6px;">
+                        <b>Current group:</b> <span id="group-id-label"></span>
+                    </p>
+                    <div class="wrapper">
+                        <div class="wrapped">
+                            <button class="button blue-button center-content flex" onclick="copy_group_link(event.currentTarget, btn_text='Copy Group Link')">
+                                <i class="fa-solid fa-clipboard"></i><span>Copy Group Link</span>
+                            </button>
+                        </div>
+                        <div class="wrapped">
+                            <button class="button grey-button center-content flex" onclick="leave_group()">
+                                <i class="fa-solid fa-xmark"></i><span>Leave Group</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -73,6 +84,14 @@
             <button class="button blue-button" onclick="start_test()">
                 <i class="fa-solid fa-right-long"></i>Continue
             </button>
+            <button
+                id="toggle-group-ui"
+                class="button grey-button center-content"
+                onclick="toggle_group_ui(event.currentTarget)"
+            >
+                <i class="fa-solid fa-people-group"></i><span>Take the test as part of a group</span>
+            </button>
+            <p id="instructions-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight:600;"></p>
         </div>
     </div>
 
@@ -107,48 +126,108 @@
         );
     }
 
+    function set_group_error(msg) {
+        const el = document.getElementById("group-join-error");
+        if (!el) return;
+
+        if (!msg) {
+            el.style.display = "none";
+            el.innerText = "";
+            return;
+        }
+
+        el.style.display = "block";
+        el.innerText = msg;
+    }
+
+    function clear_group_error() {
+        set_group_error("");
+    }
+
+    function set_instructions_error(msg) {
+        const el = document.getElementById("instructions-error");
+        if (!el) return;
+
+        if (!msg) {
+            el.style.display = "none";
+            el.innerText = "";
+            return;
+        }
+
+        el.style.display = "block";
+        el.innerText = msg;
+    }
+
+    function toggle_group_ui(btn) {
+        const panel = document.getElementById("group-ui");
+        if (!panel || !btn) return;
+
+        const isHidden = panel.style.display === "none" || panel.style.display === "";
+        panel.style.display = isHidden ? "block" : "none";
+
+        if (isHidden) {
+            _setButtonText(btn, "Hide group options");
+        } else {
+            _setButtonText(btn, "Take the test as part of a group");
+        }
+    }
+
     function create_group() {
+        clear_group_error();
+
         let gid = "";
         try {
             gid = (crypto && typeof crypto.randomUUID === "function") ? crypto.randomUUID() : _uuidFallback();
         } catch (e) {
-            alert("Failed to create group. Refresh and try again.");
+            set_group_error("Failed to create a group. Refresh and try again.");
             return;
         }
+
         window.location = "/instructions?g=" + encodeURIComponent(gid);
     }
 
     function join_group() {
+        clear_group_error();
+
         const el = document.getElementById("group-id-input");
         const gid = el ? (el.value || "").trim() : "";
+
         if (!gid) {
-            alert("Paste a Group ID first.");
+            set_group_error("Paste a Group ID first.");
             return;
         }
+
         if (!_isUUID(gid)) {
-            alert("Invalid Group ID format (must be a UUID).");
+            set_group_error("Invalid Group ID format (must be a UUID).");
             return;
         }
+
         window.location = "/instructions?g=" + encodeURIComponent(gid);
     }
 
-    async function copy_group_link() {
+    async function copy_group_link(tar, btn_text = "Copy Group Link") {
         const gid = _getGroupId();
-        if (!gid) return;
+        if (!gid || !tar) return;
+
+        disable_button(tar, "Copied");
 
         const link = window.location.origin + "/data?g=" + encodeURIComponent(gid);
 
         try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                await navigator.clipboard.writeText(link);
-                alert("Group link copied.");
-                return;
-            }
+            await navigator.clipboard.writeText(link);
         } catch (e) {
-            // ignore fallback below
+            // fallback
+            const tmp = document.createElement("textarea");
+            tmp.value = link;
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand("copy");
+            document.body.removeChild(tmp);
         }
 
-        window.prompt("Copy group link:", link);
+        setTimeout(function () {
+            enable_button(tar, btn_text);
+        }, 2500);
     }
 
     function leave_group() {
@@ -157,15 +236,25 @@
 
     function render_group_state() {
         const gid = _getGroupId();
-        const box = document.getElementById("group-active");
-        const label = document.getElementById("group-id-label");
-        if (!box || !label) return;
 
-        if (gid && _isUUID(gid)) {
-            label.innerText = gid;
-            box.style.display = "block";
-        } else {
-            box.style.display = "none";
+        const groupUI = document.getElementById("group-ui");
+        const setup = document.getElementById("group-setup");
+        const active = document.getElementById("group-active");
+        const label = document.getElementById("group-id-label");
+        const toggleBtn = document.getElementById("toggle-group-ui");
+
+        const inGroup = (gid && _isUUID(gid));
+
+        if (label) label.innerText = inGroup ? gid : "";
+
+        if (setup) setup.style.display = inGroup ? "none" : "block";
+        if (active) active.style.display = inGroup ? "block" : "none";
+
+        // Auto-open panel if already in a group
+        if (groupUI) groupUI.style.display = inGroup ? "block" : "none";
+
+        if (toggleBtn) {
+            _setButtonText(toggleBtn, inGroup ? "Hide group options" : "Take the test as part of a group");
         }
     }
 
@@ -173,6 +262,8 @@
 
     // Takes user to /test
     function start_test() {
+        set_instructions_error("");
+
         $.ajax({
             type: "POST",
             url: "/api/to_test",
@@ -185,7 +276,8 @@
                 const msg =
                     (xhr.responseJSON && xhr.responseJSON.status) ||
                     ("Request failed (" + xhr.status + "). Please refresh and try again.");
-                alert(msg);
+
+                set_instructions_error(msg);
             }
         });
     }

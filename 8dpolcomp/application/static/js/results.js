@@ -3,6 +3,8 @@
 let selected_axis = "overall";
 let selected_num_matches_shown = 8;
 
+let matches_chart = null;
+
 function _getClosestMatches() {
     try {
         let raw = $("#matches-data").data("matches");
@@ -26,7 +28,40 @@ function _getClosestMatches() {
     return { overall: [] };
 }
 
-// Takes user to /instructions
+function _getGroupIdFromMeta() {
+    const meta = document.getElementById("group-data");
+    const gid = meta ? (meta.getAttribute("data-group") || "").trim() : "";
+    return gid || "";
+}
+
+async function copy_group_link(tar, btn_text = "Copy Group Link") {
+    if (!tar) return;
+
+    const gid = _getGroupIdFromMeta();
+    if (!gid) return;
+
+    disable_button(tar, "Copied");
+
+    const link = window.location.origin + "/data?g=" + encodeURIComponent(gid);
+
+    try {
+        await navigator.clipboard.writeText(link);
+    } catch (e) {
+        // fallback
+        const tmp = document.createElement("textarea");
+        tmp.value = link;
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand("copy");
+        document.body.removeChild(tmp);
+    }
+
+    setTimeout(function () {
+        enable_button(tar, btn_text);
+    }, 2500);
+}
+
+// Takes user to /instructions (and clears any group session)
 function restart_test() {
     $(function () {
         $.ajax({
@@ -37,13 +72,17 @@ function restart_test() {
                 "action": "to_instructions"
             }),
             success: function () {
-                window.location = "/instructions";
+                window.location = "/instructions?g=clear";
             },
             error: function (xhr) {
                 const msg =
                     (xhr.responseJSON && xhr.responseJSON.status) ||
                     ("Request failed (" + xhr.status + "). Please refresh and try again.");
-                alert(msg);
+
+                const status = document.getElementById("statusmsg");
+                if (status) {
+                    status.innerHTML = `<p>${msg}</p>`;
+                }
             }
         });
     });

@@ -133,21 +133,40 @@ function _emptyFilterset(label, color, groupIdOrEmpty) {
     };
 }
 
-function _injectGroupPreset() {
+function _injectGroupPresets() {
     const gid = _getActiveGroupId();
-    if (!gid) return null;
+    if (!gid) return { groupOnly: null, groupVsAll: null };
 
     if (!preset_data || typeof preset_data !== "object") preset_data = {};
     if (!Array.isArray(preset_data.presets)) preset_data.presets = [];
 
-    const key = "group_" + gid;
+    // Remove any older injected group presets (avoid clutter)
+    preset_data.presets = preset_data.presets.filter(p => {
+        const k = p && p.key ? String(p.key) : "";
+        return !(k.startsWith("group_only_") || k.startsWith("group_vs_all_"));
+    });
 
-    // already injected
-    if (preset_data.presets.some(p => p && p.key === key)) return key;
+    const keyOnly = "group_only_" + gid;
+    const keyVs = "group_vs_all_" + gid;
 
-    const preset = {
-        key: key,
+    const groupOnlyPreset = {
+        key: keyOnly,
         label: "Group",
+        description: "Only show results from this group.",
+        filter_data: {
+            order: "random",
+            limit: 1000,
+            "min-date": "2023-01-01",
+            "max-date": "today",
+            filtersets: [
+                _emptyFilterset("Group", "#0db52e", gid)
+            ]
+        }
+    };
+
+    const groupVsAllPreset = {
+        key: keyVs,
+        label: "Group vs All Users",
         description: "Compare this group vs all users.",
         filter_data: {
             order: "random",
@@ -161,8 +180,11 @@ function _injectGroupPreset() {
         }
     };
 
-    preset_data.presets.unshift(preset);
-    return key;
+    // Put both at the top, group-only first
+    preset_data.presets.unshift(groupVsAllPreset);
+    preset_data.presets.unshift(groupOnlyPreset);
+
+    return { groupOnly: keyOnly, groupVsAll: keyVs };
 }
 
 async function load_presets() {
@@ -175,9 +197,7 @@ async function load_presets() {
 
         preset_data = data;
 
-        // Inject group preset if URL/meta has group id
-        _injectGroupPreset();
-
+        _injectGroupPresets();
         render_preset_dropdown();
     } catch (e) {
         // ignore
@@ -191,8 +211,8 @@ function render_preset_dropdown() {
     const presets = preset_data && Array.isArray(preset_data.presets) ? preset_data.presets : [];
     if (presets.length === 0) return;
 
-    const defaultKey = "all_users";
-    const injectedGroupKey = _injectGroupPreset();
+    const injected = _injectGroupPresets();
+    const hasGroup = !!injected.groupOnly;
 
     sel.innerHTML = "";
     for (const preset of presets) {
@@ -202,16 +222,13 @@ function render_preset_dropdown() {
         sel.appendChild(opt);
     }
 
-    // If group preset exists, default to it, otherwise use all_users or first
-    const hasGroup = injectedGroupKey && presets.some(p => p.key === injectedGroupKey);
-    const hasDefault = presets.some(p => p.key === defaultKey);
+    // Default selection:
+    // - if group is active -> Group ONLY
+    // - else -> all_users (or first available)
+    const preferredKey = hasGroup ? injected.groupOnly : "all_users";
+    const hasPreferred = presets.some(p => p && p.key === preferredKey);
 
-    if (hasGroup) {
-        sel.value = injectedGroupKey;
-    } else {
-        sel.value = hasDefault ? defaultKey : presets[0].key;
-    }
-
+    sel.value = hasPreferred ? preferredKey : (presets[0].key || "all_users");
     sel.disabled = false;
 
     const active = presets.find(p => p.key === sel.value);
@@ -427,8 +444,6 @@ function _build_filter_payload() {
         if (groupIds === null) {
             if (typeof show_polcomp_error === "function") {
                 show_polcomp_error("Invalid Group ID (must be a UUID).");
-            } else {
-                alert("Invalid Group ID (must be a UUID).");
             }
             return null;
         }
@@ -501,7 +516,9 @@ function _run_apply_filters(data) {
             } catch (e) {
                 // ignore
             }
-            show_polcomp_error(msg);
+            if (typeof show_polcomp_error === "function") {
+                show_polcomp_error(msg);
+            }
         }
     });
 }
@@ -603,7 +620,9 @@ function get_updated_count(ele) {
 
         const groupIds = _readGroupIds(filterset_div);
         if (groupIds === null) {
-            show_polcomp_error("Invalid Group ID (must be a UUID).");
+            if (typeof show_polcomp_error === "function") {
+                show_polcomp_error("Invalid Group ID (must be a UUID).");
+            }
             ele.classList.remove("disabled-text");
             spinner.classList.remove("spin-fa-icon");
             return;
@@ -656,7 +675,9 @@ function get_updated_count(ele) {
                 } catch (e) {
                     // ignore
                 }
-                show_polcomp_error(msg);
+                if (typeof show_polcomp_error === "function") {
+                    show_polcomp_error(msg);
+                }
                 ele.classList.remove("disabled-text");
                 spinner.classList.remove("spin-fa-icon");
             }

@@ -27,27 +27,27 @@ def _try_parse_uuid(s: str) -> str | None:
 def data():
     """
     Render the data exploration page.
-
-    Optional:
-      /data?g=<uuid> -> store session["group_id"] and expose to frontend
-      /data?g=clear  -> clear session["group_id"]
     """
-
     try:
-        g = request.args.get("g")
-        if g is not None:
-            g = str(g).strip()
-            if g == "" or g.lower() in ("clear", "none", "null", "0"):
-                session.pop("group_id", None)
-            else:
-                parsed = _try_parse_uuid(g)
-                if parsed:
-                    session["group_id"] = parsed
+        url_gid = request.args.get("g")
+        page_gid = None
+
+        if url_gid is not None:
+            url_gid = str(url_gid).strip()
+            parsed = _try_parse_uuid(url_gid)
+            if parsed:
+                page_gid = parsed
+
+        if page_gid is None:
+            # fallback to user's own group (session)
+            sess_gid = session.get("group_id")
+            parsed = _try_parse_uuid(sess_gid) if sess_gid else None
+            if parsed:
+                page_gid = parsed
 
         questions = Questions.get_all()
 
         datasets = []
-
         if "answer_counts" in session:
             datasets.insert(0, {
                 "name": "your_results",
@@ -70,7 +70,7 @@ def data():
             "columns": columns,
             "compass_datasets": json.dumps(datasets),
             "completed_count": Results.get_count(),
-            "group_id": session.get("group_id")
+            "group_id": page_gid or ""
         }
 
         demo_path = os.path.join(current_app.config["REL_DIR"], "application/data/demographics/demographics.json")
@@ -81,11 +81,13 @@ def data():
 
     except Exception:
         logger.exception("[/data] Failed to render data page")
+
         data = {
             "questions": [],
             "columns": [],
             "compass_datasets": json.dumps([]),
             "completed_count": 0,
-            "group_id": session.get("group_id")
+            "group_id": ""
         }
+
         return render_template("pages/data.html", data=data, demo={})
