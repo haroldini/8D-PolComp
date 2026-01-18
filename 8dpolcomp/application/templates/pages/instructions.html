@@ -33,13 +33,13 @@
             <div
                 id="group-ui"
                 class="component-border"
-                style="display:none; margin-top: 12px;"
+                style="display:none;"
             >
                 <p class="text text-subtitle">Group Test</p>
 
                 <!-- NOT IN A GROUP -->
                 <div id="group-setup" style="display:none;">
-                    <p class="text" style="margin-bottom: 10px;">
+                    <p class="text" style="margin-bottom: 1rem;">
                         Create a group and share the invite link. Anyone using it will be added to the same group so you can compare results later.
                     </p>
 
@@ -47,26 +47,8 @@
                         <i class="fa-solid fa-people-group"></i><span>Create Group</span>
                     </button>
 
-                    <div style="margin-top: 10px;">
-                        <input
-                            id="group-id-input"
-                            class="button grey-button"
-                            style="text-align:center;"
-                            type="text"
-                            placeholder="Paste Group ID (UUID)"
-                            oninput="clear_group_error()"
-                        >
-
-                        <button class="button grey-button" style="margin-top:8px;" onclick="join_group()">
-                            <i class="fa-solid fa-right-to-bracket"></i><span>Join Group</span>
-                        </button>
-
-                        <p id="group-join-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight: 600;"></p>
-                    </div>
-
                     <button
                         class="button grey-button"
-                        style="margin-top: 12px;"
                         onclick="close_group_ui()"
                     >
                         <i class="fa-solid fa-xmark"></i><span>Take the test alone</span>
@@ -75,7 +57,7 @@
 
                 <!-- CURRENT GROUP -->
                 <div id="group-active" style="display:none;">
-                    <p class="text green" style="margin-bottom:6px;">
+                    <p class="text green" style="margin-bottom:0.5rem;">
                         <b>Current group:</b> <span id="group-id-label"></span>
                     </p>
 
@@ -101,11 +83,11 @@
 
             </div>
 
-            <button class="button blue-button" style="margin-top: 10px;" onclick="start_test()">
+            <button class="button blue-button" onclick="start_test()">
                 <i class="fa-solid fa-right-long"></i><span>Continue</span>
             </button>
 
-            <p id="instructions-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight:600;"></p>
+            <p id="instructions-error" class="text" style="display:none; margin-top:0.5rem; color: salmon; font-weight:600;"></p>
         </div>
     </div>
 
@@ -140,24 +122,6 @@
         );
     }
 
-    function set_group_error(msg) {
-        const el = document.getElementById("group-join-error");
-        if (!el) return;
-
-        if (!msg) {
-            el.style.display = "none";
-            el.innerText = "";
-            return;
-        }
-
-        el.style.display = "block";
-        el.innerText = msg;
-    }
-
-    function clear_group_error() {
-        set_group_error("");
-    }
-
     function set_instructions_error(msg) {
         const el = document.getElementById("instructions-error");
         if (!el) return;
@@ -182,43 +146,19 @@
     function close_group_ui() {
         const gid = _getGroupId();
         const inGroup = (gid && _isUUID(gid));
-
         if (inGroup) return;
 
         const panel = document.getElementById("group-ui");
         const openBtn = document.getElementById("open-group-ui");
         if (panel) panel.style.display = "none";
         if (openBtn) openBtn.style.display = "inline-flex";
-        clear_group_error();
     }
 
     function create_group() {
-        clear_group_error();
-
         let gid = "";
         try {
             gid = (crypto && typeof crypto.randomUUID === "function") ? crypto.randomUUID() : _uuidFallback();
         } catch (e) {
-            set_group_error("Failed to create a group. Refresh and try again.");
-            return;
-        }
-
-        window.location = "/instructions?g=" + encodeURIComponent(gid);
-    }
-
-    function join_group() {
-        clear_group_error();
-
-        const el = document.getElementById("group-id-input");
-        const gid = el ? (el.value || "").trim() : "";
-
-        if (!gid) {
-            set_group_error("Paste a Group ID first.");
-            return;
-        }
-
-        if (!_isUUID(gid)) {
-            set_group_error("Invalid Group ID format (must be a UUID).");
             return;
         }
 
@@ -270,11 +210,9 @@
         if (active) active.style.display = inGroup ? "block" : "none";
 
         if (inGroup) {
-            // auto-open panel, hide open button
             if (panel) panel.style.display = "block";
             if (openBtn) openBtn.style.display = "none";
         } else {
-            // start closed by default
             if (panel) panel.style.display = "none";
             if (openBtn) openBtn.style.display = "inline-flex";
         }

@@ -23,11 +23,15 @@ def instructions():
     """
     Render the instructions page.
 
-    Also handles optional group mode:
-      /instructions?g=<uuid>  -> sets session["group_id"]
-      /instructions?g=clear   -> clears session["group_id"]
-    """
+    Args:
+        None
 
+    Returns:
+        Response: HTML instructions template.
+
+    Raises:
+        302: Redirects to the correct template if session state is invalid.
+    """
     # Optional group param
     g = request.args.get("g")
     if g is not None:

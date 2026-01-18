@@ -27,6 +27,15 @@ def _try_parse_uuid(s: str) -> str | None:
 def data():
     """
     Render the data exploration page.
+
+    Args:
+        None
+
+    Returns:
+        Response: HTML data explorer template.
+
+    Raises:
+        None
     """
     try:
         url_gid = request.args.get("g")

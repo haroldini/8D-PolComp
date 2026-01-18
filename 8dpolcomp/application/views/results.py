@@ -5,7 +5,7 @@ import os
 
 import numpy as np
 
-from flask import Blueprint, render_template, current_app, session, request, redirect, url_for
+from flask import Blueprint, render_template, current_app, session, redirect, url_for
 
 from application.controllers.results import ResultsController as Results
 
@@ -48,6 +48,20 @@ def get_closest_matches(results):
 
 
 def serve_results_by_id(results_id, result_name, color):
+    """
+    Render results for a specific result ID.
+
+    Args:
+        results_id (int): Database result ID.
+        result_name (str): Display name for the result.
+        color (str): Plot colour for the dataset.
+
+    Returns:
+        Response: HTML results template.
+
+    Raises:
+        302: Redirects to instructions if results cannot be loaded.
+    """
     try:
         id_results = Results.get_results_from_id(results_id + 1)
     except Exception:
@@ -88,6 +102,18 @@ def serve_results_by_id(results_id, result_name, color):
 
 @v.route("/results/<int:results_id>", methods=["GET"])
 def results(results_id=None):
+    """
+    Render a results page by result ID.
+
+    Args:
+        results_id (int): Result ID from the URL.
+
+    Returns:
+        Response: HTML results template.
+
+    Raises:
+        302: Redirects to instructions if results_id is missing/invalid.
+    """
     if results_id is not None:
         return serve_results_by_id(results_id, f"Test #{results_id}", "salmon")
 

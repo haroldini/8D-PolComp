@@ -282,6 +282,19 @@ def calculate_results(answers: Dict[int, int], scoring: Dict[int, Dict[str, floa
 
 @v.route("/api/to_form", methods=["POST"])
 def to_form():
+    """
+    Store answers in the session and compute result scores.
+
+    Args:
+        None
+
+    Returns:
+        Tuple[dict, int]: JSON status response and HTTP status code.
+
+    Raises:
+        400: If request payload validation fails.
+        500: If server computation fails.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -324,6 +337,19 @@ def to_form():
 
 @v.route("/api/to_test", methods=["POST"])
 def to_test():
+    """
+    Set session state to render the test page.
+
+    Args:
+        None
+
+    Returns:
+        Tuple[dict, int]: JSON status response and HTTP status code.
+
+    Raises:
+        400: If request payload validation fails.
+        500: If server error occurs.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -345,6 +371,19 @@ def to_test():
 
 @v.route("/api/to_instructions", methods=["POST"])
 def to_instructions():
+    """
+    Set session state to render the instructions page.
+
+    Args:
+        None
+
+    Returns:
+        Tuple[dict, int]: JSON status response and HTTP status code.
+
+    Raises:
+        400: If request payload validation fails.
+        500: If server error occurs.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -366,6 +405,21 @@ def to_instructions():
 
 @v.route("/api/to_results", methods=["POST"])
 def to_results():
+    """
+    Validate captcha + demographics and store a completed test result.
+
+    Args:
+        None
+
+    Returns:
+        Tuple[dict, int]: JSON status payload (including results_id) and HTTP status code.
+
+    Raises:
+        400: If request is invalid or session is expired.
+        401: If captcha or payload validation fails.
+        503: If captcha verification is unavailable.
+        500: If server/database write fails.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -458,6 +512,20 @@ def to_results():
 
 @v.route("/api/data", methods=["POST"])
 def data_api():
+    """
+    Query the database for filtered datasets (data explorer).
+
+    Args:
+        None
+
+    Returns:
+        Tuple[str, int]: JSON string response and HTTP status code.
+
+    Raises:
+        400: If request payload is invalid.
+        401: If filter validation fails.
+        500: If server/database query fails.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
@@ -506,6 +574,20 @@ def data_api():
 
 @v.route("/api/get_filterset_count", methods=["POST"])
 def get_filterset_count():
+    """
+    Return dataset counts for a single filterset (custom filters UI).
+
+    Args:
+        None
+
+    Returns:
+        Tuple[str, int]: JSON string response and HTTP status code.
+
+    Raises:
+        400: If request payload is invalid.
+        401: If filter validation fails.
+        500: If server/database query fails.
+    """
     try:
         payload = request.get_json(silent=True)
         if not isinstance(payload, dict):
