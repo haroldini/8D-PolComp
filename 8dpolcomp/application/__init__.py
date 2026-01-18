@@ -51,7 +51,7 @@ def create_app(register_blueprints=True):
     if register_blueprints:
         with app.app_context():
             try:
-                from application.views import index, instructions, test, form, results, data, contact, api
+                from application.views import index, instructions, test, form, results, data, contact, api, ads, privacy, terms
                 app.register_blueprint(index.v)
                 app.register_blueprint(instructions.v)
                 app.register_blueprint(test.v)
@@ -60,6 +60,9 @@ def create_app(register_blueprints=True):
                 app.register_blueprint(data.v)
                 app.register_blueprint(contact.v)
                 app.register_blueprint(api.v)
+                app.register_blueprint(ads.v)
+                app.register_blueprint(privacy.v)
+                app.register_blueprint(terms.v)
             except Exception:
                 logger.exception("[create_app] Failed to register blueprints")
                 raise

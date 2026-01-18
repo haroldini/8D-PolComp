@@ -8,7 +8,17 @@
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
 <meta id="matches-data" data-matches='{{ data["closest_matches"]|safe }}'>
 <meta id="group-data" data-group='{{ data.get("group_id","") }}'>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 {% endblock %}
+
+{% block SCRIPTS %}
+<script src="/static/js/results.js" defer></script>
+{% endblock %}
+
 
 {% block CONTENT %}
 <div class="components-50-50">
@@ -112,8 +122,4 @@
     {% endif %}
 
 </div>
-{% endblock %}
-
-{% block SCRIPTS %}
-<script src="/static/js/results.js"></script>
 {% endblock %}
