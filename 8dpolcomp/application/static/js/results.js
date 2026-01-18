@@ -3,7 +3,47 @@
 let selected_axis = "overall";
 let selected_num_matches_shown = 8;
 
+// ensure global exists
 let matches_chart = null;
+
+function _isUUID(s) {
+    const v = String(s || "").trim();
+    return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(v);
+}
+
+function _getGroupIdFromMeta() {
+    const meta = document.getElementById("group-data");
+    if (!meta) return "";
+    return String(meta.getAttribute("data-group") || "").trim();
+}
+
+async function copy_group_invite_link(tar, btn_text = "Copy Invite Link") {
+    if (!tar) return;
+
+    const gid = _getGroupIdFromMeta();
+    if (!gid || !_isUUID(gid)) return;
+
+    // uses ui.js helpers
+    disable_button(tar, "Copied");
+
+    const link = window.location.origin + "/instructions?g=" + encodeURIComponent(gid);
+
+    try {
+        await navigator.clipboard.writeText(link);
+    } catch (e) {
+        // fallback
+        const tmp = document.createElement("textarea");
+        tmp.value = link;
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand("copy");
+        document.body.removeChild(tmp);
+    }
+
+    setTimeout(function () {
+        enable_button(tar, btn_text);
+    }, 2500);
+}
 
 function _getClosestMatches() {
     try {
@@ -28,66 +68,6 @@ function _getClosestMatches() {
     return { overall: [] };
 }
 
-function _getGroupIdFromMeta() {
-    const meta = document.getElementById("group-data");
-    const gid = meta ? (meta.getAttribute("data-group") || "").trim() : "";
-    return gid || "";
-}
-
-async function copy_group_link(tar, btn_text = "Copy Group Link") {
-    if (!tar) return;
-
-    const gid = _getGroupIdFromMeta();
-    if (!gid) return;
-
-    disable_button(tar, "Copied");
-
-    const link = window.location.origin + "/data?g=" + encodeURIComponent(gid);
-
-    try {
-        await navigator.clipboard.writeText(link);
-    } catch (e) {
-        // fallback
-        const tmp = document.createElement("textarea");
-        tmp.value = link;
-        document.body.appendChild(tmp);
-        tmp.select();
-        document.execCommand("copy");
-        document.body.removeChild(tmp);
-    }
-
-    setTimeout(function () {
-        enable_button(tar, btn_text);
-    }, 2500);
-}
-
-// Takes user to /instructions (and clears any group session)
-function restart_test() {
-    $(function () {
-        $.ajax({
-            type: "POST",
-            url: "/api/to_instructions",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "action": "to_instructions"
-            }),
-            success: function () {
-                window.location = "/instructions?g=clear";
-            },
-            error: function (xhr) {
-                const msg =
-                    (xhr.responseJSON && xhr.responseJSON.status) ||
-                    ("Request failed (" + xhr.status + "). Please refresh and try again.");
-
-                const status = document.getElementById("statusmsg");
-                if (status) {
-                    status.innerHTML = `<p>${msg}</p>`;
-                }
-            }
-        });
-    });
-}
-
 function create_matches_chart(closest_matches, axis = "overall", num_matches_shown = 8) {
     let axis_data = closest_matches[axis] || [];
     let entries = axis_data.slice(0, num_matches_shown);
@@ -96,7 +76,7 @@ function create_matches_chart(closest_matches, axis = "overall", num_matches_sho
 
     const ctx_matches = document.getElementById("matches-chart").getContext("2d");
 
-    let matches_chart = new Chart(ctx_matches, {
+    let chart = new Chart(ctx_matches, {
         type: "bar",
         plugins: [ChartDataLabels],
         data: {
@@ -160,7 +140,7 @@ function create_matches_chart(closest_matches, axis = "overall", num_matches_sho
         }
     });
 
-    return matches_chart;
+    return chart;
 }
 
 // Updates results when an axis is selected
@@ -179,9 +159,7 @@ function update_matches(axis = "overall", num_matches_shown = 8) {
     let labels = entries.map(entry => entry[0]);
     let values = entries.map(entry => entry[1]);
 
-    if (!matches_chart) {
-        return;
-    }
+    if (!matches_chart) return;
 
     matches_chart.data.labels = labels;
     matches_chart.data.datasets[0].data = values;

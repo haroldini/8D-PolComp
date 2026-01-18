@@ -62,28 +62,55 @@
 </div>
 
 <div class="components-50-50">
-    <div class="component-border component" >
+
+    <!-- Share box pinned to bottom -->
+    <div class="component-border component" style="display:flex; flex-direction:column;">
         <p class="text text-subtitle blue">Share Results</p>
-        <button class="button blue-button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')"><i class="fa-solid fa-clipboard"></i><span>Copy Link</span></button>
-        <button class="button blue-button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')"><i class="fa-solid fa-arrow-down"></i><span>Save Image</span></button>
 
-        {% if data.get("group_id") %}
-            <button class="button green-button" onclick="copy_group_link(event.currentTarget, btn_text='Copy Group Link')"><i class="fa-solid fa-people-group"></i><span>Copy Group Link</span></button>
-            <a class="button center-content flex green-button" href="/data?g={{ data['group_id'] }}"><i class="fa-solid fa-chart-simple"></i>View Group</a>
-        {% endif %}
+        <div style="flex:1;"></div>
 
-        <div id="statusmsg" class="fill">
-            <p>Loading...</p>
+        <div>
+            <button class="button blue-button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')">
+                <i class="fa-solid fa-clipboard"></i><span>Copy Link</span>
+            </button>
+
+            <button class="button blue-button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')">
+                <i class="fa-solid fa-arrow-down"></i><span>Save Image</span>
+            </button>
+
+            <div id="statusmsg" class="fill">
+                <p>Loading...</p>
+            </div>
         </div>
     </div>
+
+    {% if data.get("group_id") %}
+    <div class="component-border component">
+        <p class="text text-subtitle green">Group Results</p>
+        <p class="text">This test was completed as part of a group. Share the invite link or view the group's results below.</p>
+
+        <button class="button green-button" onclick="copy_group_invite_link(event.currentTarget, btn_text='Copy Invite Link')">
+            <i class="fa-solid fa-clipboard"></i><span>Copy Invite Link</span>
+        </button>
+
+        <a class="button center-content flex green-button" href="/data?g={{ data['group_id'] }}">
+            <i class="fa-solid fa-chart-simple"></i>View Group Results
+        </a>
+    </div>
+    {% endif %}
+
     <div class="component-border component">
         <b><p class="text green">Explore your closest matches for a specific axis using the drop-down above.</p></b>
         <p class="text">Closest matches are calculated by finding the identities whose participants' average results most closely matched your results.</p>
     </div>
+
+    {% if not data.get("group_id") %}
     <div class="component-border component">
         <b><p class="text green">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>
         <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
     </div>
+    {% endif %}
+
 </div>
 {% endblock %}
 

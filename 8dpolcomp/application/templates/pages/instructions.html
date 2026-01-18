@@ -19,55 +19,80 @@
         </div>
     </div>
 
-    <div class="components-50-50" id="group-ui" style="display:none; margin-top: 12px;">
+    <div class="components-50-50">
         <div class="component-border">
-            <p class="text text-subtitle fade-border header-underline">Group Test (optional)</p>
 
-            <div>
+            <button
+                id="open-group-ui"
+                class="button grey-button center-content"
+                onclick="open_group_ui()"
+            >
+                <i class="fa-solid fa-people-group"></i><span>Take the test as part of a group</span>
+            </button>
 
+            <div
+                id="group-ui"
+                class="component-border"
+                style="display:none; margin-top: 12px;"
+            >
+                <p class="text text-subtitle">Group Test</p>
+
+                <!-- NOT IN A GROUP -->
                 <div id="group-setup" style="display:none;">
                     <p class="text" style="margin-bottom: 10px;">
-                        Create a group and share the link. Anyone using the link will be added to the same group so you can compare results later.
+                        Create a group and share the invite link. Anyone using it will be added to the same group so you can compare results later.
                     </p>
 
-                    <div class="components-50-50">
-                        <div class="component-border">
-                            <button class="button grey-button center-content flex" onclick="create_group()">
-                                <i class="fa-solid fa-people-group"></i><span>Create Group</span>
-                            </button>
-                        </div>
+                    <button class="button grey-button" onclick="create_group()">
+                        <i class="fa-solid fa-people-group"></i><span>Create Group</span>
+                    </button>
 
-                        <div class="component-border">
-                            <input
-                                id="group-id-input"
-                                class="button grey-button"
-                                style="width:100%; text-align:center;"
-                                type="text"
-                                placeholder="Paste Group ID (UUID)"
-                                oninput="clear_group_error()"
-                            >
-                            <button class="button grey-button center-content flex" style="margin-top:8px;" onclick="join_group()">
-                                <i class="fa-solid fa-right-to-bracket"></i><span>Join Group</span>
-                            </button>
+                    <div style="margin-top: 10px;">
+                        <input
+                            id="group-id-input"
+                            class="button grey-button"
+                            style="text-align:center;"
+                            type="text"
+                            placeholder="Paste Group ID (UUID)"
+                            oninput="clear_group_error()"
+                        >
 
-                            <p id="group-join-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight: 600;"></p>
-                        </div>
+                        <button class="button grey-button" style="margin-top:8px;" onclick="join_group()">
+                            <i class="fa-solid fa-right-to-bracket"></i><span>Join Group</span>
+                        </button>
+
+                        <p id="group-join-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight: 600;"></p>
                     </div>
+
+                    <button
+                        class="button grey-button"
+                        style="margin-top: 12px;"
+                        onclick="close_group_ui()"
+                    >
+                        <i class="fa-solid fa-xmark"></i><span>Take the test alone</span>
+                    </button>
                 </div>
 
-                <!-- In group -->
-                <div id="group-active" class="component-border component" style="display:none;">
+                <!-- CURRENT GROUP -->
+                <div id="group-active" style="display:none;">
                     <p class="text green" style="margin-bottom:6px;">
                         <b>Current group:</b> <span id="group-id-label"></span>
                     </p>
+
                     <div class="wrapper">
                         <div class="wrapped">
-                            <button class="button blue-button center-content flex" onclick="copy_group_link(event.currentTarget, btn_text='Copy Group Link')">
-                                <i class="fa-solid fa-clipboard"></i><span>Copy Group Link</span>
+                            <button
+                                class="button blue-button center-content flex"
+                                onclick="copy_group_invite_link(event.currentTarget, btn_text='Copy Invite Link')"
+                            >
+                                <i class="fa-solid fa-clipboard"></i><span>Copy Invite Link</span>
                             </button>
                         </div>
                         <div class="wrapped">
-                            <button class="button grey-button center-content flex" onclick="leave_group()">
+                            <button
+                                class="button grey-button center-content flex"
+                                onclick="leave_group()"
+                            >
                                 <i class="fa-solid fa-xmark"></i><span>Leave Group</span>
                             </button>
                         </div>
@@ -76,21 +101,10 @@
 
             </div>
 
-        </div>
-    </div>
+            <button class="button blue-button" style="margin-top: 10px;" onclick="start_test()">
+                <i class="fa-solid fa-right-long"></i><span>Continue</span>
+            </button>
 
-    <div class="components-50-50">
-        <div class="component-border">
-            <button class="button blue-button" onclick="start_test()">
-                <i class="fa-solid fa-right-long"></i>Continue
-            </button>
-            <button
-                id="toggle-group-ui"
-                class="button grey-button center-content"
-                onclick="toggle_group_ui(event.currentTarget)"
-            >
-                <i class="fa-solid fa-people-group"></i><span>Take the test as part of a group</span>
-            </button>
             <p id="instructions-error" class="text" style="display:none; margin-top:8px; color: salmon; font-weight:600;"></p>
         </div>
     </div>
@@ -158,18 +172,24 @@
         el.innerText = msg;
     }
 
-    function toggle_group_ui(btn) {
+    function open_group_ui() {
         const panel = document.getElementById("group-ui");
-        if (!panel || !btn) return;
+        const openBtn = document.getElementById("open-group-ui");
+        if (panel) panel.style.display = "block";
+        if (openBtn) openBtn.style.display = "none";
+    }
 
-        const isHidden = panel.style.display === "none" || panel.style.display === "";
-        panel.style.display = isHidden ? "block" : "none";
+    function close_group_ui() {
+        const gid = _getGroupId();
+        const inGroup = (gid && _isUUID(gid));
 
-        if (isHidden) {
-            _setButtonText(btn, "Hide group options");
-        } else {
-            _setButtonText(btn, "Take the test as part of a group");
-        }
+        if (inGroup) return;
+
+        const panel = document.getElementById("group-ui");
+        const openBtn = document.getElementById("open-group-ui");
+        if (panel) panel.style.display = "none";
+        if (openBtn) openBtn.style.display = "inline-flex";
+        clear_group_error();
     }
 
     function create_group() {
@@ -205,18 +225,17 @@
         window.location = "/instructions?g=" + encodeURIComponent(gid);
     }
 
-    async function copy_group_link(tar, btn_text = "Copy Group Link") {
+    async function copy_group_invite_link(tar, btn_text = "Copy Invite Link") {
         const gid = _getGroupId();
-        if (!gid || !tar) return;
+        if (!gid || !_isUUID(gid) || !tar) return;
 
         disable_button(tar, "Copied");
 
-        const link = window.location.origin + "/data?g=" + encodeURIComponent(gid);
+        const link = window.location.origin + "/instructions?g=" + encodeURIComponent(gid);
 
         try {
             await navigator.clipboard.writeText(link);
         } catch (e) {
-            // fallback
             const tmp = document.createElement("textarea");
             tmp.value = link;
             document.body.appendChild(tmp);
@@ -237,11 +256,11 @@
     function render_group_state() {
         const gid = _getGroupId();
 
-        const groupUI = document.getElementById("group-ui");
         const setup = document.getElementById("group-setup");
         const active = document.getElementById("group-active");
         const label = document.getElementById("group-id-label");
-        const toggleBtn = document.getElementById("toggle-group-ui");
+        const openBtn = document.getElementById("open-group-ui");
+        const panel = document.getElementById("group-ui");
 
         const inGroup = (gid && _isUUID(gid));
 
@@ -250,17 +269,19 @@
         if (setup) setup.style.display = inGroup ? "none" : "block";
         if (active) active.style.display = inGroup ? "block" : "none";
 
-        // Auto-open panel if already in a group
-        if (groupUI) groupUI.style.display = inGroup ? "block" : "none";
-
-        if (toggleBtn) {
-            _setButtonText(toggleBtn, inGroup ? "Hide group options" : "Take the test as part of a group");
+        if (inGroup) {
+            // auto-open panel, hide open button
+            if (panel) panel.style.display = "block";
+            if (openBtn) openBtn.style.display = "none";
+        } else {
+            // start closed by default
+            if (panel) panel.style.display = "none";
+            if (openBtn) openBtn.style.display = "inline-flex";
         }
     }
 
     render_group_state();
 
-    // Takes user to /test
     function start_test() {
         set_instructions_error("");
 
