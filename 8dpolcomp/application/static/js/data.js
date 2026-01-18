@@ -1,8 +1,9 @@
 
-// static/js/data.js
-
 let num_filtersets = 1;
 let preset_data = null;
+
+let _initialPresetApplied = false;
+let _applyXHR = null;
 
 function _escapeHtml(s) {
     return String(s || "")
@@ -19,7 +20,6 @@ function showPresetStatus(msg) {
     el.innerText = msg || "";
 }
 
-// Accepts either a string OR a preset object
 function showPresetDesc(presetOrMsg) {
     const el = document.getElementById("preset-desc");
     if (!el) return;
@@ -37,7 +37,6 @@ function showPresetDesc(presetOrMsg) {
     const preset = presetOrMsg;
     const desc = preset.description ? _escapeHtml(preset.description) : "";
 
-    // legend priority: explicit preset.legend, fallback to filterset labels/colors
     let legend = [];
     if (Array.isArray(preset.legend)) {
         legend = preset.legend
@@ -78,64 +77,33 @@ async function load_presets() {
 }
 
 function render_preset_dropdown() {
-    const $sel = $("#preset-select");
-    if (!$sel || $sel.length === 0) return;
+    const sel = document.getElementById("preset-select");
+    if (!sel) return;
 
     const presets = preset_data && Array.isArray(preset_data.presets) ? preset_data.presets : [];
+    if (presets.length === 0) return;
 
-    // HARD reset selectpicker so options always appear
-    if (typeof $sel.selectpicker === "function" && $sel.data("selectpicker")) {
-        $sel.selectpicker("destroy");
-    }
-
-    // Replace options
-    $sel.empty();
-    $sel.append(`<option value=""></option>`);
-    for (const preset of presets) {
-        const label = preset.label || preset.key;
-        $sel.append(`<option value="${_escapeHtml(preset.key)}">${_escapeHtml(label)}</option>`);
-    }
-
-    // Re-init selectpicker
-    if (typeof $sel.selectpicker === "function") {
-        $sel.selectpicker();
-        $sel.selectpicker("refresh");
-    }
-
-    showPresetStatus("");
-    showPresetDesc("");
-
-    // Handle user changes
-    $sel.off("changed.bs.select").on("changed.bs.select", function () {
-        showPresetStatus("");
-
-        const key = $sel.val();
-        if (!key) {
-            showPresetDesc("");
-            return;
-        }
-
-        const preset = presets.find(p => p.key === key);
-        showPresetDesc(preset || "");
-
-        apply_preset(key);
-    });
-
-    // ✅ DEFAULT: auto-select + apply "all_users" on initial load
     const defaultKey = "all_users";
-    const defaultPreset = presets.find(p => p.key === defaultKey);
 
-    if (defaultPreset) {
-        // Set dropdown selection without triggering the change handler
-        if (typeof $sel.selectpicker === "function") {
-            $sel.selectpicker("val", defaultKey);
-            $sel.selectpicker("refresh");
-        } else {
-            $sel.val(defaultKey);
-        }
+    sel.innerHTML = "";
+    for (const preset of presets) {
+        const opt = document.createElement("option");
+        opt.value = preset.key;
+        opt.textContent = preset.label || preset.key;
+        sel.appendChild(opt);
+    }
 
-        showPresetDesc(defaultPreset);
-        apply_preset(defaultKey);
+    const hasDefault = presets.some(p => p.key === defaultKey);
+    sel.value = hasDefault ? defaultKey : presets[0].key;
+    sel.disabled = false;
+
+    const active = presets.find(p => p.key === sel.value);
+    showPresetStatus("");
+    showPresetDesc(active || "");
+
+    if (!_initialPresetApplied) {
+        _initialPresetApplied = true;
+        apply_preset(sel.value);
     }
 }
 
@@ -143,7 +111,6 @@ function _todayISO() {
     return new Date().toISOString().substring(0, 10);
 }
 
-// optional helper: allow "__VOTERS__" token in preset party list
 function _get_all_party_values() {
     const sel = document.querySelector("#filterset1 select[name='party']");
     if (!sel) return [];
@@ -251,6 +218,8 @@ function apply_preset(preset_key) {
         return;
     }
 
+    showPresetDesc(preset);
+
     const fd = preset.filter_data;
 
     const limitEl = document.querySelector("input[name='sample-size']");
@@ -287,11 +256,9 @@ function apply_preset(preset_key) {
         _apply_filterset_to_div(div, filtersets[i - 1], i);
     }
 
-    apply_filters();
+    apply_filters_silent();
 }
 
-
-// Self explanatory
 function add_filterset(event) {
     let new_filterset = document.getElementById("filterset" + (num_filtersets + 1));
     new_filterset.classList.remove("hidden");
@@ -309,7 +276,6 @@ function add_filterset(event) {
     num_filtersets += 1;
 }
 
-// Self explanatory
 function remove_filterset(event) {
     let add_btn = document.getElementById("addfiltersetbtn");
     add_btn.classList.remove("disabled");
@@ -333,10 +299,7 @@ function _coerceSelectList(val) {
     return [val];
 }
 
-// Applies filtersets, retrieves relevant data and updates the charts.
-function apply_filters() {
-    scroll_to("results-section");
-
+function _build_filter_payload() {
     let filterset_divs = [];
     for (let i = 1; i < num_filtersets + 1; i++) {
         filterset_divs.push(document.getElementById("filterset" + i));
@@ -345,82 +308,99 @@ function apply_filters() {
     let filtersets = [];
     let select_names = ["country", "religion", "ethnicity", "education", "party", "identities"];
 
-    $(function () {
-        show_spinner();
+    let j = 0;
+    let data = {};
 
-        let j = 0;
-        let data = {};
+    data.order = document.querySelector("input[name='sorting']:checked").value;
+    data.limit = Number(document.querySelector("input[name='sample-size']").value || 1000);
+    data["min-date"] = document.querySelector("input[name='min-date']").value || "2023-01-01";
+    data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
 
-        data.order = document.querySelector("input[name='sorting']:checked").value;
-        data.limit = Number(document.querySelector("input[name='sample-size']").value || 1000);
-        data["min-date"] = document.querySelector("input[name='min-date']").value || "2023-01-01";
-        data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
+    for (const filterset_div of filterset_divs) {
+        j += 1;
+        let filterset = {};
 
-        for (const filterset_div of filterset_divs) {
-            j += 1;
-            let filterset = {};
+        const minAgeRaw = filterset_div.querySelector("input[name='min-age']").value;
+        const maxAgeRaw = filterset_div.querySelector("input[name='max-age']").value;
 
-            const minAgeRaw = filterset_div.querySelector("input[name='min-age']").value;
-            const maxAgeRaw = filterset_div.querySelector("input[name='max-age']").value;
+        filterset["min-age"] = (minAgeRaw === "" || Number(minAgeRaw) === 0) ? null : Number(minAgeRaw);
+        filterset["max-age"] = (maxAgeRaw === "" || Number(maxAgeRaw) === 0) ? null : Number(maxAgeRaw);
 
-            filterset["min-age"] = (minAgeRaw === "" || Number(minAgeRaw) === 0) ? null : Number(minAgeRaw);
-            filterset["max-age"] = (maxAgeRaw === "" || Number(maxAgeRaw) === 0) ? null : Number(maxAgeRaw);
+        filterset["any-all"] = filterset_div.querySelector("input[name='any-all" + String(j) + "']:checked").value;
 
-            filterset["any-all"] = filterset_div.querySelector("input[name='any-all" + String(j) + "']:checked").value;
+        let label = filterset_div.querySelector("input[name='label']").value;
+        if (!label || !label.trim()) {
+            label = "Filterset " + j;
+            filterset_div.querySelector("input[name='label']").value = label;
+        }
+        filterset["label"] = label;
 
-            let label = filterset_div.querySelector("input[name='label']").value;
-            if (!label || !label.trim()) {
-                label = "Filterset " + j;
-                filterset_div.querySelector("input[name='label']").value = label;
-            }
-            filterset["label"] = label;
+        filterset["color"] = document.getElementById(`color_${String(j)}`).value;
 
-            filterset["color"] = document.getElementById(`color_${String(j)}`).value;
-
-            for (const select_name of select_names) {
-                let selects_data = $('#' + filterset_div.id).find('select[name=' + select_name + ']').val();
-                filterset[select_name] = _coerceSelectList(selects_data);
-            }
-
-            filtersets.push(filterset);
+        for (const select_name of select_names) {
+            let selects_data = $('#' + filterset_div.id).find('select[name=' + select_name + ']').val();
+            filterset[select_name] = _coerceSelectList(selects_data);
         }
 
-        data.filtersets = filtersets;
+        filtersets.push(filterset);
+    }
 
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                "action": "apply_filters",
-                "data": data
-            }),
-            url: "/api/data",
-            success: async function (req) {
-                await sleep(Math.random() * 250 + 500);
+    data.filtersets = filtersets;
+    return data;
+}
 
-                datasets = JSON.parse(req).compass_datasets;
+function _run_apply_filters(data) {
+    if (_applyXHR && _applyXHR.readyState !== 4) {
+        _applyXHR.abort();
+    }
 
-                let hist_axis = $(document).find("#select-histogram").find(":selected").val();
-                update_chart_data();
-                update_histogram(hist_axis);
-                update_pie(question_id, question_id);
-                update_counts();
-                hide_spinner();
-            },
-            error: function (xhr) {
-                let msg = "Error loading data, try again.";
-                try {
-                    msg = (xhr.responseText && JSON.parse(xhr.responseText).status) || msg;
-                } catch (e) {
-                    // ignore
-                }
-                show_polcomp_error(msg);
+    show_spinner();
+
+    _applyXHR = $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            "action": "apply_filters",
+            "data": data
+        }),
+        url: "/api/data",
+        success: async function (req) {
+            await sleep(Math.random() * 250 + 500);
+
+            datasets = JSON.parse(req).compass_datasets;
+
+            let hist_axis = $(document).find("#select-histogram").find(":selected").val();
+            update_chart_data();
+            update_histogram(hist_axis);
+            update_pie(question_id, question_id);
+            update_counts();
+            hide_spinner();
+        },
+        error: function (xhr) {
+            if (xhr && xhr.statusText === "abort") return;
+
+            let msg = "Error loading data, try again.";
+            try {
+                msg = (xhr.responseText && JSON.parse(xhr.responseText).status) || msg;
+            } catch (e) {
+                // ignore
             }
-        });
+            show_polcomp_error(msg);
+        }
     });
 }
 
-// Updates counts shown below filtersets after query complete.
+function apply_filters() {
+    scroll_to("results-section");
+    const data = _build_filter_payload();
+    _run_apply_filters(data);
+}
+
+function apply_filters_silent() {
+    const data = _build_filter_payload();
+    _run_apply_filters(data);
+}
+
 function update_counts() {
     for (const dataset of datasets) {
         if (dataset.custom_dataset === true) {
@@ -430,7 +410,6 @@ function update_counts() {
     }
 }
 
-// Applies new color to all charts
 function set_filterset_color(event) {
     let target_id = event.target.id.split("_")[1] - 1;
     let target_label = datasets.filter(x => x.custom_id === target_id)[0].label;
@@ -456,7 +435,6 @@ function set_filterset_color(event) {
     update_pie(question_id, question_id);
 }
 
-// Applies new filterset label to all charts
 function set_filterset_label(event) {
     let target_id = event.target.id.split("_")[1] - 1;
     let new_target_label = event.target.value;
@@ -482,7 +460,6 @@ function set_filterset_label(event) {
     update_pie(question_id, question_id);
 }
 
-// Applies new question to pie chart
 function select_table_row(event) {
     prev_question_id = question_id;
     question_id = Number(event.currentTarget.id.split('_')[1]);
@@ -565,17 +542,14 @@ function get_updated_count(ele) {
 window.onload = function () {
     load_presets();
 
-    // Initialises jquery tablesorter
     $(function () {
         $("#questions-table").tablesorter();
     });
 
-    // Adds today's date to date fields
     let date = new Date().toISOString().substring(0, 10);
     document.getElementById("todays-date").value = date;
     document.getElementById("todays-date").max = date;
 
-    // Creates default histogram & pie chart
     histogram = create_histogram("society");
     question_id = 1;
     pie = create_pie(question_id);
@@ -583,5 +557,6 @@ window.onload = function () {
     document.getElementById("question_text").innerText =
         document.getElementById("qid_" + question_id).getElementsByTagName("td")[1].textContent;
 
-    document.getElementById("count_1").innerText = datasets.filter(x => x.custom_id === 0)[0].count;
+    const d0 = Array.isArray(datasets) ? datasets.find(x => x.custom_id === 0) : null;
+    document.getElementById("count_1").innerText = d0 ? d0.count : 0;
 };

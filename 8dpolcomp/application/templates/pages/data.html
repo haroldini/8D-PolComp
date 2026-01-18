@@ -12,7 +12,6 @@
 
 {% block CONTENT %}
 
-<!-- Results explorer at top -->
 <div class="components-50-50">
     <div class="component-border">
         <div class="components-25-75" id="results-section">
@@ -34,20 +33,15 @@
             </div>
 
             <div class="component-border component">
-                <div class="select-box select-box-super-mini" style="width: 100%;">
-                    <select
-                        id="preset-select"
-                        data-style="select-box select-box-super-mini"
-                        data-width="100%"
-                        class="selectpicker"
-                        data-actions-box="false"
-                        data-size="10"
-                        title="Select a preset..."
-                        data-live-search="false"
-                    >
-                        <option value="">Select a preset...</option>
-                    </select>
-                </div>
+                <select
+                    id="preset-select"
+                    style="width:100%; text-align:center;"
+                    class="button save-button grey-button"
+                    onchange="apply_preset(event.target.value)"
+                    disabled
+                >
+                    <option value="all_users" selected>All Users</option>
+                </select>
 
                 <p id="preset-desc" class="text" style="margin-top: 8px;"></p>
                 <p id="preset-status" class="text" style="font-weight: 600; color: salmon; margin-top: 0;"></p>
@@ -56,7 +50,6 @@
     </div>
 </div>
 
-<!-- Custom Filters section (moved below explorer + presets) -->
 <div class="component-border component">
     <div class="components-50-50">
         <div class="component-border component" style="justify-content: center;">
@@ -81,7 +74,7 @@
             <br>
             <button id="addfiltersetbtn" class="button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filterset</button>
             <button id="rmfiltersetbtn" disabled class="button disabled" onclick="remove_filterset(event)"><i class="fa-solid fa-minus"></i>Remove Filterset</button>
-            <button id="applyfilters" class="button blue-button" onclick="apply_filters(event)"><i class="fa-solid fa-play"></i>Apply Filters</button>
+            <button id="applyfilters" class="button blue-button" onclick="apply_filters()"><i class="fa-solid fa-play"></i>Apply Filters</button>
         </div>
     </div>
 
@@ -114,14 +107,12 @@
     </div>
 </div>
 
-<!-- Histogram (now after Custom Filters) -->
 <div class="components-50-50">
     <div class="component-border">
         {% include "components/histogram.html" %}
     </div>
 </div>
 
-<!-- Question explorer -->
 <div class="components-50-50">
     <div class="component-border">
         <div class="components-25-75">
