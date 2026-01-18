@@ -5,13 +5,192 @@
 
 {% block HEAD %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css')}}">
 {% endblock %}
 
 {% block CONTENT %}
-<div class="component-border component">
-    <p class="text text-subtitle">Terms</p>
-    <div class="component-border component">
-        <p class="text">Temp</p>
+<div class="component-border component legal-page">
+    <p class="text text-subtitle center-content">Terms of Service</p>
+
+    <!-- Intro / Summary -->
+    <div class="component-border component legal-section">
+        <p class="text"><b>Last updated:</b> 18 January 2026</p>
+
+        <p class="text">
+            These Terms govern your use of 8D-PolComp (the “Service”). By using the site, you agree to these Terms.
+        </p>
+    </div>
+
+    <!-- 1 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="1">
+            <li>
+                <p class="text text-subtitle">Service Description</p>
+                <ol class="legal-ol">
+                    <li><p class="text">The Service provides a political questionnaire, generates results, and provides tools to explore aggregated data.</p></li>
+                    <li><p class="text">The Service is informational/entertainment. It is not professional advice.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 2 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="2">
+            <li>
+                <p class="text text-subtitle">Eligibility</p>
+                <ol class="legal-ol">
+                    <li><p class="text">You must be at least 13 years old to use the Service.</p></li>
+                    <li><p class="text">If local law requires a higher age for consent, do not submit optional demographics.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 3 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="3">
+            <li>
+                <p class="text text-subtitle">Public Dataset and Submissions</p>
+                <ol class="legal-ol">
+                    <li><p class="text">When you take the test, your results are stored.</p></li>
+                    <li><p class="text">Optional demographics are only stored if you submit them.</p></li>
+                    <li><p class="text">You understand the dataset is designed to be public via the Data Explorer and exports.</p></li>
+                    <li><p class="text">Group test results are visible to others using the same group ID/link.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 4 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="4">
+            <li>
+                <p class="text text-subtitle">Acceptable Use</p>
+                <ol class="legal-ol">
+                    <li><p class="text">Do not spam the test or submit results at high frequency.</p></li>
+                    <li><p class="text">Do not bypass or attempt to bypass hCaptcha or other protections.</p></li>
+                    <li><p class="text">Do not submit automated responses using bots/scripts.</p></li>
+                    <li><p class="text">Do not intentionally poison the dataset with malicious, abusive, or deliberately false data.</p></li>
+                    <li><p class="text">Do not abuse endpoints (including repeated high-volume requests or scraping that impacts performance).</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 5 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="5">
+            <li>
+                <p class="text text-subtitle">Reasonable Retakes</p>
+                <ol class="legal-ol">
+                    <li><p class="text">The Service is intended for one genuine submission per person in most cases.</p></li>
+                    <li><p class="text">Retaking is allowed if enough time has passed and your views may have changed.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 6 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="6">
+            <li>
+                <p class="text text-subtitle">Licence to Use Submitted Data</p>
+                <ol class="legal-ol">
+                    <li><p class="text">By submitting data, you grant us permission to store, process, aggregate, and display it as part of the Service.</p></li>
+                    <li><p class="text">This includes using data to generate comparisons, matches, and analytics features.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 7 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="7">
+            <li>
+                <p class="text text-subtitle">Advertising and Analytics</p>
+                <ol class="legal-ol">
+                    <li><p class="text">The Service may show ads and use analytics tools to measure performance and improve the product.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 8 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="8">
+            <li>
+                <p class="text text-subtitle">Availability and Changes</p>
+                <ol class="legal-ol">
+                    <li><p class="text">We may change, suspend, or discontinue any part of the Service at any time.</p></li>
+                    <li><p class="text">We do not guarantee uptime, accuracy, or uninterrupted access.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 9 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="9">
+            <li>
+                <p class="text text-subtitle">Disclaimers</p>
+                <ol class="legal-ol">
+                    <li><p class="text">Political tests are inherently imperfect and can be biased.</p></li>
+                    <li><p class="text">Your results depend on interpretation, honesty, and changes over time.</p></li>
+                    <li><p class="text">The Service is provided “as is” without warranties of any kind.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 10 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="10">
+            <li>
+                <p class="text text-subtitle">Limitation of Liability</p>
+                <ol class="legal-ol">
+                    <li><p class="text">To the maximum extent permitted by law, we are not liable for indirect or consequential damages.</p></li>
+                    <li><p class="text">You are responsible for deciding what optional information you submit.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 11 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="11">
+            <li>
+                <p class="text text-subtitle">Enforcement</p>
+                <ol class="legal-ol">
+                    <li><p class="text">We may rate-limit, block, or restrict access if we detect abuse or violations of these Terms.</p></li>
+                    <li><p class="text">We may remove results that appear automated, fraudulent, or malicious.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 12 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="12">
+            <li>
+                <p class="text text-subtitle">Changes to These Terms</p>
+                <ol class="legal-ol">
+                    <li><p class="text">We may update these Terms at any time. The “Last updated” date will change.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 13 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="13">
+            <li>
+                <p class="text text-subtitle">Contact</p>
+                <ol class="legal-ol">
+                    <li><p class="text">For support or legal requests, use the Contact page.</p></li>
+                </ol>
+            </li>
+        </ol>
     </div>
 </div>
 {% endblock %}

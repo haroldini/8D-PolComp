@@ -1,0 +1,55 @@
+
+.legal-page {
+    text-align: left !important;
+    align-items: stretch !important;
+
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.legal-section {
+    text-align: left !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+}
+
+.legal-ol {
+    max-width: 100%;
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+
+    text-align: left;
+    list-style-position: inside;
+
+    overflow-x: hidden;
+}
+
+/* Spacing */
+.legal-ol > li {
+    margin: 0.75rem 0;
+}
+
+/* Marker styling */
+.legal-ol li::marker {
+    font-weight: 700;
+    color: var(--blue);
+}
+
+/* Text inside list items */
+.legal-ol p.text {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Nested lists */
+.legal-ol .legal-ol {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+}
+
+.legal-ol .legal-ol li::marker {
+    color: var(--green);
+}

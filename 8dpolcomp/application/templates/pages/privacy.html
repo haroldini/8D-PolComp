@@ -5,13 +5,243 @@
 
 {% block HEAD %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css')}}">
 {% endblock %}
 
 {% block CONTENT %}
-<div class="component-border component">
-    <p class="text text-subtitle">Privacy Policy</p>
-    <div class="component-border component">
-        <p class="text">Temp</p>
+<div class="component-border component legal-page">
+    <p class="text text-subtitle center-content">Privacy Policy</p>
+
+    <!-- Intro / Summary -->
+    <div class="component-border component legal-section">
+        <p class="text"><b>Last updated:</b> 18 January 2026</p>
+
+        <p class="text">
+            This Privacy Policy explains how <b>8D-PolComp</b> (“we”, “us”) collects, uses, and shares information when you use this site.
+        </p>
+
+        <p class="text" style="font-weight: 600;">
+            Important: your submitted test results (and any optional demographics you include) should be treated as <b>public</b>
+            via the <b>Data Explorer</b> or <b>database exports</b>.
+        </p>
+    </div>
+
+    <!-- 1 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="1">
+            <li>
+                <p class="text text-subtitle">Scope</p>
+                <ol class="legal-ol">
+                    <li><p class="text">This policy applies to 8D-PolComp and all pages hosted on this domain.</p></li>
+                    <li><p class="text">By using the site, you agree to the data handling described here.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 2 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="2">
+            <li>
+                <p class="text text-subtitle">What We Collect</p>
+                <ol class="legal-ol">
+                    <li>
+                        <p class="text"><b>Test data (always stored):</b> your answers, computed scores, and result metadata (including submission date).</p>
+                    </li>
+                    <li>
+                        <p class="text"><b>Optional demographics (only if you submit them):</b> age, country, education, ethnicity, religion, party, identities, and “how you found the app”.</p>
+                    </li>
+                    <li>
+                        <p class="text"><b>Group participation (optional):</b> if you take the test using a group link, your result can be associated with a group ID.</p>
+                    </li>
+                    <li>
+                        <p class="text"><b>Not intentionally stored as part of results:</b> we do not ask for names, emails, phone numbers, or accounts to use the test.</p>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 3 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="3">
+            <li>
+                <p class="text text-subtitle">Public Dataset Warning</p>
+                <ol class="legal-ol">
+                    <li>
+                        <p class="text">
+                            The Service is designed around analysis and comparison. Submitted results are intended to be viewable and usable by others.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            Optional demographic fields are optional — do not submit anything you aren’t comfortable making public.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            Even without “direct identifiers”, combinations of demographics may be identifying in rare cases.
+                        </p>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 4 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="4">
+            <li>
+                <p class="text text-subtitle">How We Use Your Data</p>
+                <ol class="legal-ol">
+                    <li><p class="text">To calculate and show your test results.</p></li>
+                    <li><p class="text">To populate the Data Explorer and enable comparisons, filtering, and visualisations.</p></li>
+                    <li><p class="text">To compute dataset features such as aggregate matching and similarity tools.</p></li>
+                    <li><p class="text">To prevent abuse and maintain the integrity of the dataset.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 5 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="5">
+            <li>
+                <p class="text text-subtitle">Cookies and Similar Technologies</p>
+                <ol class="legal-ol">
+                    <li>
+                        <p class="text">
+                            <b>Essential cookies:</b> this site uses cookies (including a session cookie) for core functionality and app state
+                            (test progress, navigating between stages, and group state).
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>Analytics:</b> we use Google Analytics to understand usage and improve performance.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>Ads:</b> we may display ads (e.g. via Google/AdSense). Ads can involve measurement and ad-serving technologies.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>Consent by use:</b> by using this site, you consent to the cookie usage described in this section.
+                            If you do not consent, do not use the site.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            You can also control cookies via your browser settings, but doing so may break site functionality.
+                        </p>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 6 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="6">
+            <li>
+                <p class="text text-subtitle">Third-Party Services</p>
+                <ol class="legal-ol">
+                    <li>
+                        <p class="text">
+                            <b>hCaptcha:</b> used to reduce bot submissions and protect the dataset. It may process device and interaction signals for abuse detection.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>Google Analytics:</b> used to measure site traffic and usage patterns.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>Google Ads / AdSense:</b> used to display ads. Ad systems may use cookies/identifiers depending on browser settings and platform behaviour.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            <b>CDNs / hosted libraries:</b> this site loads some libraries from third-party CDNs, which may receive basic request metadata.
+                        </p>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 7 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="7">
+            <li>
+                <p class="text text-subtitle">Retention</p>
+                <ol class="legal-ol">
+                    <li>
+                        <p class="text">
+                            Results are stored long-term so the dataset remains consistent and useful over time.
+                        </p>
+                    </li>
+                    <li>
+                        <p class="text">
+                            If you request removal, we may ask for your results link or test number to identify the correct record.
+                        </p>
+                    </li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 8 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="8">
+            <li>
+                <p class="text text-subtitle">Security</p>
+                <ol class="legal-ol">
+                    <li><p class="text">We use reasonable safeguards to protect the Service.</p></li>
+                    <li><p class="text">No system is perfectly secure. You submit data at your own risk, especially given the public dataset design.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 9 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="9">
+            <li>
+                <p class="text text-subtitle">Your Choices</p>
+                <ol class="legal-ol">
+                    <li><p class="text">You can complete the test without submitting any optional demographics.</p></li>
+                    <li><p class="text">If you join a group, your result will be viewable with that group’s results.</p></li>
+                    <li><p class="text">If you want a result removed, use the Contact page and include your results link or test number.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 10 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="10">
+            <li>
+                <p class="text text-subtitle">Changes to This Policy</p>
+                <ol class="legal-ol">
+                    <li><p class="text">We may update this policy at any time. The “Last updated” date will change.</p></li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+
+    <!-- 11 -->
+    <div class="component-border component legal-section">
+        <ol class="legal-ol" start="11">
+            <li>
+                <p class="text text-subtitle">Contact</p>
+                <ol class="legal-ol">
+                    <li><p class="text">For any privacy-related request or question, use the Contact page.</p></li>
+                </ol>
+            </li>
+        </ol>
     </div>
 </div>
 {% endblock %}
