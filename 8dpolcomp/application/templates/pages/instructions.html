@@ -8,89 +8,71 @@
 <meta id="group-data" data-group="{{ group_id or '' }}">
 
 <div class="component-border">
-    <p class="text text-subtitle">Instructions</p>
+    <p class="text text-subtitle">Before you start</p>
 
+    <!-- Main instructions -->
     <div class="components-50-50">
         <div class="component-border">
             <p class="text">
-                You will be shown a series of political statements, and your responses to them will be recorded.
-                At the end of the test, your responses will be used to determine your position across eight ideological axes.
+                You'll see a series of political statements. For each one, choose how much you agree or disagree.
+                At the end, we'll calculate your results across 8 ideological axes.
             </p>
         </div>
     </div>
 
+    <!-- Actions (group + continue) -->
     <div class="components-50-50">
         <div class="component-border">
 
-            <button
-                id="open-group-ui"
-                class="button grey-button center-content"
-                onclick="open_group_ui()"
-            >
-                <i class="fa-solid fa-people-group"></i><span>Take the test as part of a group</span>
-            </button>
-
-            <div
-                id="group-ui"
-                class="component-border"
-                style="display:none;"
-            >
-                <p class="text text-subtitle">Group Test</p>
-
-                <!-- NOT IN A GROUP -->
-                <div id="group-setup" style="display:none;">
-                    <p class="text" style="margin-bottom: 1rem;">
-                        Create a group and share the invite link. Anyone using it will be added to the same group so you can compare results later.
-                    </p>
-
-                    <button class="button grey-button" onclick="create_group()">
-                        <i class="fa-solid fa-people-group"></i><span>Create Group</span>
-                    </button>
-
-                    <button
-                        class="button grey-button"
-                        onclick="close_group_ui()"
-                    >
-                        <i class="fa-solid fa-xmark"></i><span>Take the test alone</span>
-                    </button>
-                </div>
-
-                <!-- CURRENT GROUP -->
-                <div id="group-active" style="display:none;">
-                    <p class="text green" style="margin-bottom:0.5rem;">
-                        <b>Current group:</b> <span id="group-id-label"></span>
-                    </p>
-
-                    <div class="wrapper">
-                        <div class="wrapped">
-                            <button
-                                class="button blue-button center-content flex"
-                                onclick="copy_group_invite_link(event.currentTarget, btn_text='Copy Invite Link')"
-                            >
-                                <i class="fa-solid fa-clipboard"></i><span>Copy Invite Link</span>
-                            </button>
-                        </div>
-                        <div class="wrapped">
-                            <button
-                                class="button grey-button center-content flex"
-                                onclick="leave_group()"
-                            >
-                                <i class="fa-solid fa-xmark"></i><span>Leave Group</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- NOT IN GROUP -->
+            <div id="group-inactive" style="display:none;">
+                <p class="text" style="margin-bottom: 0.75rem;">
+                    <b>Optional:</b> take the test as part of a group to compare results with friends.
+                </p>
+                <button
+                    class="button grey-button center-content"
+                    onclick="create_group()"
+                >
+                    <i class="fa-solid fa-people-group"></i><span>Start as a group</span>
+                </button>
             </div>
 
+            <!-- IN GROUP -->
+            <div id="group-active" style="display:none;">
+                <p class="text green" style="margin-bottom:0.25rem;">
+                    <b>Group mode enabled.</b>
+                </p>
+                <p class="text" style="margin-bottom: 0.75rem; opacity: 0.9;">
+                    Anyone who completes the test using your invite link will be added to your group.
+                    You'll be able to compare your group's results later in the Data Explorer.
+                </p>
+
+                <button
+                    class="button blue-button center-content"
+                    onclick="copy_group_invite_link(event.currentTarget, btn_text='Copy Invite Link')"
+                >
+                    <i class="fa-solid fa-clipboard"></i><span>Copy Invite Link</span>
+                </button>
+                <button
+                    class="button grey-button center-content"
+                    onclick="leave_group()"
+                >
+                    <i class="fa-solid fa-xmark"></i><span>Leave Group</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <div class="components-50-50">
+        <div class="component-border">
+            <!-- Continue button (bottom) -->
             <button class="button blue-button" onclick="start_test()">
-                <i class="fa-solid fa-right-long"></i><span>Continue</span>
+                <span>Start Test</span><i class="fa-solid fa-right-long"></i>
             </button>
 
             <p id="instructions-error" class="text" style="display:none; margin-top:0.5rem; color: salmon; font-weight:600;"></p>
         </div>
     </div>
-
 </div>
 
 {% endblock %}
@@ -136,24 +118,6 @@
         el.innerText = msg;
     }
 
-    function open_group_ui() {
-        const panel = document.getElementById("group-ui");
-        const openBtn = document.getElementById("open-group-ui");
-        if (panel) panel.style.display = "block";
-        if (openBtn) openBtn.style.display = "none";
-    }
-
-    function close_group_ui() {
-        const gid = _getGroupId();
-        const inGroup = (gid && _isUUID(gid));
-        if (inGroup) return;
-
-        const panel = document.getElementById("group-ui");
-        const openBtn = document.getElementById("open-group-ui");
-        if (panel) panel.style.display = "none";
-        if (openBtn) openBtn.style.display = "inline-flex";
-    }
-
     function create_group() {
         let gid = "";
         try {
@@ -162,6 +126,7 @@
             return;
         }
 
+        // Reload this page in group mode
         window.location = "/instructions?g=" + encodeURIComponent(gid);
     }
 
@@ -195,27 +160,16 @@
 
     function render_group_state() {
         const gid = _getGroupId();
+        const inGroup = (gid && _isUUID(gid));
 
-        const setup = document.getElementById("group-setup");
+        const inactive = document.getElementById("group-inactive");
         const active = document.getElementById("group-active");
         const label = document.getElementById("group-id-label");
-        const openBtn = document.getElementById("open-group-ui");
-        const panel = document.getElementById("group-ui");
-
-        const inGroup = (gid && _isUUID(gid));
 
         if (label) label.innerText = inGroup ? gid : "";
 
-        if (setup) setup.style.display = inGroup ? "none" : "block";
+        if (inactive) inactive.style.display = inGroup ? "none" : "block";
         if (active) active.style.display = inGroup ? "block" : "none";
-
-        if (inGroup) {
-            if (panel) panel.style.display = "block";
-            if (openBtn) openBtn.style.display = "none";
-        } else {
-            if (panel) panel.style.display = "none";
-            if (openBtn) openBtn.style.display = "inline-flex";
-        }
     }
 
     render_group_state();

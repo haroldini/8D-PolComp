@@ -62,7 +62,7 @@
             </div>
             <div class="components-50-50">
                 <div class="component-border">
-                <p class="text green"><b>Test #{{ data["results_id"] }}</b></p>
+                <p class="text green"><b>Result #{{ data["results_id"] }}</b></p>
             </div>
             <div class="component-border">
                 <p class="text blue"><b>8DPolComp.com</b></p>
@@ -77,7 +77,9 @@
     <div class="component-border component" style="display:flex; flex-direction:column;">
         <p class="text text-subtitle blue">Share Results</p>
 
-        <div style="flex:1;"></div>
+        <p class="text" style="margin-top: 0.25rem;">
+            Copy your results link or save an image to share anywhere.
+        </p>
 
         <div>
             <button class="button blue-button" onclick="copy_link(event.currentTarget, btn_text='Copy Link')">
@@ -104,20 +106,26 @@
         </button>
 
         <a class="button center-content flex green-button" href="/data?g={{ data['group_id'] }}">
-            <i class="fa-solid fa-chart-simple"></i>View Group Results
+            <i class="fa-solid fa-chart-simple"></i>Open Group Results
         </a>
     </div>
     {% endif %}
 
     <div class="component-border component">
-        <b><p class="text green">Explore your closest matches for a specific axis using the drop-down above.</p></b>
-        <p class="text">Closest matches are calculated by finding the identities whose participants' average results most closely matched your results.</p>
+        <b><p class="text green">Closest matches show the results that are most similar to yours.</p></b>
+        <p class="text">
+            Use the dropdown above to switch between <b>overall similarity</b> and a <b>single axis</b>.
+            Matches are approximate and depend on the size and quality of the dataset.
+        </p>
     </div>
 
     {% if not data.get("group_id") %}
     <div class="component-border component">
-        <b><p class="text green">See a more detailed analysis of your results & compare them to others' using 8D-PolComp's data visualisation tool.</p></b>
-        <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-table"></i>Data</a>
+        <b><p class="text green">Want more detail?</p></b>
+        <p class="text">
+            Use the <b>Data Explorer</b> to compare your results to the full dataset, filter by demographics, and explore trends.
+        </p>
+        <a class="button center-content flex green-button" href="/data"><i class="fa-solid fa-table"></i>Data Explorer</a>
     </div>
     {% endif %}
 

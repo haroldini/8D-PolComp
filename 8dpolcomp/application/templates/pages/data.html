@@ -29,10 +29,14 @@
     <div class="component-border">
         <div class="components-25-75" id="results-section">
             <div class="component-border component" style="justify-content:center">
-                <p class="text text-subtitle fade-border header-underline">Results Explorer</p>
-                <p class="text">This compass shows the scores for test results that meet your filter criteria. Filterset averages are displayed as larger dots in matching colors.</p>
-                <p class="text">If you've completed the test, your results will appear in the chart as four pink dots.</p>
-                <p class="text">Use the histogram below to explore the score distribution for each filter set across a specific axis.</p>
+                <p class="text text-subtitle fade-border header-underline">Data Explorer</p>
+                <p class="text">
+                    This chart shows results that match your current filters. Each colored point is one result.
+                    The larger dot in each color is that filter set's average position.
+                </p>
+                <p class="text">
+                    If you've taken the test on this device, your result will appear as four <b>pink</b> points.
+                </p>
             </div>
             <div class="component">
                 {% include "components/compass.html" %}
@@ -42,7 +46,7 @@
         <div class="components-50-50">
             <div class="component-border component" style="justify-content: center;">
                 <p class="text text-subtitle fade-border header-underline">Quick Presets</p>
-                <p class="text">Select a preset comparison and it will apply immediately.</p>
+                <p class="text">Pick a preset to load a ready-made comparison.</p>
             </div>
 
             <div class="component-border component">
@@ -67,12 +71,18 @@
     <div class="components-50-50">
         <div class="component-border component" style="justify-content: center;">
             <p class="text text-subtitle fade-border header-underline">Custom Filters</p>
-            <p class="text">Add up to four custom filtersets, then click 'Apply Filters' to query 8D-PolComp's database and compare different groups. Use the input boxes to adjust sampling order, size, and date range.</p>
+            <p class="text">
+                Build up to <b>4 filter sets</b> to compare groups in the dataset (country, party, ideology, demographics, and more).
+            </p>
+            <p class="text">
+                Use the controls to change <b>sample size</b>, <b>sampling method</b> (random vs. most recent), and the <b>date range</b>.
+            </p>
+
         </div>
 
         <div class="component-border component">
             <div class="input-box-container" style="width: 100%;">
-                <input type="number" name="sample-size" class="age-box a-l grey-button" placeholder="Sampling" value="1000" min="1" max="10000">
+                <input type="number" name="sample-size" class="age-box a-l grey-button" placeholder="Sample size" value="1000" min="1" max="5000">
                 <div style="width: 50%; height: auto;" class="age-box a-r">
                     <input type="radio" class="radio-selector" name="sorting" id="random" value="random" checked>
                     <input type="radio" class="radio-selector a-r" name="sorting" id="recent" value="recent">
@@ -85,8 +95,8 @@
             </div>
 
             <br>
-            <button id="addfiltersetbtn" class="button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filterset</button>
-            <button id="rmfiltersetbtn" disabled class="button disabled" onclick="remove_filterset(event)"><i class="fa-solid fa-minus"></i>Remove Filterset</button>
+            <button id="addfiltersetbtn" class="button" onclick="add_filterset(event)"><i class="fa-solid fa-plus"></i>Add Filter set</button>
+            <button id="rmfiltersetbtn" disabled class="button disabled" onclick="remove_filterset(event)"><i class="fa-solid fa-minus"></i>Remove Filter set</button>
             <button id="applyfilters" class="button blue-button" onclick="apply_filters()"><i class="fa-solid fa-play"></i>Apply Filters</button>
         </div>
     </div>
@@ -132,8 +142,12 @@
             <div class="component">
                 <div class="component-border fill" style="flex-direction: column;">
                     <p class="text text-subtitle fade-border header-underline">Question Explorer</p>
-                    <p class="text">Select a question from the table to see how 8D-PolComp users meeting your filter criteria responded. The table also displays each question's weighting for each axis.</p>
-                    <br>
+                    <p class="text">
+                        The chart shows the response split for the selected question, grouped by filter set, so you can compare how different groups answered.
+                    </p>
+                    <p class="text">
+                        Click a question in the table below to see how each filter set responded.
+                    </p>
                 </div>
             </div>
             <div class="component">

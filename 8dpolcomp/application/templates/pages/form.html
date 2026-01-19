@@ -201,7 +201,7 @@
 
 {% block CONTENT %}
 <div class="component-border">
-    <p class="text text-subtitle">Optional Questions</p>
+    <p class="text text-subtitle">Optional Survey Data</p>
     <div class="components-50-50">
         <div class="component-border component">
             <div style="width: 100%;">
@@ -210,11 +210,20 @@
         </div>
         <div class="component">
             <div class="component-border" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                <p class="text">To improve 8D-PolComp's data, please answer as many of these questions as you can. They are completely optional, and will not influence your results.</p>
-                <p class="text" style="font-weight: 600">Your responses to the test will be stored in 8D-PolComp's public database, alongside any of these optional questions you choose to answer.</p>
+                <p class="text">These questions are optional, you can skip everything here and still view your results. They help improve comparisons in the Data Explorer, but they do not affect your test result.</p>
+                <p class="text"><b>Important:</b> your test result is stored in the public dataset. Any optional survey responses you submit will be stored with it and may be visible via the <b>Data Explorer</b> or <b>database exports</b>.</p>
             </div>
             <div class="component-border">
-
+            <p class="text">
+                By continuing, you confirm you've read the
+                <span class="inline-link">
+                    <a class="link" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                </span>
+                and
+                <span class="inline-link">
+                    <a class="link" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>.
+                </span>
+            </p>
                 <!-- hCaptcha -->
                 <div
                     id="captcha"
@@ -228,8 +237,8 @@
                 <p id='recaptcha-status' class="text" style="font-weight: 600; color: salmon; align-self: bottom;"></p>
 
                 <button id="continue-btn" class="button blue-button" onclick="goto_results()">
+                    <span id="next-btn-text">Continue</span>
                     <i class="fa-solid fa-right-long"></i>
-                    <span id="next-btn-text">Next</span>
                 </button>
             </div>
         </div>
