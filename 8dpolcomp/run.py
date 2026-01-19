@@ -3,9 +3,6 @@ import os
 import logging
 
 from application import create_app
-from dotenv import load_dotenv
-
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
