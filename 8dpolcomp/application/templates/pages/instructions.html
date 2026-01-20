@@ -178,10 +178,8 @@
         set_instructions_error("");
 
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/api/to_test",
-            contentType: "application/json",
-            data: JSON.stringify({ "action": "to_test" }),
             success: function () {
                 window.location = "/test";
             },

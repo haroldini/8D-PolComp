@@ -78,12 +78,8 @@ function prev_question() {
     // Exit to instructions
     if (qn === 0) {
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "/api/to_instructions",
-            contentType: "application/json",
-            data: JSON.stringify({
-                action: "to_instructions"
-            }),
             success: function () {
                 window.location = "/instructions";
             },

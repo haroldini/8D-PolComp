@@ -5,6 +5,9 @@ let preset_data = null;
 let _initialPresetApplied = false;
 let _applyXHR = null;
 
+const _SAMPLE_MIN = 1;
+const _SAMPLE_MAX = 2500;
+
 function _escapeHtml(s) {
     return String(s || "")
         .replaceAll("&", "&amp;")
@@ -17,6 +20,52 @@ function _escapeHtml(s) {
 function _isUUID(s) {
     const v = String(s || "").trim();
     return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(v);
+}
+
+function _isISODate(s) {
+    const v = String(s || "").trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(v);
+}
+
+function _clamp(n, lo, hi) {
+    n = Number(n);
+    if (!Number.isFinite(n)) return lo;
+    return Math.max(lo, Math.min(hi, n));
+}
+
+function _read_and_clamp_sample_size() {
+    const el = document.querySelector("input[name='sample-size']");
+    let raw = 1000;
+    if (el) raw = Number(el.value || 1000);
+
+    const clamped = _clamp(raw, _SAMPLE_MIN, _SAMPLE_MAX);
+
+    if (el) el.value = String(clamped);
+    return clamped;
+}
+
+function _read_dates_or_error() {
+    const minEl = document.querySelector("input[name='min-date']");
+    const maxEl = document.querySelector("input[name='max-date']");
+
+    const minDate = (minEl && minEl.value) ? String(minEl.value) : "2023-01-01";
+    const maxDate = (maxEl && maxEl.value) ? String(maxEl.value) : new Date().toISOString().substring(0, 10);
+
+    if (!_isISODate(minDate) || !_isISODate(maxDate)) {
+        if (typeof show_polcomp_error === "function") {
+            show_polcomp_error("Invalid date input. Please check your date range.");
+        }
+        return null;
+    }
+
+    if (minDate > maxDate) {
+        if (typeof show_polcomp_error === "function") {
+            show_polcomp_error("Invalid date range: start date must be before end date.");
+        }
+        return null;
+    }
+
+    return { minDate, maxDate };
 }
 
 function _getUrlGroupId() {
@@ -333,7 +382,10 @@ function apply_preset(preset_key) {
     const fd = preset.filter_data;
 
     const limitEl = document.querySelector("input[name='sample-size']");
-    if (limitEl) limitEl.value = String(fd.limit || 1000);
+    if (limitEl) {
+        const presetLimit = _clamp(Number(fd.limit || 1000), _SAMPLE_MIN, _SAMPLE_MAX);
+        limitEl.value = String(presetLimit);
+    }
 
     const order = fd.order === "recent" ? "recent" : "random";
     const radio = document.querySelector("input[name='sorting'][value='" + order + "']");
@@ -432,9 +484,14 @@ function _build_filter_payload() {
     let data = {};
 
     data.order = document.querySelector("input[name='sorting']:checked").value;
-    data.limit = Number(document.querySelector("input[name='sample-size']").value || 1000);
-    data["min-date"] = document.querySelector("input[name='min-date']").value || "2023-01-01";
-    data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
+
+    data.limit = _read_and_clamp_sample_size();
+
+    const dates = _read_dates_or_error();
+    if (!dates) return null;
+
+    data["min-date"] = dates.minDate;
+    data["max-date"] = dates.maxDate;
 
     for (const filterset_div of filterset_divs) {
         j += 1;
@@ -491,7 +548,6 @@ function _run_apply_filters(data) {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-            "action": "apply_filters",
             "data": data
         }),
         url: "/api/data",
@@ -612,9 +668,18 @@ function get_updated_count(ele) {
 
         let data = {};
         data.order = document.querySelector("input[name='sorting']:checked").value;
-        data.limit = Number(document.querySelector("input[name='sample-size']").value || 1000);
-        data["min-date"] = document.querySelector("input[name='min-date']").value || "2023-01-01";
-        data["max-date"] = document.querySelector("input[name='max-date']").value || new Date().toISOString().substring(0, 10);
+
+        data.limit = _read_and_clamp_sample_size();
+
+        const dates = _read_dates_or_error();
+        if (!dates) {
+            ele.classList.remove("disabled-text");
+            spinner.classList.remove("spin-fa-icon");
+            return;
+        }
+
+        data["min-date"] = dates.minDate;
+        data["max-date"] = dates.maxDate;
 
         let filterset = {};
 
@@ -658,7 +723,6 @@ function get_updated_count(ele) {
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                "action": "get_filterset_count",
                 "data": data
             }),
             url: "/api/get_filterset_count",
@@ -705,4 +769,6 @@ window.onload = function () {
 
     const d0 = Array.isArray(datasets) ? datasets.find(x => x.custom_id === 0) : null;
     document.getElementById("count_1").innerText = d0 ? d0.count : 0;
+
+    _read_and_clamp_sample_size();
 };

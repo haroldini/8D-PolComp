@@ -24,7 +24,7 @@ Axis = Literal["diplomacy", "economics", "government", "politics", "religion", "
 
 
 class ToFormBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     answers: Dict[int, int]
 
@@ -45,18 +45,8 @@ class ToFormBody(BaseModel):
         return v
 
 
-class ToTestBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    action: Literal["to_test"]
-
-
-class ToInstructionsBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    action: Literal["to_instructions"]
-
-
 class ToResultsBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     captcha: str = Field(min_length=1)
     demographics: Dict[str, Any]
@@ -64,7 +54,7 @@ class ToResultsBody(BaseModel):
 
 
 class FiltersetModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     label: str
     min_age: Optional[int] = Field(default=None, alias="min-age", ge=0, le=101)
@@ -91,10 +81,10 @@ class FiltersetModel(BaseModel):
 
 
 class FilterDataModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     order: Literal["random", "recent"]
-    limit: int = Field(gt=0, le=10000)
+    limit: int = Field(gt=0, le=2500)
     min_date: date = Field(alias="min-date")
     max_date: date = Field(alias="max-date")
     filtersets: List[FiltersetModel]
@@ -119,21 +109,19 @@ class FilterDataModel(BaseModel):
 
 
 class DataApiBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
-    action: Literal["apply_filters"]
-    data: Optional[dict] = None
+    data: FilterDataModel
 
 
 class FilterCountBody(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
-    action: Literal["get_filterset_count"]
-    data: dict
+    data: FilterDataModel
 
 
 class ScoresModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     diplomacy: float = Field(ge=-1, le=1)
     economics: float = Field(ge=-1, le=1)
@@ -342,14 +330,14 @@ def to_form():
         500: If server computation fails.
     """
     try:
-        payload = request.get_json(silent=True)
+        payload = request.get_json(silent=True) or {}
         if not isinstance(payload, dict):
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
         try:
             body = ToFormBody(**payload)
-        except ValidationError as e:
-            logger.warning("[/api/to_form] ValidationError: %s", str(e))
+        except ValidationError:
+            logger.warning("[/api/to_form] ValidationError")
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
         try:
@@ -358,14 +346,10 @@ def to_form():
             logger.exception("[/api/to_form] Failed to load question scoring data")
             return {"status": "Server error. Please refresh and try again."}, 500
 
-        answers = {int(q): int(a) for q, a in body.answers.items()}
+        answers = body.answers
 
         if set(answers.keys()) != set(scoring.keys()):
-            logger.warning(
-                "[/api/to_form] Answer keys mismatch: required=%s provided=%s",
-                len(scoring.keys()),
-                len(answers.keys()),
-            )
+            logger.warning("[/api/to_form] Answer keys mismatch")
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
         results = calculate_results(answers, scoring)
@@ -381,7 +365,7 @@ def to_form():
         return {"status": "Server error. Please refresh and try again."}, 500
 
 
-@v.route("/api/to_test", methods=["POST"])
+@v.route("/api/to_test", methods=["GET"])
 def to_test():
     """
     Set session state to render the test page.
@@ -393,20 +377,9 @@ def to_test():
         Tuple[dict, int]: JSON status response and HTTP status code.
 
     Raises:
-        400: If request payload validation fails.
         500: If server error occurs.
     """
     try:
-        payload = request.get_json(silent=True)
-        if not isinstance(payload, dict):
-            return {"status": "Invalid request. Please refresh and try again."}, 400
-
-        try:
-            ToTestBody(**payload)
-        except ValidationError as e:
-            logger.warning("[/api/to_test] ValidationError: %s", str(e))
-            return {"status": "Invalid request. Please refresh and try again."}, 400
-
         session["template"] = "test"
         return {"status": "success"}, 200
 
@@ -415,7 +388,7 @@ def to_test():
         return {"status": "Server error. Please refresh and try again."}, 500
 
 
-@v.route("/api/to_instructions", methods=["POST"])
+@v.route("/api/to_instructions", methods=["GET"])
 def to_instructions():
     """
     Set session state to render the instructions page.
@@ -427,20 +400,9 @@ def to_instructions():
         Tuple[dict, int]: JSON status response and HTTP status code.
 
     Raises:
-        400: If request payload validation fails.
         500: If server error occurs.
     """
     try:
-        payload = request.get_json(silent=True)
-        if not isinstance(payload, dict):
-            return {"status": "Invalid request. Please refresh and try again."}, 400
-
-        try:
-            ToInstructionsBody(**payload)
-        except ValidationError as e:
-            logger.warning("[/api/to_instructions] ValidationError: %s", str(e))
-            return {"status": "Invalid request. Please refresh and try again."}, 400
-
         session["template"] = "instructions"
         return {"status": "success"}, 200
 
@@ -580,38 +542,36 @@ def data_api():
         try:
             body = DataApiBody(**payload)
         except ValidationError as e:
-            logger.warning("[/api/data] ValidationError: %s", str(e))
-            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+            logger.warning("[/api/data] ValidationError")
 
-        if body.action == "apply_filters":
-            if not isinstance(body.data, dict):
-                return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
-
+            bad_request = False
             try:
-                filt = FilterDataModel(**body.data)
-            except ValidationError as e:
-                logger.warning("[/api/data] FilterData ValidationError: %s", str(e))
-                return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
+                bad_request = any(tuple(err.get("loc", ())) == ("data",) for err in e.errors())
+            except Exception:
+                bad_request = False
 
-            filter_data = filt.model_dump(by_alias=True)
-            datasets = Results.get_filtered_datasets(filter_data)
+            if bad_request:
+                return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
 
-            if "answer_counts" in session:
-                datasets.insert(0, {
-                    "name": "your_results",
-                    "label": "Your Results",
-                    "custom_dataset": False,
-                    "result_id": session.get("results_id"),
-                    "color": "salmon",
-                    "count": 1,
-                    "point_props": [1, 8],
-                    "all_scores": [session.get("results")],
-                    "answer_counts": session.get("answer_counts")
-                })
+            return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
 
-            return json.dumps({"status": "success", "compass_datasets": datasets}), 200
+        filter_data = body.data.model_dump(by_alias=True)
+        datasets = Results.get_filtered_datasets(filter_data)
 
-        return json.dumps({"status": "Error: Unknown action. Contact the developer if you think this is a mistake."}), 401
+        if "answer_counts" in session:
+            datasets.insert(0, {
+                "name": "your_results",
+                "label": "Your Results",
+                "custom_dataset": False,
+                "result_id": session.get("results_id"),
+                "color": "salmon",
+                "count": 1,
+                "point_props": [1, 8],
+                "all_scores": [session.get("results")],
+                "answer_counts": session.get("answer_counts")
+            })
+
+        return json.dumps({"status": "success", "compass_datasets": datasets}), 200
 
     except Exception:
         logger.exception("[/api/data] Unhandled error")
@@ -642,16 +602,20 @@ def get_filterset_count():
         try:
             body = FilterCountBody(**payload)
         except ValidationError as e:
-            logger.warning("[/api/get_filterset_count] ValidationError: %s", str(e))
-            return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+            logger.warning("[/api/get_filterset_count] ValidationError")
 
-        try:
-            filt = FilterDataModel(**body.data)
-        except ValidationError as e:
-            logger.warning("[/api/get_filterset_count] FilterData ValidationError: %s", str(e))
+            bad_request = False
+            try:
+                bad_request = any(tuple(err.get("loc", ())) == ("data",) for err in e.errors())
+            except Exception:
+                bad_request = False
+
+            if bad_request:
+                return json.dumps({"status": "Invalid request. Please refresh and try again."}), 400
+
             return json.dumps({"status": "Filterset validation failed: Invalid filters"}), 401
 
-        filter_data = filt.model_dump(by_alias=True)
+        filter_data = body.data.model_dump(by_alias=True)
         counts = Results.get_filtered_dataset_count(filter_data)
         return json.dumps({"status": "success", "counts": counts}), 200
 
