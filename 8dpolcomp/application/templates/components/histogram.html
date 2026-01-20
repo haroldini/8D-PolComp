@@ -1,5 +1,5 @@
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css') }}">
 
 <div class="component-border" oncontextmenu="return false;" style="cursor: default;">
     <p class="text text-subtitle fade-border header-underline">Result Distributions</p>
@@ -36,4 +36,4 @@
     </div>
 </div>
 
-<script src="/static/js/histogram.js" defer></script>
+<script src="{{ url_for('static', filename='js/histogram.js') }}" defer></script>

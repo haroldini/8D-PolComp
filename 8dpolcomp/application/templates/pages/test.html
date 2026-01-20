@@ -6,13 +6,13 @@
 {% block CONTENT %}
 
 <!-- Page CSS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/test.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
 
 <!-- Question payload (JSON) -->
 <script id="texts-data" type="application/json">{{ texts|safe }}</script>
 
 <!-- Page logic -->
-<script type="text/javascript" src="/static/js/test.js" defer></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/test.js') }}" defer></script>
 
 <div class="components-50-50">
     <div class="component-border">

@@ -1,5 +1,5 @@
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/select.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select.css') }}">
 
 <div class="component-border" oncontextmenu="return false;" style="cursor: default;">
     <div class="fill pie-container">
@@ -23,4 +23,4 @@
     </div>
 </div>
 
-<script src="/static/js/pie.js" defer></script>
+<script src="{{ url_for('static', filename='js/pie.js') }}" defer></script>

@@ -10,15 +10,15 @@
 <link href="https://cdn.jsdelivr.net/npm/tablesorter@2.31.3/dist/css/theme.bootstrap_4.min.css" rel="stylesheet">
 
 <!-- Re-apply app CSS after vendor to preserve original cascade -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
 
 <!-- Page CSS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/polcomp.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
 
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
 {% endblock %}
@@ -195,7 +195,7 @@
 <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tablesorter@2.31.3/dist/js/jquery.tablesorter.combined.min.js"></script>
 
-<script src="/static/js/data.js"></script>
+<script src="{{ url_for('static', filename='js/data.js') }}"></script>
 
 <!-- Vendor JS required for bootstrap-select -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"></script>

@@ -3,6 +3,7 @@ import os
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "DEV")
 DB_ENV = os.getenv("DB_ENV", "DEV")  # DEV // SSH // PROD
+STATIC_VERSION = os.getenv("STATIC_VERSION", "1")
 
 
 """ ===== GLOBALS ===== """

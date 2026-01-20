@@ -5,15 +5,14 @@
 
 {% block HEAD %}
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
 {% endblock %}
 
 {% block SCRIPTS %}
-<script src="/static/js/index.js" defer></script>
+<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
 {% endblock %}
-
 
 {% block CONTENT %}
 
@@ -39,41 +38,52 @@
                 {% endwith %}
             </div>
             <div class="component-border component icon-container">
-                <button
-                    type="button"
-                    onmouseover="update_index_chart(event, 'recent1000')"
-                    class="icon-button icon-selected"
-                    style="
-                        background-image: none;
-                        background-color: #e3e3e3;
-                        color: #262626;
-                        padding: 0;
-                        position: relative;
-                        overflow: hidden;
-                    "
+            <button
+                type="button"
+                onmouseover="update_index_chart(event, 'recent1000')"
+                class="icon-button icon-selected"
+                aria-label="Latest 1,000 Results"
+                style="
+                    background-image: none;
+                    background-color: #e3e3e3;
+                    color: #262626;
+                    padding: 0;
+                    position: relative;
+                    overflow: hidden;
+                "
+            >
+                <svg
+                    viewBox="0 0 100 100"
+                    role="img"
+                    aria-hidden="true"
+                    focusable="false"
+                    style="width: 100%; height: 100%; display: block; pointer-events: none;"
                 >
-                    <span
-                        style="
-                            pointer-events: none;
-                            position: absolute;
-                            inset: 0;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            font-weight: 600;
-                            font-size: 14px;
-                            line-height: 1.05;
-                            text-align: center;
-                            padding: 0 4px;
-                            box-sizing: border-box;
-                        "
-                    >
-                        <span>Latest</span>
-                        <span>1,000</span>
-                        <span>Results</span>
-                    </span>
-                </button>
+                    <text
+                        x="50"
+                        y="34"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
+                    >Latest</text>
+
+                    <text
+                        x="50"
+                        y="56"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;"
+                    >1,000</text>
+
+                    <text
+                        x="50"
+                        y="78"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
+                    >Results</text>
+                </svg>
+            </button>
                 <button onmouseover="update_index_chart(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
                 <button onmouseover="update_index_chart(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
                 <button onmouseover="update_index_chart(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>

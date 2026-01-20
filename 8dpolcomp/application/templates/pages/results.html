@@ -4,7 +4,7 @@
 {% block TITLE %} • Test{% endblock %}
 
 {% block HEAD %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/data.css') }}">
 <meta id="compass-data" data-compass='{{ data["compass_datasets"]|safe }}'>
 <meta id="matches-data" data-matches='{{ data["closest_matches"]|safe }}'>
 <meta id="group-data" data-group='{{ data.get("group_id","") }}'>
@@ -16,9 +16,8 @@
 {% endblock %}
 
 {% block SCRIPTS %}
-<script src="/static/js/results.js" defer></script>
+<script src="{{ url_for('static', filename='js/results.js') }}" defer></script>
 {% endblock %}
-
 
 {% block CONTENT %}
 <div class="components-50-50">
