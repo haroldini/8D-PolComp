@@ -5,12 +5,50 @@ let key_vals = {};
 // Tracks the current selected sample key
 let current_key = "recent1000";
 
-// 1000 Recent state
-let recent1000_loaded = false;
-let recent1000_loading = false;
-let recent1000_mean = null;
-let recent1000_count = 0;
-let recent1000_scores = [];
+// Lazy-loaded data samples (cached after first load)
+const data_samples = {
+    recent1000: {
+        identities: [],
+        color: "#0d56b5",
+        loaded: false,
+        loading: false,
+        mean: null,
+        count: 0,
+        scores: []
+    },
+    left1000: {
+        identities: ["Left-Wing"],
+        color: "#d81b60",
+        loaded: false,
+        loading: false,
+        mean: null,
+        count: 0,
+        scores: []
+    },
+    right1000: {
+        identities: ["Right-Wing"],
+        color: "#1e88e5",
+        loaded: false,
+        loading: false,
+        mean: null,
+        count: 0,
+        scores: []
+    },
+    centrist1000: {
+        identities: ["Centrist"],
+        color: "#9c27b0",
+        loaded: false,
+        loading: false,
+        mean: null,
+        count: 0,
+        scores: []
+    }
+};
+
+function _isDataSample(key) {
+    return !!(key && data_samples[key]);
+}
+
 
 let samples_expanded = false;
 
@@ -162,47 +200,39 @@ function _updateMarkerForQuadrants(quadrantsObj, axes) {
     }
 }
 
-function _setRecentCloudVisible(visible) {
+function _setDataCloudVisible(visible, key) {
     for (const quadrant in quadrants) {
         const chart = quadrants[quadrant].chart;
-        if (!chart) {
-            continue;
-        }
+        if (!chart) continue;
 
         const cloud = _findChartDatasetByLabel(chart, "1000 Recent");
-        if (!cloud) {
-            continue;
-        }
+        if (!cloud) continue;
 
-        if (!visible) {
+        if (!visible || !_isDataSample(key)) {
             cloud.data = [];
             chart.update();
             continue;
         }
 
+        const cfg = data_samples[key];
         const xk = quadrants[quadrant].x;
         const yk = quadrants[quadrant].y;
 
         const vals = [];
-        for (const s of recent1000_scores) {
-            if (!s) {
-                continue;
-            }
-            vals.push({
-                x: s[xk],
-                y: s[yk]
-            });
+        for (const s of cfg.scores) {
+            if (!s) continue;
+            vals.push({ x: s[xk], y: s[yk] });
         }
 
         cloud.data = vals;
 
         if (typeof calc_point_props === "function") {
-            const props = calc_point_props({ count: 500 }, 500);
+            const props = calc_point_props({ count: cfg.count }, cfg.count);
             const transparency = props[0];
             const radius = props[1];
 
             cloud.pointRadius = radius / 2;
-            cloud.pointBackgroundColor = add_transparency("#00ACC1", transparency);
+            cloud.pointBackgroundColor = add_transparency(cfg.color, transparency);
             cloud.pointBorderWidth = radius / 4;
             cloud.pointBorderColor = add_transparency("#262626", transparency);
         }
@@ -211,7 +241,11 @@ function _setRecentCloudVisible(visible) {
     }
 }
 
-function _buildRecent1000Payload() {
+
+function _buildDataSamplePayload(key) {
+    const cfg = _isDataSample(key) ? data_samples[key] : null;
+    const ids = cfg ? cfg.identities : [];
+
     return {
         order: "recent",
         limit: 1000,
@@ -223,89 +257,78 @@ function _buildRecent1000Payload() {
                 "min-age": null,
                 "max-age": null,
                 "any-all": "any",
-                color: "#0d56b5",
+                color: cfg ? cfg.color : "#0d56b5",
                 "group-ids": [],
                 country: [],
                 religion: [],
                 ethnicity: [],
                 education: [],
                 party: [],
-                identities: []
+                identities: Array.isArray(ids) ? ids : []
             }
         ]
     };
 }
 
-function load_recent1000() {
-    if (recent1000_loaded || recent1000_loading) {
-        return;
-    }
 
-    recent1000_loading = true;
+function load_data_sample(key) {
+    if (!_isDataSample(key)) return;
+
+    const cfg = data_samples[key];
+    if (cfg.loaded || cfg.loading) return;
+
+    cfg.loading = true;
 
     const start = Date.now();
-    if (typeof show_spinner === "function") {
-        show_spinner();
-    }
+    if (typeof show_spinner === "function") show_spinner();
 
     $.ajax({
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
             action: "apply_filters",
-            data: _buildRecent1000Payload()
+            data: _buildDataSamplePayload(key)
         }),
         url: "/api/data",
         success: async function (req) {
             try {
                 let parsed = req;
-                if (typeof parsed === "string") {
-                    parsed = JSON.parse(parsed);
-                }
+                if (typeof parsed === "string") parsed = JSON.parse(parsed);
 
                 let cds = parsed && parsed.compass_datasets ? parsed.compass_datasets : [];
-                if (typeof cds === "string") {
-                    cds = JSON.parse(cds);
-                }
-                if (!Array.isArray(cds)) {
-                    cds = [];
-                }
+                if (typeof cds === "string") cds = JSON.parse(cds);
+                if (!Array.isArray(cds)) cds = [];
 
                 cds = cds.filter(d => !(d && d.name === "your_results"));
 
                 const ds = cds.find(d => d && Array.isArray(d.all_scores));
-                if (!ds) {
-                    throw new Error("No dataset returned.");
-                }
+                if (!ds) throw new Error("No dataset returned.");
 
-                recent1000_scores = Array.isArray(ds.all_scores) ? ds.all_scores : [];
-                recent1000_count = Number(ds.count || recent1000_scores.length || 0);
+                cfg.scores = Array.isArray(ds.all_scores) ? ds.all_scores : [];
+                cfg.count = Number(ds.count || cfg.scores.length || 0);
 
-                const mean = (ds.mean_scores && typeof ds.mean_scores === "object")
+                cfg.mean = (ds.mean_scores && typeof ds.mean_scores === "object")
                     ? ds.mean_scores
-                    : _meanFromScores(recent1000_scores);
+                    : _meanFromScores(cfg.scores);
 
-                recent1000_mean = mean;
+                if (!key_vals || typeof key_vals !== "object") key_vals = {};
+                key_vals[key] = cfg.mean;
 
-                if (!key_vals || typeof key_vals !== "object") {
-                    key_vals = {};
-                }
-                key_vals["recent1000"] = recent1000_mean;
+                cfg.loaded = true;
+                cfg.loading = false;
 
-                recent1000_loaded = true;
-                recent1000_loading = false;
-
-                if (current_key === "recent1000") {
-                    _setRecentCloudVisible(true);
-                    _updateMarkerForQuadrants(quadrants, recent1000_mean);
-                    _updateMarkerForQuadrants(quadrants_sample, recent1000_mean);
-                } else {
-                    _setRecentCloudVisible(false);
+                if (current_key === key) {
+                    _setDataCloudVisible(true, key);
+                    _updateMarkerForQuadrants(quadrants, cfg.mean);
+                    _updateMarkerForQuadrants(quadrants_sample, cfg.mean);
                 }
             } catch (e) {
-                recent1000_loaded = false;
-                recent1000_loading = false;
-                _setRecentCloudVisible(false);
+                cfg.loaded = false;
+                cfg.loading = false;
+
+                if (current_key === key) {
+                    _setDataCloudVisible(false, key);
+                }
             }
 
             const minDuration = 500 + Math.random() * 250;
@@ -313,26 +336,26 @@ function load_recent1000() {
             const wait = Math.max(0, minDuration - elapsed);
             await _sleep(wait);
 
-            if (typeof hide_spinner === "function") {
-                hide_spinner();
-            }
+            if (typeof hide_spinner === "function") hide_spinner();
         },
         error: async function () {
-            recent1000_loaded = false;
-            recent1000_loading = false;
-            _setRecentCloudVisible(false);
+            cfg.loaded = false;
+            cfg.loading = false;
+
+            if (current_key === key) {
+                _setDataCloudVisible(false, key);
+            }
 
             const minDuration = 500 + Math.random() * 250;
             const elapsed = Date.now() - start;
             const wait = Math.max(0, minDuration - elapsed);
             await _sleep(wait);
 
-            if (typeof hide_spinner === "function") {
-                hide_spinner();
-            }
+            if (typeof hide_spinner === "function") hide_spinner();
         }
     });
 }
+
 
 function _get_sample_name(key) {
     const btn = document.querySelector(`[data-sample-key="${key}"]`);
@@ -485,22 +508,24 @@ function update_index_chart(event, key) {
 
     current_key = key;
 
-    if (key === "recent1000") {
-        if (!recent1000_loaded) {
-            load_recent1000();
+    if (_isDataSample(key)) {
+        const cfg = data_samples[key];
+
+        if (!cfg.loaded) {
+            load_data_sample(key);
             return;
         }
 
-        _setRecentCloudVisible(true);
+        _setDataCloudVisible(true, key);
 
-        if (recent1000_mean) {
-            _updateMarkerForQuadrants(quadrants, recent1000_mean);
-            _updateMarkerForQuadrants(quadrants_sample, recent1000_mean);
+        if (cfg.mean) {
+            _updateMarkerForQuadrants(quadrants, cfg.mean);
+            _updateMarkerForQuadrants(quadrants_sample, cfg.mean);
         }
         return;
     }
 
-    _setRecentCloudVisible(false);
+    _setDataCloudVisible(false, null);
 
     if (!key_vals[key] || typeof key_vals[key] !== "object") {
         return;
@@ -508,6 +533,18 @@ function update_index_chart(event, key) {
 
     _updateMarkerForQuadrants(quadrants, key_vals[key]);
     _updateMarkerForQuadrants(quadrants_sample, key_vals[key]);
+}
+
+
+function bind_sample_clicks() {
+    const btns = document.querySelectorAll("#samples-list .icon-button[data-sample-key]");
+    for (const btn of btns) {
+        btn.addEventListener("click", function (e) {
+            const key = btn.getAttribute("data-sample-key");
+            if (!key) return;
+            update_index_chart(e, key);
+        });
+    }
 }
 
 
@@ -524,6 +561,8 @@ function create_axis_clones() {
 create_axis_clones();
 
 window.onload = function () {
+    bind_sample_clicks();
+
     current_key = "recent1000";
     _set_selected_sample_name(current_key);
 
@@ -549,6 +588,6 @@ window.onload = function () {
         });
     });
 
-    _setRecentCloudVisible(false);
-    load_recent1000();
+    _setDataCloudVisible(false, null);
+    load_data_sample("recent1000");
 };

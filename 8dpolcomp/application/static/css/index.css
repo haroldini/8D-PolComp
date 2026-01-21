@@ -45,7 +45,7 @@
     align-items: center;
     gap: 0.75rem;
 
-    padding: 0.85rem;
+    padding: 0.5rem;
 
     overflow: hidden;
     transition: max-height 0.8s ease;

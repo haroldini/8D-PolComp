@@ -32,11 +32,7 @@
 <div class="components-50-50">
     <div class="component-border">
         <div class="component">
-            {% with is_results_page=True %}
-                {% include "components/compass.html" %}
-            {% endwith %}
-
-            <div class="component-border component">
+                        <div class="component-border component">
 
                 <p class="text text-subtitle samples-selected-name" id="samples-selected-name">Latest 1,000 Results</p>
 
@@ -91,6 +87,93 @@
                             >Results</text>
                         </svg>
                     </button>
+                    <button
+                        type="button"
+                        data-sample-key="left1000"
+                        onmouseover="update_index_chart(event, 'left1000')"
+                        class="icon-button"
+                        aria-label="Latest 1,000 Left-Wing"
+                        style="
+                            background-image: none;
+                            background-color: #e3e3e3;
+                            color: #262626;
+                            padding: 0;
+                            position: relative;
+                            overflow: hidden;
+                        "
+                    >
+                        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"
+                            style="width:100%;height:100%;display:block;pointer-events:none;">
+                            <rect x="0" y="0" width="100" height="8" fill="#d81b60"></rect>
+
+                            <text x="50" y="38" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;">Latest</text>
+
+                            <text x="50" y="62" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;">1,000</text>
+
+                            <text x="50" y="84" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 18px; font-weight: 600; fill: currentColor; font-family: inherit;">Left</text>
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        data-sample-key="centrist1000"
+                        onmouseover="update_index_chart(event, 'centrist1000')"
+                        class="icon-button"
+                        aria-label="Latest 1,000 Centrist"
+                        style="
+                            background-image: none;
+                            background-color: #e3e3e3;
+                            color: #262626;
+                            padding: 0;
+                            position: relative;
+                            overflow: hidden;
+                        "
+                    >
+                        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"
+                            style="width:100%;height:100%;display:block;pointer-events:none;">
+                            <rect x="0" y="0" width="100" height="8" fill="#9c27b0"></rect>
+
+                            <text x="50" y="38" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;">Latest</text>
+
+                            <text x="50" y="62" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;">1,000</text>
+
+                            <text x="50" y="84" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 18px; font-weight: 600; fill: currentColor; font-family: inherit;">Center</text>
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        data-sample-key="right1000"
+                        onmouseover="update_index_chart(event, 'right1000')"
+                        class="icon-button"
+                        aria-label="Latest 1,000 Right-Wing"
+                        style="
+                            background-image: none;
+                            background-color: #e3e3e3;
+                            color: #262626;
+                            padding: 0;
+                            position: relative;
+                            overflow: hidden;
+                        "
+                    >
+                        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"
+                            style="width:100%;height:100%;display:block;pointer-events:none;">
+                            <rect x="0" y="0" width="100" height="8" fill="#1e88e5"></rect>
+
+                            <text x="50" y="38" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;">Latest</text>
+
+                            <text x="50" y="62" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;">1,000</text>
+
+                            <text x="50" y="84" text-anchor="middle" dominant-baseline="middle"
+                                style="font-size: 18px; font-weight: 600; fill: currentColor; font-family: inherit;">Right</text>
+                        </svg>
+                    </button>
 
                     <span class="samples-label">Current</span>
 
@@ -127,7 +210,9 @@
                 </span>
 
             </div>
-
+            {% with is_results_page=True %}
+                {% include "components/compass.html" %}
+            {% endwith %}
         </div>
     </div>
 </div>
