@@ -58,5 +58,195 @@
         "society": -0.35,
         "state": 0.62,
         "technology": -0.35
+    },
+    "obama": {
+        "diplomacy": 0.51,
+        "economics": 0.04,
+        "government": 0.43,
+        "politics": 0.62,
+        "religion": 0.57,
+        "society": 0.48,
+        "state": -0.35,
+        "technology": -0.07
+    },
+    "trump": {
+        "diplomacy": -0.73,
+        "economics": 0.56,
+        "government": -0.34,
+        "politics": 0.12,
+        "religion": -0.1,
+        "society": -0.52,
+        "state": 0.36,
+        "technology": 0.25
+    },
+    "jinping": {
+        "diplomacy": -0.5,
+        "economics": -0.12,
+        "government": -0.7,
+        "politics": 0.46,
+        "religion": 0.97,
+        "society": -0.25,
+        "state": 0.52,
+        "technology": -0.34
+    },
+    "putin": {
+        "diplomacy": -0.79,
+        "economics": 0.23,
+        "government": -0.76,
+        "politics": 0.48,
+        "religion": -0.23,
+        "society": -0.65,
+        "state": 0.6,
+        "technology": -0.09
+    },
+    "trotsky": {
+        "diplomacy": 0.6,
+        "economics": -0.64,
+        "government": 0.14,
+        "politics": -0.98,
+        "religion": 1.0,
+        "society": 0.43,
+        "state": -0.27,
+        "technology": -0.44
+    },
+    "khomeini": {
+        "diplomacy": -0.7,
+        "economics": -0.26,
+        "government": -0.68,
+        "politics": -0.21,
+        "religion": -0.93,
+        "society": -0.76,
+        "state": 0.7,
+        "technology": 0.29
+    },
+    "sanders": {
+        "diplomacy": 0.73,
+        "economics": -0.68,
+        "government": 0.76,
+        "politics": 0.06,
+        "religion": 0.53,
+        "society": 0.66,
+        "state": -0.59,
+        "technology": -0.09
+    },
+    "milei": {
+        "diplomacy": 0.25,
+        "economics": 0.6,
+        "government": 0.42,
+        "politics": -0.38,
+        "religion": 0.4,
+        "society": 0.4,
+        "state": -0.58,
+        "technology": -0.11
+    },
+    "thunberg": {
+        "diplomacy": 0.86,
+        "economics": -0.56,
+        "government": 0.58,
+        "politics": -0.27,
+        "religion": 0.53,
+        "society": 0.64,
+        "state": -0.49,
+        "technology": -0.07
+    },
+    "pinochet": {
+        "diplomacy": -0.81,
+        "economics": 0.59,
+        "government": -0.82,
+        "politics": 0.6,
+        "religion": -0.23,
+        "society": -0.67,
+        "state": 0.59,
+        "technology": -0.03
+    },
+    "lula": {
+        "diplomacy": 0.58,
+        "economics": -0.55,
+        "government": 0.76,
+        "politics": 0.06,
+        "religion": 0.37,
+        "society": 0.58,
+        "state": -0.52,
+        "technology": -0.09
+    },
+    "macron": {
+        "diplomacy": 0.54,
+        "economics": 0.05,
+        "government": 0.39,
+        "politics": 0.65,
+        "religion": 0.57,
+        "society": 0.43,
+        "state": -0.28,
+        "technology": -0.03
+    },
+    "kuanyew": {
+        "diplomacy": -0.33,
+        "economics": 0.2,
+        "government": -0.54,
+        "politics": 0.48,
+        "religion": 0.97,
+        "society": -0.18,
+        "state": 0.45,
+        "technology": -0.26
+    },
+    "mussolini": {
+        "diplomacy": -0.98,
+        "economics": 0.13,
+        "government": -0.72,
+        "politics": -0.71,
+        "religion": -0.03,
+        "society": -0.61,
+        "state": 0.53,
+        "technology": -0.23
+    },
+    "francis": {
+        "diplomacy": 0.73,
+        "economics": -0.61,
+        "government": 0.72,
+        "politics": 0.1,
+        "religion": -0.2,
+        "society": 0.36,
+        "state": -0.39,
+        "technology": -0.01
+    },
+    "king": {
+        "diplomacy": 0.73,
+        "economics": -0.57,
+        "government": 0.74,
+        "politics": 0.04,
+        "religion": -0.2,
+        "society": 0.47,
+        "state": -0.46,
+        "technology": -0.07
+    },
+    "netanyahu": {
+        "diplomacy": -0.8,
+        "economics": 0.46,
+        "government": -0.28,
+        "politics": 0.12,
+        "religion": -0.03,
+        "society": -0.5,
+        "state": 0.35,
+        "technology": 0.28
+    },
+    "vonderleyen": {
+        "diplomacy": 0.7,
+        "economics": -0.16,
+        "government": 0.46,
+        "politics": 0.56,
+        "religion": 0.57,
+        "society": 0.56,
+        "state": -0.4,
+        "technology": -0.04
+    },
+    "musk": {
+        "diplomacy": 0.15,
+        "economics": 0.7,
+        "government": 0.43,
+        "politics": -0.38,
+        "religion": 0.4,
+        "society": 0.23,
+        "state": -0.46,
+        "technology": -0.41
     }
 }

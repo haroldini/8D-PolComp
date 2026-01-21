@@ -31,66 +31,103 @@
 
 <div class="components-50-50">
     <div class="component-border">
-        <div class="components-80-20">
-            <div class="component">
-                {% with is_results_page=True %}
-                    {% include "components/compass.html" %}
-                {% endwith %}
-            </div>
-            <div class="component-border component icon-container">
-            <button
-                type="button"
-                onmouseover="update_index_chart(event, 'recent1000')"
-                class="icon-button icon-selected"
-                aria-label="Latest 1,000 Results"
-                style="
-                    background-image: none;
-                    background-color: #e3e3e3;
-                    color: #262626;
-                    padding: 0;
-                    position: relative;
-                    overflow: hidden;
-                "
-            >
-                <svg
-                    viewBox="0 0 100 100"
-                    role="img"
-                    aria-hidden="true"
-                    focusable="false"
-                    style="width: 100%; height: 100%; display: block; pointer-events: none;"
-                >
-                    <text
-                        x="50"
-                        y="34"
-                        text-anchor="middle"
-                        dominant-baseline="middle"
-                        style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
-                    >Latest</text>
+        <div class="component">
+            {% with is_results_page=True %}
+                {% include "components/compass.html" %}
+            {% endwith %}
 
-                    <text
-                        x="50"
-                        y="56"
-                        text-anchor="middle"
-                        dominant-baseline="middle"
-                        style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;"
-                    >1,000</text>
+            <div class="component-border component">
 
-                    <text
-                        x="50"
-                        y="78"
-                        text-anchor="middle"
-                        dominant-baseline="middle"
-                        style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
-                    >Results</text>
-                </svg>
-            </button>
-                <button onmouseover="update_index_chart(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
-                <button onmouseover="update_index_chart(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
-                <button onmouseover="update_index_chart(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>
-                <button onmouseover="update_index_chart(event, 'rand')" class="icon-button" style="background-image: url('/static/images/samples/icons/rand.png');"></button>
-                <button onmouseover="update_index_chart(event, 'reagan')" class="icon-button" style="background-image: url('/static/images/samples/icons/reagan.png');"></button>
-                <button onmouseover="update_index_chart(event, 'stalin')" class="icon-button" style="background-image: url('/static/images/samples/icons/stalin.png');"></button>
+                <p class="text text-subtitle samples-selected-name" id="samples-selected-name">Latest 1,000 Results</p>
+
+                <div class="samples-list samples-collapsed" id="samples-list">
+
+                    <span class="samples-label">Data</span>
+
+                    <button
+                        type="button"
+                        data-sample-key="recent1000"
+                        onmouseover="update_index_chart(event, 'recent1000')"
+                        class="icon-button icon-selected"
+                        aria-label="Latest 1,000 Results"
+                        style="
+                            background-image: none;
+                            background-color: #e3e3e3;
+                            color: #262626;
+                            padding: 0;
+                            position: relative;
+                            overflow: hidden;
+                        "
+                    >
+                        <svg
+                            viewBox="0 0 100 100"
+                            role="img"
+                            aria-hidden="true"
+                            focusable="false"
+                            style="width: 100%; height: 100%; display: block; pointer-events: none;"
+                        >
+                            <text
+                                x="50"
+                                y="34"
+                                text-anchor="middle"
+                                dominant-baseline="middle"
+                                style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
+                            >Latest</text>
+
+                            <text
+                                x="50"
+                                y="56"
+                                text-anchor="middle"
+                                dominant-baseline="middle"
+                                style="font-size: 22px; font-weight: 700; fill: currentColor; font-family: inherit;"
+                            >1,000</text>
+
+                            <text
+                                x="50"
+                                y="78"
+                                text-anchor="middle"
+                                dominant-baseline="middle"
+                                style="font-size: 20px; font-weight: 600; fill: currentColor; font-family: inherit;"
+                            >Results</text>
+                        </svg>
+                    </button>
+
+                    <span class="samples-label">Current</span>
+
+                    <button data-sample-key="trump" aria-label="Donald Trump" onmouseover="update_index_chart(event, 'trump')" class="icon-button" style="background-image: url('/static/images/samples/icons/trump.png');"></button>
+                    <button data-sample-key="obama" aria-label="Barack Obama" onmouseover="update_index_chart(event, 'obama')" class="icon-button" style="background-image: url('/static/images/samples/icons/obama.png');"></button>
+                    <button data-sample-key="putin" aria-label="Vladimir Putin" onmouseover="update_index_chart(event, 'putin')" class="icon-button" style="background-image: url('/static/images/samples/icons/putin.png');"></button>
+                    <button data-sample-key="jinping" aria-label="Xi Jinping" onmouseover="update_index_chart(event, 'jinping')" class="icon-button" style="background-image: url('/static/images/samples/icons/jinping.png');"></button>
+                    
+                    <button data-sample-key="sanders" aria-label="Bernie Sanders" onmouseover="update_index_chart(event, 'sanders')" class="icon-button" style="background-image: url('/static/images/samples/icons/sanders.png');"></button>
+                    <button data-sample-key="thunberg" aria-label="Greta Thunberg" onmouseover="update_index_chart(event, 'thunberg')" class="icon-button" style="background-image: url('/static/images/samples/icons/thunberg.png');"></button>
+                    <button data-sample-key="musk" aria-label="Elon Musk" onmouseover="update_index_chart(event, 'musk')" class="icon-button" style="background-image: url('/static/images/samples/icons/musk.png');"></button>
+
+                    <button data-sample-key="chomsky" aria-label="Noam Chomsky" onmouseover="update_index_chart(event, 'chomsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/chomsky.png');"></button>
+
+                    <span class="samples-label">Historical</span>
+
+                    <button data-sample-key="gandhi" aria-label="Mahatma Gandhi" onmouseover="update_index_chart(event, 'gandhi')" class="icon-button" style="background-image: url('/static/images/samples/icons/gandhi.png');"></button>
+                    <button data-sample-key="francis" aria-label="Pope Francis" onmouseover="update_index_chart(event, 'francis')" class="icon-button" style="background-image: url('/static/images/samples/icons/francis.png');"></button>
+
+                    <button data-sample-key="hitler" aria-label="Adolf Hitler" onmouseover="update_index_chart(event, 'hitler')" class="icon-button" style="background-image: url('/static/images/samples/icons/hitler.png');"></button>
+                    <button data-sample-key="stalin" aria-label="Joseph Stalin" onmouseover="update_index_chart(event, 'stalin')" class="icon-button" style="background-image: url('/static/images/samples/icons/stalin.png');"></button>
+                    <button data-sample-key="trotsky" aria-label="Leon Trotsky" onmouseover="update_index_chart(event, 'trotsky')" class="icon-button" style="background-image: url('/static/images/samples/icons/trotsky.png');"></button>
+                    <button data-sample-key="khomeini" aria-label="Ruhollah Khomeini" onmouseover="update_index_chart(event, 'khomeini')" class="icon-button" style="background-image: url('/static/images/samples/icons/khomeini.png');"></button>
+
+                    <button data-sample-key="reagan" aria-label="Ronald Reagan" onmouseover="update_index_chart(event, 'reagan')" class="icon-button" style="background-image: url('/static/images/samples/icons/reagan.png');"></button>
+                    <button data-sample-key="rand" aria-label="Ayn Rand" onmouseover="update_index_chart(event, 'rand')" class="icon-button" style="background-image: url('/static/images/samples/icons/rand.png');"></button>
+                    <button data-sample-key="pinochet" aria-label="Augusto Pinochet" onmouseover="update_index_chart(event, 'pinochet')" class="icon-button" style="background-image: url('/static/images/samples/icons/pinochet.png');"></button>
+                    <button data-sample-key="kuanyew" aria-label="Lee Kuan Yew" onmouseover="update_index_chart(event, 'kuanyew')" class="icon-button" style="background-image: url('/static/images/samples/icons/kuanyew.png');"></button>
+
+                </div>
+
+                <span class="show-more fade-border" id="samples-link">
+                    <button class="inline-link large-link link" onclick="toggle_samples_more()">Show more...</button>
+                </span>
+
             </div>
+
         </div>
     </div>
 </div>

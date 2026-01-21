@@ -12,6 +12,8 @@ let recent1000_mean = null;
 let recent1000_count = 0;
 let recent1000_scores = [];
 
+let samples_expanded = false;
+
 // Axis values fallback
 function _zeroAxes() {
     return {
@@ -332,6 +334,22 @@ function load_recent1000() {
     });
 }
 
+function _get_sample_name(key) {
+    const btn = document.querySelector(`[data-sample-key="${key}"]`);
+    if (!btn) {
+        return key;
+    }
+    return btn.getAttribute("aria-label") || key;
+}
+
+function _set_selected_sample_name(key) {
+    const el = document.getElementById("samples-selected-name");
+    if (!el) {
+        return;
+    }
+    el.innerText = _get_sample_name(key);
+}
+
 function _select_icon(event) {
     const icons = document.getElementsByClassName("icon-button");
     for (const icon of icons) {
@@ -343,9 +361,120 @@ function _select_icon(event) {
     }
 }
 
+function _update_samples_collapsed_height() {
+    const list = document.getElementById("samples-list");
+    if (!list || !list.classList.contains("samples-collapsed")) {
+        return;
+    }
+
+    const icons = Array.from(list.querySelectorAll(".icon-button"));
+    if (icons.length === 0) {
+        return;
+    }
+
+    const listRect = list.getBoundingClientRect();
+
+    const pos = [];
+    let minTop = Infinity;
+
+    for (const icon of icons) {
+        const r = icon.getBoundingClientRect();
+        const topRel = r.top - listRect.top;
+        const bottomRel = r.bottom - listRect.top;
+        pos.push({ topRel, bottomRel });
+        if (topRel < minTop) {
+            minTop = topRel;
+        }
+    }
+
+    if (!Number.isFinite(minTop)) {
+        return;
+    }
+
+    const tol = 1;
+
+    let maxBottomRel = 0;
+    for (const p of pos) {
+        if (Math.abs(p.topRel - minTop) <= tol) {
+            maxBottomRel = Math.max(maxBottomRel, p.bottomRel);
+        }
+    }
+
+    let secondRowTopRel = Infinity;
+    for (const p of pos) {
+        if (p.topRel > minTop + tol) {
+            secondRowTopRel = Math.min(secondRowTopRel, p.topRel);
+        }
+    }
+
+    let maxH = list.scrollHeight;
+
+    if (Number.isFinite(secondRowTopRel)) {
+        const cs = getComputedStyle(list);
+        const padBottom = parseFloat(cs.paddingBottom) || 0;
+
+        const available = Math.max(0, secondRowTopRel - maxBottomRel);
+        const extra = Math.min(padBottom, Math.max(0, available - 1));
+
+        maxH = maxBottomRel + extra;
+    }
+
+    list.style.maxHeight = maxH + "px";
+}
+
+function toggle_samples_more() {
+    const list = document.getElementById("samples-list");
+    const link = document.getElementById("samples-link");
+    if (!list || !link) {
+        return;
+    }
+
+    const btn = link.firstElementChild;
+    if (!btn) {
+        return;
+    }
+
+    if (!samples_expanded) {
+        samples_expanded = true;
+
+        list.classList.remove("samples-labels-shown");
+        list.classList.remove("samples-collapsed");
+        list.classList.add("samples-labels-shown");
+
+        const onEnd = function (e) {
+            if (e && e.propertyName !== "max-height") {
+                return;
+            }
+            list.removeEventListener("transitionend", onEnd);
+        };
+
+        list.addEventListener("transitionend", onEnd);
+
+        requestAnimationFrame(() => {
+            list.style.maxHeight = list.scrollHeight + "px";
+        });
+
+        btn.innerText = "Show less...";
+        return;
+    }
+
+    samples_expanded = false;
+
+    list.classList.remove("samples-labels-shown");
+    list.classList.add("samples-collapsed");
+
+    requestAnimationFrame(() => {
+        _update_samples_collapsed_height();
+    });
+
+    btn.innerText = "Show more...";
+}
+
+
 // Updates "Sample Compasses" and "The Axes" quadrants when new sample enabled
 function update_index_chart(event, key) {
     _select_icon(event);
+    _set_selected_sample_name(key);
 
     current_key = key;
 
@@ -389,6 +518,30 @@ create_axis_clones();
 
 window.onload = function () {
     current_key = "recent1000";
+    _set_selected_sample_name(current_key);
+
+    requestAnimationFrame(() => {
+        _update_samples_collapsed_height();
+    });
+
+    window.addEventListener("resize", function () {
+        const list = document.getElementById("samples-list");
+        if (!list) {
+            return;
+        }
+
+        if (samples_expanded) {
+            requestAnimationFrame(() => {
+                list.style.maxHeight = list.scrollHeight + "px";
+            });
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            _update_samples_collapsed_height();
+        });
+    });
+
     _setRecentCloudVisible(false);
     load_recent1000();
 };

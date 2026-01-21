@@ -6,7 +6,9 @@
     box-sizing: border-box;
     border-radius: 0.5rem;
     display: block;
-    height: 1fr;
+
+    width: clamp(4rem, 7vw, 5rem);
+    height: clamp(4rem, 7vw, 5rem);
     aspect-ratio: 1;
 
     transition: outline-offset 0.2s ease-out;
@@ -14,15 +16,88 @@
     background-repeat: no-repeat;
     background-position: center center;
 }
+
 .icon-button:focus {
     outline: none;
 }
+
 .icon-selected {
-    outline: var(--blue) solid 4px !important;
+    outline: var(--blue) solid 0.25rem !important;
     outline-offset: 0.25rem !important;
 }
+
 .sample-container {
     justify-content: center;
+}
+
+.samples-selected-name {
+    text-align: center;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.samples-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding: 0.85rem;
+
+    overflow: hidden;
+    transition: max-height 0.8s ease;
+}
+
+.samples-collapsed {
+    padding-bottom: 0.6rem;
+}
+
+.samples-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    width: clamp(4rem, 7vw, 5rem);
+    height: clamp(4rem, 7vw, 5rem);
+    aspect-ratio: 1;
+
+    border-radius: 0.5rem;
+
+    background: #93daf8;
+    color: #262626;
+
+    font-weight: 700;
+    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+    line-height: 1.05;
+
+    padding: 0;
+    text-align: center;
+    user-select: none;
+
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.samples-label::after {
+    content: "\f061";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    display: block;
+    margin-top: 0.2rem;
+    line-height: 1;
+}
+
+.samples-labels-shown .samples-label {
+    opacity: 0.95;
+}
+
+.samples-collapsed .samples-label {
+    display: none;
 }
 
 .icon-container {
@@ -44,7 +119,6 @@
     display: flex;
     flex: 1;
 }
-
 
 #upper_left_sample {
     border-top-left-radius: 5% ;
