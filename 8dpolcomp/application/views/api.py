@@ -439,39 +439,98 @@ def to_results():
             logger.warning("[/api/to_results] ValidationError: %s", str(e))
             return {"status": "Invalid request. Please refresh and try again."}, 400
 
+        # ----------------
         # Validate captcha
-        try:
-            resp = requests.post(
-                url=current_app.config["HCAPTCHA_VERIFY_URL"],
-                data={
-                    "secret": current_app.config["HCAPTCHA_SECRET_KEY"],
-                    "response": body.captcha,
-                    "remoteip": request.remote_addr
-                },
-                timeout=3
-            )
-            verify_response = resp.json()
-        except (requests.RequestException, ValueError):
-            logger.warning("[/api/to_results] Captcha verification unavailable")
+        # ----------------
+        verify_url = current_app.config.get("HCAPTCHA_VERIFY_URL")
+        secret = current_app.config.get("HCAPTCHA_SECRET_KEY")
+
+        if not verify_url or not secret:
+            logger.error("[/api/to_results] hCaptcha config missing (url/secret)")
+            return {"status": "Captcha verification unavailable. Please try again."}, 503
+
+        data = {
+            "secret": secret,
+            "response": body.captcha,
+        }
+
+        # remoteip is optional; include only if present
+        if request.remote_addr:
+            data["remoteip"] = request.remote_addr
+
+        verify_response = None
+
+        # 1 retry to squash transient network hiccups
+        for attempt in (1, 2):
+            try:
+                resp = requests.post(
+                    url=verify_url,
+                    data=data,
+                    timeout=8,
+                )
+
+                if resp.status_code != 200:
+                    logger.warning(
+                        "[/api/to_results] hCaptcha verify non-200 (attempt %s): status=%s ct=%r body=%r",
+                        attempt,
+                        resp.status_code,
+                        resp.headers.get("Content-Type"),
+                        (resp.text or "")[:200],
+                    )
+                    raise requests.HTTPError(f"Non-200 from hCaptcha: {resp.status_code}")
+
+                try:
+                    verify_response = resp.json()
+                except ValueError as e:
+                    logger.warning(
+                        "[/api/to_results] hCaptcha verify invalid JSON (attempt %s): ct=%r body=%r err=%r",
+                        attempt,
+                        resp.headers.get("Content-Type"),
+                        (resp.text or "")[:200],
+                        e,
+                    )
+                    raise
+
+                break  # success path
+
+            except (requests.RequestException, ValueError) as e:
+                if attempt == 1:
+                    continue  # retry once
+                logger.warning(
+                    "[/api/to_results] Captcha verification unavailable after retry: %r",
+                    e,
+                    exc_info=True,
+                )
+                return {"status": "Captcha verification unavailable. Please try again."}, 503
+
+        if not isinstance(verify_response, dict):
+            logger.warning("[/api/to_results] hCaptcha verify response missing/invalid: %r", verify_response)
             return {"status": "Captcha verification unavailable. Please try again."}, 503
 
         if not verify_response.get("success"):
-            logger.info("[/api/to_results] Captcha verification failed")
+            logger.info(
+                "[/api/to_results] Captcha verification failed: error_codes=%r hostname=%r",
+                verify_response.get("error-codes"),
+                verify_response.get("hostname"),
+            )
             return {"status": "Captcha verification failed. Please try again."}, 401
 
+        # ---------------------------
         # Validate session answers/results
+        # ---------------------------
         session_payload, err = _validate_session_answers_and_scores()
         if err:
             logger.warning("[/api/to_results] %s", err)
             return {"status": err}, 400
 
-        # Validate demographics payload against file
+        # ---------------------------
+        # Validate demographics + how_found
+        # ---------------------------
         demographics, dem_err = _validate_demographics_against_file(body.demographics or {})
         if dem_err:
             logger.warning("[/api/to_results] Demographics validation failed: %s", dem_err)
             return {"status": f"Result Validation Failed: {dem_err}. Refresh and try again."}, 401
 
-        # Validate how_found against file
         how_found, hf_err = _validate_how_found_against_file(body.how_found)
         if hf_err:
             logger.warning("[/api/to_results] how_found validation failed: %s", hf_err)
@@ -503,9 +562,9 @@ def to_results():
                     "demographics": demographics,
                     "scores": session_payload["scores"],
                     "answers": session_payload["answers"],
-                    "how_found": how_found
+                    "how_found": how_found,
                 }
-                session["results_id"] = Results.add_result(result_row, return_id=True) - 1  # -1 for 0-start indexed db IDs
+                session["results_id"] = Results.add_result(result_row, return_id=True) - 1
         except Exception:
             logger.exception("[/api/to_results] Failed to store result")
             return {"status": "Server error. Please refresh and try again."}, 500
