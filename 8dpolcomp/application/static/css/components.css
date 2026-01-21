@@ -1,20 +1,19 @@
+
 .component-border {
-    margin: 0.5rem;
+    margin: var(--spacing-3);
     padding: 1rem;
-    border: 0px solid var(--dark-grey);
-    border-radius: 0.5rem;
-    background: var(--dark-black);
-    /* border-image: linear-gradient(45deg, var(--blue), var(--green)); */
+    border-radius: var(--radius-3);
+    background: var(--bg-surface-1);
     border-image-slice: 1;
-    width: calc(100% - 1rem);
+    width: calc(100% - (2 * var(--spacing-3)));
 }
 .component-border .component-border {
-    border-radius: 0.5rem;
-    background: var(--black);
+    border-radius: var(--radius-2);
+    background: var(--bg-surface-2);
 }
 .component-border .component-border .component-border {
-    border-radius: 0.5rem;
-    background: var(--dark-black);
+    border-radius: var(--radius-1);
+    background: var(--bg-surface-3);
 }
 .component {
     display: flex;

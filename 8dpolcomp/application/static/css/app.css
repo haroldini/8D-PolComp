@@ -1,20 +1,55 @@
+
 :root{
-    --white: #f3f3f3;
-    --black: #1d1d1d;
-    --dark-black: #262626;
-    --grey: #9e9e9e;
-    --dark-grey: #555555;
-    --green: #c9e5bd;
+    --green: #eef9e9;
     --blue: #93daf8;
+    --black: #1d1d1d;
+    --white: #f3f3f3;
+    --grey: #afafaf;
+    --dark-grey: #4d4d4d;
+
+    --focus-color: #d81b60;
+    --color-danger: salmon;
+
+    --bg-app: #1d1d1d;
+    --bg-surface-1: #262626;
+    --bg-surface-2: #202020;
+    --bg-surface-3: #292929;
+
+    --text-primary: #f3f3f3;
+    --text-secondary: #9e9e9e;
+
+    --radius-1: 0.5rem;
+    --radius-2: 1rem;
+    --radius-3: 1.5rem;
+    --radius-full: 9999px;
+
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+
+    --font-size: 16px;
+    --page-margin: 15%;
+    --page-max-width: 1100px;
 }
 * {
     box-sizing: border-box;
 }
 *:focus {
     box-shadow: none !important;
+    outline: none;
 }
+*:focus-visible {
+    box-shadow: none !important;
+    outline: var(--focus-color) solid 2px;
+    outline-offset: 2px;
+}
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
 html {
-    font-size: 16px;
+    font-size: var(--font-size);
     scroll-behavior: smooth;
     overflow-x: hidden;
 }
@@ -23,33 +58,11 @@ body {
     font-family: "Montserrat";
     font-weight: 400;
     font-size: 1rem;
-    background: var(--black);
+    background: var(--bg-app);
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-}
-
-::-webkit-scrollbar {
-    width: 18px;
-    height: 18px;
-    margin: 0.5rem;
-}
-::-webkit-scrollbar-track {
-    background-color: #202020;
-}
-::-webkit-scrollbar-corner {
-    background-color: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(0deg, var(--green) 50%, var(--blue) 50%);
-    border: solid 2px var(--black);
-    border-radius: 9px;
-}
-::-webkit-scrollbar-thumb:horizontal{
-    background-image: linear-gradient(90deg, var(--green) 50%, var(--blue) 50%);
-    border: solid 2px var(--black);
-    border-radius: 9px;
 }
 
 form {
@@ -57,8 +70,8 @@ form {
 }
 
 .header {
-    background: var(--black);
-    color: var(--black);
+    background: var(--bg-app);
+    color: var(--bg-app);
     background-image: linear-gradient(135deg, var(--green), var(--blue));
     font-weight: 600;
     width: 100%;
@@ -69,100 +82,30 @@ form {
     bottom: 0;
     width: 100%;
     min-height: 12rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-top: 0.25rem solid transparent;
+    padding-top: var(--spacing-2);
+    padding-bottom: var(--spacing-2);
+    border-top: 3px solid transparent;
     border-image: linear-gradient(to right, var(--blue), var(--green)) 1;
-    background: var(--dark-black);
-    color: var(--white);
+    background: var(--bg-surface-1);
+    color: var(--text-primary);
 }
 
 .page {
-    background: var(--black);
-    color: var(--white);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
     min-height: 90vh;
     min-height: 90svh;
-}
-/* very large screens */
-@media only screen and (min-width: 2001px) {
-    html {
-        font-size: 18px;
-    }
-    .page {
-        margin-left: 27.5%;
-        margin-right: 27.5%;
-    }
-}
-/* large screens */
-@media only screen and (max-width: 2000px) {
-    html {
-        font-size: 17px;
-    }
-    .page {
-        margin-left: 22.5%;
-        margin-right: 22.5%;
-    }
-}
-/* small screens */
-@media only screen and (max-width: 1600px) {
-    html {
-        font-size: 16px;
-    }
-    .page {
-        margin-left: 15%;
-        margin-right: 15%;
-    }
-}
-/* large tablet */
-@media only screen and (max-width: 1200px) {
-    html {
-        font-size: 16px;
-    }
-    .page {
-        margin-left: 7.5%;
-        margin-right: 7.5%;
-    }
-}
-/* small tablet */
-@media only screen and (max-width: 900px) {
-    html {
-        font-size: 16px;
-    }
-    .page {
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-}
-/* mobile */
-@media only screen and (max-width: 600px) {
-    html {
-        font-size: 15px;
-    }
-    .page {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-    }
-}
-/* small mobile */
-@media only screen and (max-width: 350px) {
-    html {
-        font-size: 14px;
-    }
-    .page {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-    }
+    margin-left: max(var(--page-margin), calc((100vw - var(--page-max-width)) / 2));
+    margin-right: max(var(--page-margin), calc((100vw - var(--page-max-width)) / 2));
 }
 
 .header-text {
-    color: var(--black);
+    color: var(--bg-app);
     font-weight: 600;
-    height: 8vh;
-    min-height: 4rem;
-    max-height: 6rem;
-    font-size: 2.25rem;
+    height: max(4rem, 8vh);
+    font-size: 2rem;
     padding: 0;
     margin: 0;
 }
@@ -194,7 +137,7 @@ form {
 }
 
 .nav-bar {
-    color: var(--black);
+    color: var(--bg-app);
     height: 2.5rem;
     width: 100%;
     display: flex;
@@ -204,11 +147,11 @@ form {
     height: 100%;
     display: flex;
     width: 10rem;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out; 
+    transition: color 0.15s ease, background-color 0.15s ease; 
 }
 .nav-item:hover {
-    background-color: var(--black);
-    color: var(--white);
+    background-color: var(--bg-app);
+    color: var(--text-primary);
 }
 
 .nav-link {
@@ -218,8 +161,8 @@ form {
 }
 
 .active-page { 
-    background-color: var(--black) !important;
-    color: var(--white) !important;
+    background-color: var(--bg-app) !important;
+    color: var(--text-primary) !important;
 }
 
 .footer-logo {
@@ -233,5 +176,123 @@ form {
     transform: rotate(0deg) scale(65%);
 }
 .footer-text {
-    color: var(--grey)
+    color: var(--text-secondary)
+}
+
+
+/* -----------------------------------------------------------
+   Text selection highlighting
+   ----------------------------------------------------------- */
+
+::selection {
+    background: var(--blue);
+    color: var(--black);
+}
+
+::-moz-selection {
+    background: var(--blue);
+    color: var(--black);
+}
+
+* {
+    -webkit-tap-highlight-color: rgba(147, 218, 248, 0.25);
+}
+
+
+/* -----------------------------------------------------------
+   Global scrollbars (Chrome / Edge / Safari + Firefox)
+   ----------------------------------------------------------- */
+
+/* Firefox */
+* {
+    scrollbar-color: var(--blue) var(--bg-surface-1); /* thumb track */
+}
+
+/* Chromium/WebKit */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--bg-surface-1);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--blue);
+    border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--blue);
+}
+
+*::-webkit-scrollbar-corner {
+    background: var(--bg-surface-1);
+}
+
+
+/* -----------------------------------------------------------
+   Responsive scaling
+   ----------------------------------------------------------- */
+
+
+/* Phones */
+@media (max-width: 600px) {
+    :root {
+        --font-size: 13px;
+        --page-margin: 0.4rem;
+
+        --radius-1: 0.3rem;
+        --radius-2: 0.6rem;
+        --radius-3: 0.9rem;
+        --radius-full: 9999px;
+
+        --spacing-1: 0.2rem;
+        --spacing-2: 0.4rem;
+        --spacing-3: 0.6rem;
+        --spacing-4: 0.8rem;
+    }
+}
+
+/* Small tablets */
+@media (min-width: 601px) and (max-width: 900px) {
+    :root {
+        --font-size: 14px;
+        --page-margin: 0.5rem;
+        
+        --radius-1: 0.3rem;
+        --radius-2: 0.6rem;
+        --radius-3: 0.9rem;
+        --radius-full: 9999px;
+
+        --spacing-1: 0.25rem;
+        --spacing-2: 0.5rem;
+        --spacing-3: 0.75rem;
+        --spacing-4: 0.1rem;
+    }
+}
+
+/* Tablets / small laptops */
+@media (min-width: 901px) and (max-width: 1199px) {
+    :root {
+        --font-size: 16px;
+        --page-margin: 1rem;
+    }
+}
+
+/* Desktops: keep % gutters BUT cap max width + keep centered */
+@media (min-width: 1200px) {
+    :root {
+        --font-size: 16px;
+        --page-margin: 15%;
+    }
+}
+
+/* Very large monitors */
+@media (min-width: 1800px) {
+    :root {
+        --font-size: 16px;
+        --page-margin: 25%;
+    }
 }

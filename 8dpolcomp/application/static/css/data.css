@@ -1,3 +1,4 @@
+
 .radio-selector {
     all: unset;
     box-sizing: border-box;
@@ -10,7 +11,7 @@
     background: var(--grey);
     color: var(--black);
     font-weight: 600;
-    transition: opacity 0.2s ease-in-out background-color 0.2s ease-in-out;
+    transition: opacity 0.1s ease background-color 0.1s ease;
 }
 .radio-selector:focus {
     text-decoration: solid underline 4px;
@@ -61,12 +62,12 @@
     border: none;
     outline: none;
     min-height: 100%;
-    border-radius: 0.25rem;
+    border-radius: var(--radius-1);
     margin: 0;
     padding: 0;
     font-weight: 600;
     color: var(--black);
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
+    transition: color 0.1s ease, background-color 0.1s ease, opacity 0.1s ease, outline-offset 0.1s ease, outline 0.1s ease; 
 }
 .color-box {
     -webkit-appearance: none;
@@ -81,14 +82,14 @@
     padding: 0;
 
     margin: 0;
-    margin-left: 1rem;
+    margin-left: var(--spacing-4);
 
-    border-radius: 1rem;
+    border-radius: var(--radius-2);
     background: transparent;
 
     overflow: hidden;
 
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.1s ease;
 }
 
 /* Chrome / Safari / Edge */
@@ -120,9 +121,9 @@
     padding: 0;
     margin: auto;
     display: flex;
-    border-radius: 0.5rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    border-radius: var(--radius-2);
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
     text-align: center;
 }
 .age-box {
@@ -140,7 +141,7 @@
     background-color: var(--green);
     font-weight: 600;
     color: var(--black);
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.1s ease;
 }
 .age-box:hover, .age-box:focus {
     background: var(--blue);
@@ -150,14 +151,14 @@
     color: var(--dark-grey);
 }
 .a-l {
-    border-top-left-radius: 0.5rem !important;
-    border-bottom-left-radius: 0.5rem !important;
+    border-top-left-radius: var(--radius-1) !important;
+    border-bottom-left-radius: var(--radius-1) !important;
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
 .a-r {
-    border-top-right-radius: 0.5rem !important;
-    border-bottom-right-radius: 0.5rem !important;
+    border-top-right-radius: var(--radius-1) !important;
+    border-bottom-right-radius: var(--radius-1) !important;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
 }
@@ -168,9 +169,9 @@
     height: auto;
     min-height: 3rem;
     margin: auto;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-radius: 0.5rem;
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    border-radius: var(--radius-1);
 }
 .hg-container {
     height: 24rem;
@@ -200,7 +201,7 @@
 
 #histogram-canvas {
     max-height: 100%;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-1);
 }
 .pie-container {
     max-height: 40rem;
@@ -208,6 +209,7 @@
     flex-direction: column;
 }
 .filterset {
+    height: auto;
     overflow-y: auto;
     min-width: 300px;
     scroll-snap-align: center;
@@ -228,7 +230,7 @@
 }
 
 .filterset-grow {
-    transition: max-height 1s ease;
+    transition: max-height 0.5s ease;
     max-height: 0;
     width: 100%;
     height: 100%;
@@ -277,26 +279,6 @@
     justify-content: center;
     align-items: center;
 }
-.legacy-card-container {
-    display: block;
-    padding: 0.5rem;
-    width: 100%;
-    height: 100%;
-}
-.legacy-card {
-    width: 100%;
-    max-height: 75vh;
-    background: var(--dark-black);
-    border-radius: 0.5rem;
-}
-.legacy-img {
-    height: 100%;
-    box-sizing: border-box;
-    max-width: 100%;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    max-height: min(65vh, 40rem);
-}
 .arrow-btn {
     z-index: 1;
     cursor: pointer;
@@ -306,18 +288,26 @@
     font-size: 1.5rem;
     font-weight: 600;
     border: none;
-    outline: none;
-    outline-offset: 0;
     color: var(--blue);
     background: var(--dark-black);
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, outline-offset 0.2s ease-in-out, outline 0.2s ease-in-out; 
+    outline-color: var(--blue) !important;
+    transition: color 0.1s ease, background-color 0.1s ease, opacity 0.1s ease, outline-offset 0.1s ease, outline 0.1s ease; 
 }
 .arrow-btn:hover {
     background: var(--blue);
     color: var(--black);
     text-decoration: none;
 }
+
 .arrow-btn:focus {
+    box-shadow: none !important;
+    outline: none;
+}
+.arrow-btn:focus-visible {
+    box-shadow: none !important;
     outline: var(--blue) solid 2px;
-    outline-offset: 4px;
+    outline-offset: 2px;
+}
+.arrow-btn:focus:not(:focus-visible) {
+    outline: none;
 }

@@ -34,8 +34,7 @@
                     {% endwith %}
                 </div>
                 <div class="component flex">
-                    <div class="component-border space-between">
-                        <p class="text text-subtitle blue" style="margin: 0;">Closest Matches</p>
+                    <div class="component-border fill space-between">
                         <div class="input-box-container" style="width: 100%; margin-top:0;">
                             <select id="select-matches-axes" style="text-align: center; width: 75%; border-radius:0;" name="select-matches-axes" class="button blue-button" onchange="update_matches(axis=event.target.value, num_matches_shown=null)">
                                 <option value="overall" selected>All Axes</option>
@@ -50,8 +49,6 @@
                             </select>
                             <button class="button grey-button" style="min-width: 2rem; width: 25%; border-radius:0;" onclick="swap_num_matches(this)" id="num_matches_swap_button">+</button>
                         </div>
-                    </div>
-                    <div class="component-border fill space-between">
                         <div class="fill" style="min-height: 250px; cursor: default;" oncontextmenu="return false;">
                             <canvas id="matches-chart"></canvas>
                         </div>
@@ -88,10 +85,6 @@
             <button class="button blue-button" onclick="save_image(event.currentTarget, 'compass_save', btn_text='Save Image')">
                 <i class="fa-solid fa-arrow-down"></i><span>Save Image</span>
             </button>
-
-            <div id="statusmsg" class="fill">
-                <p>Loading...</p>
-            </div>
         </div>
     </div>
 

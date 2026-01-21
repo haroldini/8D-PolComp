@@ -49,7 +49,6 @@ function _isDataSample(key) {
     return !!(key && data_samples[key]);
 }
 
-
 let samples_expanded = false;
 
 // Axis values fallback
@@ -78,14 +77,10 @@ function _meanFromScores(scores) {
     }
 
     for (const s of scores) {
-        if (!s) {
-            continue;
-        }
+        if (!s) continue;
         for (const ax of axes) {
             const v = Number(s[ax]);
-            if (!Number.isNaN(v)) {
-                out[ax] += v;
-            }
+            if (!Number.isNaN(v)) out[ax] += v;
         }
     }
 
@@ -98,28 +93,21 @@ function _meanFromScores(scores) {
 async function load_sample_scores() {
     try {
         const resp = await fetch("/static/data/samples/scores.json", { cache: "no-store" });
-        if (!resp.ok) {
-            return;
-        }
+        if (!resp.ok) return;
 
         const data = await resp.json();
-        if (data && typeof data === "object") {
-            key_vals = data;
-        }
+        if (data && typeof data === "object") key_vals = data;
     } catch (e) {
         // ignore
     }
 
-    if (!key_vals || typeof key_vals !== "object") {
-        key_vals = {};
-    }
+    if (!key_vals || typeof key_vals !== "object") key_vals = {};
 
     // Ensure recent1000 exists (average will replace after /api/data loads)
     key_vals["recent1000"] = _zeroAxes();
 }
 
 load_sample_scores();
-
 
 // Additional compass quadrants for "The Axes" section.
 const quadrants_sample = {
@@ -154,32 +142,22 @@ const quadrants_sample = {
 };
 
 function _findChartDatasetByLabel(chart, label) {
-    if (!chart || !chart.data || !Array.isArray(chart.data.datasets)) {
-        return null;
-    }
+    if (!chart || !chart.data || !Array.isArray(chart.data.datasets)) return null;
     for (const ds of chart.data.datasets) {
-        if (ds && ds.label === label) {
-            return ds;
-        }
+        if (ds && ds.label === label) return ds;
     }
     return null;
 }
 
 function _updateMarkerForQuadrants(quadrantsObj, axes) {
-    if (!axes || typeof axes !== "object") {
-        return;
-    }
+    if (!axes || typeof axes !== "object") return;
 
     for (const quadrant in quadrantsObj) {
         const chart = quadrantsObj[quadrant].chart;
-        if (!chart) {
-            continue;
-        }
+        if (!chart) continue;
 
         const marker = _findChartDatasetByLabel(chart, "Marker");
-        if (!marker || !Array.isArray(marker.data) || marker.data.length === 0) {
-            continue;
-        }
+        if (!marker || !Array.isArray(marker.data) || marker.data.length === 0) continue;
 
         marker.data[0] = {
             x: axes[quadrantsObj[quadrant].x],
@@ -226,7 +204,7 @@ function _setDataCloudVisible(visible, key) {
 
         cloud.data = vals;
 
-        if (typeof calc_point_props === "function") {
+        if (typeof calc_point_props === "function" && typeof add_transparency === "function") {
             const props = calc_point_props({ count: cfg.count }, cfg.count);
             const transparency = props[0];
             const radius = props[1];
@@ -240,7 +218,6 @@ function _setDataCloudVisible(visible, key) {
         chart.update();
     }
 }
-
 
 function _buildDataSamplePayload(key) {
     const cfg = _isDataSample(key) ? data_samples[key] : null;
@@ -269,7 +246,6 @@ function _buildDataSamplePayload(key) {
         ]
     };
 }
-
 
 function load_data_sample(key) {
     if (!_isDataSample(key)) return;
@@ -356,20 +332,15 @@ function load_data_sample(key) {
     });
 }
 
-
 function _get_sample_name(key) {
     const btn = document.querySelector(`[data-sample-key="${key}"]`);
-    if (!btn) {
-        return key;
-    }
+    if (!btn) return key;
     return btn.getAttribute("aria-label") || key;
 }
 
 function _set_selected_sample_name(key) {
     const el = document.getElementById("samples-selected-name");
-    if (!el) {
-        return;
-    }
+    if (!el) return;
     el.innerText = _get_sample_name(key);
 }
 
@@ -386,14 +357,10 @@ function _select_icon(event) {
 
 function _update_samples_collapsed_height(force = false) {
     const list = document.getElementById("samples-list");
-    if (!list || (!force && !list.classList.contains("samples-collapsed"))) {
-        return;
-    }
+    if (!list || (!force && !list.classList.contains("samples-collapsed"))) return;
 
     const icons = Array.from(list.querySelectorAll(".icon-button"));
-    if (icons.length === 0) {
-        return;
-    }
+    if (icons.length === 0) return;
 
     const listRect = list.getBoundingClientRect();
 
@@ -405,14 +372,10 @@ function _update_samples_collapsed_height(force = false) {
         const topRel = r.top - listRect.top;
         const bottomRel = r.bottom - listRect.top;
         pos.push({ topRel, bottomRel });
-        if (topRel < minTop) {
-            minTop = topRel;
-        }
+        if (topRel < minTop) minTop = topRel;
     }
 
-    if (!Number.isFinite(minTop)) {
-        return;
-    }
+    if (!Number.isFinite(minTop)) return;
 
     const tol = 1;
 
@@ -448,14 +411,10 @@ function _update_samples_collapsed_height(force = false) {
 function toggle_samples_more() {
     const list = document.getElementById("samples-list");
     const link = document.getElementById("samples-link");
-    if (!list || !link) {
-        return;
-    }
+    if (!list || !link) return;
 
     const btn = link.firstElementChild;
-    if (!btn) {
-        return;
-    }
+    if (!btn) return;
 
     if (!samples_expanded) {
         samples_expanded = true;
@@ -477,9 +436,7 @@ function toggle_samples_more() {
     list.classList.remove("samples-collapsed");
 
     const onEnd = function (e) {
-        if (e && e.propertyName !== "max-height") {
-            return;
-        }
+        if (e && e.propertyName !== "max-height") return;
 
         list.classList.remove("samples-labels-shown");
         list.classList.add("samples-collapsed");
@@ -499,7 +456,6 @@ function toggle_samples_more() {
 
     btn.innerText = "Show more...";
 }
-
 
 // Updates "Sample Compasses" and "The Axes" quadrants when new sample enabled
 function update_index_chart(event, key) {
@@ -527,32 +483,15 @@ function update_index_chart(event, key) {
 
     _setDataCloudVisible(false, null);
 
-    if (!key_vals[key] || typeof key_vals[key] !== "object") {
-        return;
-    }
+    if (!key_vals[key] || typeof key_vals[key] !== "object") return;
 
     _updateMarkerForQuadrants(quadrants, key_vals[key]);
     _updateMarkerForQuadrants(quadrants_sample, key_vals[key]);
 }
 
-
-function bind_sample_clicks() {
-    const btns = document.querySelectorAll("#samples-list .icon-button[data-sample-key]");
-    for (const btn of btns) {
-        btn.addEventListener("click", function (e) {
-            const key = btn.getAttribute("data-sample-key");
-            if (!key) return;
-            update_index_chart(e, key);
-        });
-    }
-}
-
-
 // Creates quadrants for "The Axes"
 function create_axis_clones() {
-    if (typeof create_quadrant !== "function") {
-        return;
-    }
+    if (typeof create_quadrant !== "function") return;
     for (const quadrant_sample in quadrants_sample) {
         create_quadrant(quadrant_sample, quadrants_sample);
     }
@@ -561,8 +500,6 @@ function create_axis_clones() {
 create_axis_clones();
 
 window.onload = function () {
-    bind_sample_clicks();
-
     current_key = "recent1000";
     _set_selected_sample_name(current_key);
 
@@ -572,9 +509,7 @@ window.onload = function () {
 
     window.addEventListener("resize", function () {
         const list = document.getElementById("samples-list");
-        if (!list) {
-            return;
-        }
+        if (!list) return;
 
         if (samples_expanded) {
             requestAnimationFrame(() => {
@@ -589,5 +524,6 @@ window.onload = function () {
     });
 
     _setDataCloudVisible(false, null);
+
     load_data_sample("recent1000");
 };

@@ -11,7 +11,7 @@
 
     z-index: 99999;
 
-    padding: 0.75rem;
+    padding: var(--spacing-3);
 
     display: flex;
     justify-content: center;
@@ -21,40 +21,36 @@
 }
 
 .cookie-banner-inner {
-    width: calc(100% - 1rem);
+    width: calc(100% - var(--spacing-2));
     max-width: 980px;
 
-    /* Gradient border using app colours */
     border: 2px solid transparent;
     background:
-        linear-gradient(var(--black, rgba(0, 0, 0, 0.92)), var(--black, rgba(0, 0, 0, 0.92))) padding-box,
-        linear-gradient(90deg, var(--blue, #2b8cff), var(--green, #22c55e)) border-box;
+        linear-gradient(var(--black), var(--black)) padding-box,
+        linear-gradient(90deg, var(--blue), var(--green)) border-box;
 
-    border-radius: var(--radius, 12px);
-
-    /* Prevent weird overflow + keep it clean */
     overflow: hidden;
 }
 
 .cookie-banner-inner .text {
-    color: var(--white, #f3f3f3);
+    color: var(--white);
     text-align: left;
 }
 
 .cookie-banner-inner .link,
 .cookie-banner-inner i {
-    color: var(--black, #f3f3f3);
+    color: var(--black);
     text-align: left;
 }
 
 .cookie-banner-inner .inline-link a {
-    color: var(--blue, #f3f3f3);
+    color: var(--blue);
     text-align: left;
 }
 
 .cookie-btn-row {
     display: flex;
-    gap: 0.75rem;
+    gap: var(--spacing-2);
     width: 100%;
     justify-content: flex-end;
     flex-wrap: wrap;
@@ -62,15 +58,4 @@
 
 .cookie-btn-row .button {
     max-width: 16rem;
-}
-
-@media only screen and (max-width: 600px) {
-    .cookie-banner {
-        padding: 0.5rem;
-    }
-
-    .cookie-btn-row .button {
-        max-width: 100%;
-        width: 100%;
-    }
 }
