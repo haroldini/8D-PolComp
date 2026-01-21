@@ -197,12 +197,12 @@ function _setRecentCloudVisible(visible) {
         cloud.data = vals;
 
         if (typeof calc_point_props === "function") {
-            const props = calc_point_props({ count: recent1000_count }, recent1000_count);
+            const props = calc_point_props({ count: 500 }, 500);
             const transparency = props[0];
             const radius = props[1];
 
             cloud.pointRadius = radius / 2;
-            cloud.pointBackgroundColor = add_transparency("#0d56b5", transparency);
+            cloud.pointBackgroundColor = add_transparency("#00ACC1", transparency);
             cloud.pointBorderWidth = radius / 4;
             cloud.pointBorderColor = add_transparency("#262626", transparency);
         }
@@ -361,9 +361,9 @@ function _select_icon(event) {
     }
 }
 
-function _update_samples_collapsed_height() {
+function _update_samples_collapsed_height(force = false) {
     const list = document.getElementById("samples-list");
-    if (!list || !list.classList.contains("samples-collapsed")) {
+    if (!list || (!force && !list.classList.contains("samples-collapsed"))) {
         return;
     }
 
@@ -437,18 +437,8 @@ function toggle_samples_more() {
     if (!samples_expanded) {
         samples_expanded = true;
 
-        list.classList.remove("samples-labels-shown");
         list.classList.remove("samples-collapsed");
         list.classList.add("samples-labels-shown");
-
-        const onEnd = function (e) {
-            if (e && e.propertyName !== "max-height") {
-                return;
-            }
-            list.removeEventListener("transitionend", onEnd);
-        };
-
-        list.addEventListener("transitionend", onEnd);
 
         requestAnimationFrame(() => {
             list.style.maxHeight = list.scrollHeight + "px";
@@ -460,11 +450,28 @@ function toggle_samples_more() {
 
     samples_expanded = false;
 
-    list.classList.remove("samples-labels-shown");
-    list.classList.add("samples-collapsed");
+    list.classList.add("samples-labels-shown");
+    list.classList.remove("samples-collapsed");
+
+    const onEnd = function (e) {
+        if (e && e.propertyName !== "max-height") {
+            return;
+        }
+
+        list.classList.remove("samples-labels-shown");
+        list.classList.add("samples-collapsed");
+
+        requestAnimationFrame(() => {
+            _update_samples_collapsed_height();
+        });
+
+        list.removeEventListener("transitionend", onEnd);
+    };
+
+    list.addEventListener("transitionend", onEnd);
 
     requestAnimationFrame(() => {
-        _update_samples_collapsed_height();
+        _update_samples_collapsed_height(true);
     });
 
     btn.innerText = "Show more...";

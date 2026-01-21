@@ -72,11 +72,13 @@
     color: #262626;
 
     font-weight: 700;
-    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-    line-height: 1.05;
-
-    padding: 0;
+    font-size: clamp(0.65rem, 1.15vw, 0.9rem);
+    line-height: 1;
+    padding: 0.1rem;
+    overflow-wrap: anywhere;
     text-align: center;
+    gap: 0.15rem;
+
     user-select: none;
 
     opacity: 0;
@@ -87,9 +89,9 @@
     content: "\f061";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    display: block;
-    margin-top: 0.2rem;
+    font-size: 0.95em;
     line-height: 1;
+    margin-top: 0;
 }
 
 .samples-labels-shown .samples-label {
